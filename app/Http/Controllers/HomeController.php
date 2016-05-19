@@ -174,7 +174,7 @@ class HomeController extends Controller
         );
 
         if (0 === $amount) {
-            return null;
+            return;
         }
 
         return $matches[0][0];
