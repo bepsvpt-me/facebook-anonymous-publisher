@@ -8,6 +8,7 @@ use App\Post;
 use Carbon\Carbon;
 use Facebook\Facebook;
 use Facebook\FacebookResponse;
+use Facebook\FileUpload\FacebookFile;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -57,10 +58,11 @@ class HomeController extends Controller
 
         $fb = new Facebook(Config::getConfig('facebook-service'));
 
-        $response = $fb->post('/me/feed/', [
-            'message' => $this->content($post),
-            'link' => $post->getAttribute('link'),
-        ]);
+        if (! $request->hasFile('image')) {
+            $response = $this->postFeed($fb, $post);
+        } else {
+            $response = $this->postPhotos($fb, $post, $request);
+        }
 
         $post = $this->posted($response, $post);
 
@@ -204,6 +206,39 @@ class HomeController extends Controller
     }
 
     /**
+     * Post to feed.
+     *
+     * @param Facebook $fb
+     * @param Post $post
+     *
+     * @return FacebookResponse
+     */
+    protected function postFeed(Facebook $fb, Post $post)
+    {
+        return $fb->post('/me/feed', [
+            'message' => $this->content($post),
+            'link' => $post->getAttribute('link'),
+        ]);
+    }
+
+    /**
+     * Post a photo.
+     *
+     * @param Facebook $fb
+     * @param Post $post
+     * @param Request $request
+     *
+     * @return FacebookResponse
+     */
+    protected function postPhotos(Facebook $fb, Post $post, Request $request)
+    {
+        return $fb->post('/me/photos', [
+            'source' => new FacebookFile($request->file('image')->getPathname()),
+            'caption' => $this->content($post),
+        ]);
+    }
+
+    /**
      * Get post content.
      *
      * @param Post $post
@@ -238,7 +273,9 @@ class HomeController extends Controller
      */
     protected function posted(FacebookResponse $response, Post $post)
     {
-        list($pageId, $fbid) = explode('_', $response->getDecodedBody()['id']);
+        $key = str_contains($response->getRequest()->getEndpoint(), 'photos') ? 'post_id' : 'id';
+
+        list($pageId, $fbid) = explode('_', $response->getDecodedBody()[$key]);
 
         $post->setAttribute('fbid', $fbid);
 

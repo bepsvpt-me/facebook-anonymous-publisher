@@ -10,11 +10,17 @@
       <section>
         @include('components.form-errors')
 
-        {!! Form::open(['route' => 'kobe', 'method' => 'POST', 'role' => 'form', 'data-toggle' => 'validator']) !!}
+        {!! Form::open(['route' => 'kobe', 'method' => 'POST', 'files' => true, 'role' => 'form', 'data-toggle' => 'validator']) !!}
 
         <div class="form-group">
           {!! Form::textarea('content', null, ['class' => 'form-control', 'placeholder' => '今天要靠北什麼？', 'maxlength' => 500, 'data-error' => '至少需要靠北點東西', 'required']) !!}
           <div class="help-block with-errors"></div>
+        </div>
+
+        <div class="form-group">
+          {!! Form::label('image', '圖片（可選）') !!}
+          {!! Form::file('image', ['accept' => 'image/*']) !!}
+          <p class="help-block">大小需小於 3 MB</p>
         </div>
 
         <div class="form-group">
