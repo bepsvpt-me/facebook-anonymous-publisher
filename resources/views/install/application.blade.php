@@ -27,3 +27,15 @@
   {!! Form::textarea('license', null, ['class' => 'form-control']) !!}
   <div class="help-block with-errors"></div>
 </div>
+
+<div class="form-group">
+  {!! Form::label('ga', 'Google Analytics Code') !!}
+  {!! Form::textarea('ga', null, ['class' => 'form-control', 'rows' => 3]) !!}
+  <div class="help-block with-errors"></div>
+</div>
+
+<div class="form-group">
+  {!! Form::label('ad', 'Google AdSense Code') !!}
+  {!! Form::textarea('ad', null, ['class' => 'form-control', 'rows' => 3]) !!}
+  <div class="help-block with-errors"></div>
+</div>

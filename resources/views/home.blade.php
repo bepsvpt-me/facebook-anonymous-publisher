@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-xs-12 col-md-offset-2 col-md-8">
       <header>
-        <h1 class="text-center">{{ $application['page_name'] }}</h1>
+        <h1 class="text-center">{{ $pageName }}</h1>
       </header>
 
       <section>
@@ -36,6 +36,14 @@
 
         {!! Form::close() !!}
       </section>
+
+      @unless(empty($application['ad']))
+        <section>{!! $application['ad'] !!}</section>
+      @endunless
+
+      @unless(empty($application['ga']))
+        <section>{!! $application['ga'] !!}</section>
+      @endunless
     </div>
   </div>
 @endsection

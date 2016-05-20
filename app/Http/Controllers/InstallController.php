@@ -7,6 +7,7 @@ use App\Http\Requests\Install\ApplicationRequest;
 use App\Http\Requests\Install\FacebookRequest;
 use App\Http\Requests\Install\RecaptchaRequest;
 use App\User;
+use Artisan;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -116,8 +117,8 @@ class InstallController extends Controller
         ]);
 
         return $this->storeConfig(
-            'application',
-            $request->only(['page_name', 'extra_content', 'license']),
+            'application-service',
+            $request->only(['page_name', 'extra_content', 'license', 'ga', 'ad']),
             'install.finish'
         );
     }
@@ -130,6 +131,8 @@ class InstallController extends Controller
     public function finish()
     {
         Config::updateOrCreate(['key' => 'installed', 'value' => true]);
+
+        Artisan::call('cache:clear');
 
         return view('install.finish');
     }

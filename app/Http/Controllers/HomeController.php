@@ -29,7 +29,7 @@ class HomeController extends Controller
             throw new ServiceUnavailableHttpException;
         }
 
-        $this->application = Config::getConfig('application');
+        $this->application = Config::getConfig('application-service');
     }
 
     /**
