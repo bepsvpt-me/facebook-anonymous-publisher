@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Config;
-use App\Http\Requests;
 use App\Http\Requests\Install\ApplicationRequest;
 use App\Http\Requests\Install\FacebookRequest;
 use App\Http\Requests\Install\RecaptchaRequest;
