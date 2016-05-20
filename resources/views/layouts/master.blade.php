@@ -4,11 +4,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <title>靠北中正</title>
+    <title>{{ $name or '匿名靠北' }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
   </head>
   <body>
     <main class="container">
+      @include('flash::message')
+
       @yield('main')
     </main>
 

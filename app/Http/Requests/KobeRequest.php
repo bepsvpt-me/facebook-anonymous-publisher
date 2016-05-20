@@ -12,7 +12,7 @@ class KobeRequest extends Request
     public function rules()
     {
         return [
-            'content' => 'required|string|max:1000',
+            'content' => 'required|string|max:500',
             'g-recaptcha-response' => 'required|recaptcha',
 //            'accept-license' => 'required|boolean',
         ];

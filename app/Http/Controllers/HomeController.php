@@ -2,15 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Config;
 use App\Http\Requests\KobeRequest;
 use App\Post;
 use Carbon\Carbon;
 use Facebook\Facebook;
 use Facebook\FacebookResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class HomeController extends Controller
 {
+    /**
+     * The application config.
+     *
+     * @var array|null
+     */
+    protected $application;
+
+    /**
+     * HomeController constructor.
+     */
+    public function __construct()
+    {
+        if (! Config::getConfig('installed')) {
+            throw new ServiceUnavailableHttpException;
+        }
+
+        $this->application = Config::getConfig('application');
+    }
+
     /**
      * Home page.
      *
@@ -18,7 +39,9 @@ class HomeController extends Controller
      */
     public function home()
     {
-        return view('home');
+        return view('home', [
+            'application' => $this->application,
+        ]);
     }
 
     /**
@@ -32,7 +55,7 @@ class HomeController extends Controller
     {
         $post = $this->savePost($request);
 
-        $fb = new Facebook(config('services.facebook'));
+        $fb = new Facebook(Config::getConfig('facebook-service'));
 
         $response = $fb->post('/me/feed/', [
             'message' => $this->content($post),
@@ -119,7 +142,7 @@ class HomeController extends Controller
      */
     protected function transformHashTag($content)
     {
-        if (0 === preg_match_all('/#靠北民雄大鳳梨(\d+)/', $content, $matches)) {
+        if (0 === preg_match_all('/#'.$this->application['page_name'].'(\d+)/', $content, $matches)) {
             return $content;
         }
 
@@ -174,7 +197,7 @@ class HomeController extends Controller
         );
 
         if (0 === $amount) {
-            return;
+            return null;
         }
 
         return $matches[0][0];
@@ -189,13 +212,22 @@ class HomeController extends Controller
      */
     protected function content(Post $post)
     {
-        $content = '#靠北民雄大鳳梨'.$post->getKey()." \n\n";
+        return implode('', [
+            // Page hash tag
+            '#'.$this->application['page_name'].$post->getKey(),
+            $this->newLines(1),
 
-        $content .= $post->getAttribute('content')."\n\n";
+            // Extra content that should insert to the post
+            $this->application['extra_content'],
+            $this->newLines(2),
 
-        $content .= 'Submitted At: '.$post->getAttribute('created_at');
+            // User post content
+            $post->getAttribute('content'),
+            $this->newLines(2),
 
-        return $content;
+            // Post submitted time
+            'Submitted At: '.$post->getAttribute('created_at'),
+        ]);
     }
 
     /**
