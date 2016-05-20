@@ -14,7 +14,7 @@ class KobeRequest extends Request
         return [
             'content' => 'required|string|max:500',
             'g-recaptcha-response' => 'required|recaptcha',
-//            'accept-license' => 'required|boolean',
+            'accept-license' => 'required|boolean',
         ];
     }
 
