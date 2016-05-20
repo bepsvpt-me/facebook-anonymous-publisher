@@ -17,4 +17,11 @@ class Post extends \Eloquent
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['published_at'];
 }

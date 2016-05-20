@@ -6,6 +6,8 @@ use Illuminate\Routing\Router;
 
 $router->get('/', ['as' => 'home', 'uses' => 'HomeController@home']);
 
+$router->get('r/{rand}', ['as' => 'redirect', 'uses' => 'HomeController@redirect']);
+
 $router->post('kobe', ['as' => 'kobe', 'uses' => 'HomeController@kobe']);
 
 $router->group(['prefix' => 'install', 'as' => 'install.'], function (Router $router) {

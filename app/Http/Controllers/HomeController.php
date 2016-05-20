@@ -10,6 +10,8 @@ use Facebook\Facebook;
 use Facebook\FacebookResponse;
 use Facebook\FileUpload\FacebookFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Redirect;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class HomeController extends Controller
@@ -43,6 +45,16 @@ class HomeController extends Controller
         return view('home', [
             'application' => $this->application,
         ]);
+    }
+
+    /**
+     * Just redirect to home page.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function redirect()
+    {
+        return Redirect::route('home');
     }
 
     /**
@@ -252,6 +264,10 @@ class HomeController extends Controller
             '#'.$this->application['page_name'].$post->getKey(),
             $this->newLines(1),
 
+            // Link that redirect to the kobe page
+            '發文請至：'.route('redirect', ['rand' => Str::quickRandom(8)]),
+            $this->newLines(1),
+
             // Extra content that should insert to the post
             $this->application['extra_content'],
             $this->newLines(2),
@@ -278,6 +294,7 @@ class HomeController extends Controller
         list($pageId, $fbid) = explode('_', $response->getDecodedBody()[$key]);
 
         $post->setAttribute('fbid', $fbid);
+        $post->setAttribute('published_at', Carbon::now());
 
         $post->save();
 
