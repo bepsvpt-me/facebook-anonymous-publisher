@@ -59,11 +59,20 @@
         </div>
 
         <div class="form-group {{ empty($application['license']) ? 'hidden' : '' }}">
-          <div class="checkbox">
-            <label>
-              {!! Form::checkbox('accept-license', true, empty($application['license']) ? true : false, ['data-error' => '您必須同意本站隱私條款', 'required']) !!}
-              <span>我同意並已詳細閱讀使用條款及本站隱私權政策</span>
-            </label>
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">服務條款及隱私政策</h3>
+            </div>
+            <div class="panel-body">
+              <pre>{{ $application['license'] }}</pre>
+
+              <div class="checkbox">
+                <label>
+                  {!! Form::checkbox('accept-license', true, empty($application['license']) ? true : false, ['data-error' => '您必須同意本站隱私條款', 'required']) !!}
+                  <span>我同意並已詳細閱讀服務條款及隱私政策</span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
