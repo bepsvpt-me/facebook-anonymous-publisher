@@ -222,6 +222,11 @@ class KobeController extends Controller
      */
     protected function postPhotos($file)
     {
+        $file = $file->move(
+            storage_path(file_build_path('app', 'images', intval(floor($this->post->getKey() / 5000)))),
+            $this->post->getKey().'.'.$file->guessExtension()
+        );
+
         return $this->fb->post('/me/photos', [
             'source' => new FacebookFile($file->getPathname()),
             'caption' => $this->content(),
