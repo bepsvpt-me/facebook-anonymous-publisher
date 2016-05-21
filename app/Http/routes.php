@@ -19,8 +19,8 @@ $router->group(['prefix' => 'install', 'as' => 'install.'], function (Router $ro
     $router->get('recaptcha-service', ['as' => 'recaptcha', 'uses' => 'InstallController@recaptcha']);
     $router->post('recaptcha-service', ['as' => 'recaptcha.store', 'uses' => 'InstallController@storeRecaptcha']);
 
-    $router->get('application', ['as' => 'application', 'uses' => 'InstallController@application']);
-    $router->post('application', ['as' => 'application.store', 'uses' => 'InstallController@storeApplication']);
+    $router->get('application-service', ['as' => 'application', 'uses' => 'InstallController@application']);
+    $router->post('application-service', ['as' => 'application.store', 'uses' => 'InstallController@storeApplication']);
 
     $router->get('finish', ['as' => 'finish', 'uses' => 'InstallController@finish']);
 });

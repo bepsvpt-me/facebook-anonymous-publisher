@@ -44,8 +44,16 @@
           </div>
 
           <div class="col-xs-12 col-md-6">
-            @unless(empty($application['ad']))
-              <section>{!! $application['ad'] !!}</section>
+            @unless(empty($application['ad-client']) || empty($application['ad-slot']))
+              <section>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="{{ $application['ad-client'] }}"
+                     data-ad-slot="{{ $application['ad-slot'] }}"
+                     data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+              </section>
             @endunless
           </div>
         </div>
@@ -67,7 +75,11 @@
       </section>
 
       @unless(empty($application['ga']))
-        <section>{!! $application['ga'] !!}</section>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          ga('create', '{{ $application['ga'] }}', 'auto');
+          ga('send', 'pageview');
+        </script>
       @endunless
     </div>
   </div>

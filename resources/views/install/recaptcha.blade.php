@@ -6,6 +6,6 @@
 
 <div class="form-group">
   {!! Form::label('private_key', 'Secret Key') !!}
-  {!! Form::text('private_key', null, ['class' => 'form-control', 'required']) !!}
+  {!! Form::password('private_key', ['class' => 'form-control', 'required']) !!}
   <div class="help-block with-errors"></div>
 </div>

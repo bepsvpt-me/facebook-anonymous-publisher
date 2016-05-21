@@ -20,7 +20,7 @@ class InstallController extends Controller
     public function __construct()
     {
         // If the application was installed, it will throw the exception.
-        if (Config::where('key', 'installed')->exists()) {
+        if (Config::getConfig('installed')) {
             throw new BadRequestHttpException;
         }
     }
@@ -118,7 +118,10 @@ class InstallController extends Controller
 
         return $this->storeConfig(
             'application-service',
-            $request->only(['page_name', 'extra_content', 'license', 'ga', 'ad']),
+            $request->only([
+                'page_name', 'extra_content', 'license',
+                'ga', 'ad-client', 'ad-slot',
+            ]),
             'install.finish'
         );
     }

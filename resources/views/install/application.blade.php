@@ -29,13 +29,19 @@
 </div>
 
 <div class="form-group">
-  {!! Form::label('ga', 'Google Analytics Code') !!}
-  {!! Form::textarea('ga', null, ['class' => 'form-control', 'rows' => 3]) !!}
+  {!! Form::label('ga', 'Google Analytics 編號') !!}
+  {!! Form::text('ga', null, ['class' => 'form-control', 'placeholder' => 'UA-xxxxxxxx-x']) !!}
   <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
-  {!! Form::label('ad', 'Google AdSense Code') !!}
-  {!! Form::textarea('ad', null, ['class' => 'form-control', 'rows' => 3]) !!}
+  {!! Form::label('ad-client', 'Google AdSense Client') !!}
+  {!! Form::text('ad-client', null, ['class' => 'form-control', 'placeholder' => 'ca-pub-xxxxxxxx']) !!}
+  <div class="help-block with-errors"></div>
+</div>
+
+<div class="form-group">
+  {!! Form::label('ad-slot', 'Google AdSense Slot') !!}
+  {!! Form::text('ad-slot', null, ['class' => 'form-control']) !!}
   <div class="help-block with-errors"></div>
 </div>

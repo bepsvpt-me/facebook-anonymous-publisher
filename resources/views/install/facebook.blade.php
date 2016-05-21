@@ -6,7 +6,7 @@
 
 <div class="form-group">
   {!! Form::label('app_secret', 'App Secret') !!}
-  {!! Form::text('app_secret', null, ['class' => 'form-control', 'required']) !!}
+  {!! Form::password('app_secret', ['class' => 'form-control', 'required']) !!}
   <div class="help-block with-errors"></div>
 </div>
 
@@ -18,6 +18,6 @@
 
 <div class="form-group">
   {!! Form::label('default_access_token', 'Access Token') !!}
-  {!! Form::text('default_access_token', null, ['class' => 'form-control', 'required']) !!}
+  {!! Form::password('default_access_token', ['class' => 'form-control', 'required']) !!}
   <div class="help-block with-errors"></div>
 </div>

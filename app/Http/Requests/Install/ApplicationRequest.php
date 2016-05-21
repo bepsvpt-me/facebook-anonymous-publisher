@@ -20,7 +20,8 @@ class ApplicationRequest extends Request
             'extra_content' => 'string',
             'license' => 'string',
             'ga' => 'string',
-            'ad' => 'string',
+            'ad-client' => 'required_with:ad-slot|string',
+            'ad-slot' => 'required_with:ad-client|string',
         ];
     }
 }
