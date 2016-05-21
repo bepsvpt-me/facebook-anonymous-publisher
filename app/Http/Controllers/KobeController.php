@@ -66,7 +66,7 @@ class KobeController extends Controller
      *
      * @param Request $request
      *
-     * @return boolean
+     * @return bool
      */
     protected function savePost(Request $request)
     {
@@ -267,7 +267,7 @@ class KobeController extends Controller
      *
      * @param FacebookResponse $response
      *
-     * @return boolean
+     * @return bool
      */
     protected function posted(FacebookResponse $response)
     {

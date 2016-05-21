@@ -19,19 +19,16 @@ class UpdateLang extends Command
      *
      * @var string
      */
-
     protected $description = 'Update the language translation.';
 
     /**
      * @var Filesystem
      */
-
     protected $filesystem;
 
     /**
      * @var string
      */
-
     protected $srcPath;
 
     /**
