@@ -24,4 +24,13 @@ class Post extends \Eloquent
      * @var array
      */
     protected $dates = ['published_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'has_image' => 'boolean',
+    ];
 }

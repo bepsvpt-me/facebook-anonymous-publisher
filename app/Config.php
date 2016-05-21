@@ -58,7 +58,11 @@ class Config extends \Eloquent
      */
     public static function getConfig($key, $default = null)
     {
-        $config = self::find($key);
+        try {
+            $config = self::find($key);
+        } catch (\Exception $e) {
+            $config = null;
+        }
 
         if (is_null($config)) {
             return $default;
