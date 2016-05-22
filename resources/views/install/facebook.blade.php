@@ -21,3 +21,9 @@
   {!! Form::password('default_access_token', ['class' => 'form-control', 'required']) !!}
   <div class="help-block with-errors"></div>
 </div>
+
+<div class="form-group">
+  {!! Form::label('page_id', 'Page Id') !!}
+  {!! Form::text('page_id', null, ['class' => 'form-control', 'required']) !!}
+  <div class="help-block with-errors"></div>
+</div>

@@ -58,7 +58,9 @@ class InstallController extends Controller
     {
         return $this->storeConfig(
             'facebook-service',
-            $request->only(['app_id', 'app_secret', 'default_graph_version', 'default_access_token']),
+            $request->only([
+                'app_id', 'app_secret', 'default_graph_version', 'default_access_token', 'page_id',
+            ]),
             'install.recaptcha'
         );
     }

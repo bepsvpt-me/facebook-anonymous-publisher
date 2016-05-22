@@ -38,10 +38,12 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id, ['id', 'fbid']);
 
-        $fb = new Facebook(Config::getConfig('facebook-service'));
+        $config = Config::getConfig('facebook-service');
+
+        $fb = new Facebook($config);
 
         try {
-            $response = $fb->delete($post->getAttribute('fbid'));
+            $response = $fb->delete($config['page_id'].'_'.$post->getAttribute('fbid'));
 
             if ($response->getDecodedBody()['success']) {
                 $post->delete();
