@@ -45,7 +45,7 @@
               <p>{{ $agent->browser().' on '.$agent->platform() }}</p>
             </td>
             <td>
-              <a href="{{ route('dashboard.delete', ['id' => $post->getKey()]) }}">
+              <a href="{{ route('dashboard.posts.delete', ['id' => $post->getKey()]) }}">
                 <button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
               </a>
             </td>

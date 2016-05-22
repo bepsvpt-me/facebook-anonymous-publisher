@@ -52,6 +52,6 @@ class PostController extends Controller
             Flash::error('刪除失敗，文章不存在或沒有權限刪除');
         }
 
-        return Redirect::route('dashboard.index');
+        return Redirect::route('dashboard.posts.index');
     }
 }
