@@ -160,13 +160,12 @@ class KobeController extends Controller
      */
     protected function replaceBlockWord(Block $word, $content)
     {
-        $blockWordLen = mb_strlen($word->getAttribute('value'));
-
-        $contentLen = mb_strlen($content) - $blockWordLen;
-
         $pinyin = new Pinyin();
 
+        $blockWordLen = mb_strlen($word->getAttribute('value'));
         $blockWordPinyin = $pinyin->sentence($word->getAttribute('value'));
+
+        $contentLen = mb_strlen($content) - $blockWordLen + 1;
 
         for ($i = 0; $i < $contentLen; ++$i) {
             $sub = mb_substr($content, $i, $blockWordLen);
@@ -178,7 +177,7 @@ class KobeController extends Controller
                     mb_substr($content, $i + $blockWordLen),
                 ]);
 
-                $i += $blockWordLen;
+                $i += ($blockWordLen - 1);
             }
         }
 
