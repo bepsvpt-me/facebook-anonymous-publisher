@@ -10,6 +10,11 @@ $router->get('r/{rand}', ['as' => 'redirect', 'uses' => 'HomeController@redirect
 
 $router->post('kobe', ['as' => 'kobe', 'uses' => 'KobeController@kobe']);
 
+$router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function (Router $router) {
+    $router->get('/', ['as' => 'index', 'uses' => 'PostController@index']);
+    $router->get('{id}/delete', ['as' => 'delete', 'uses' => 'PostController@destroy']);
+});
+
 $router->group(['prefix' => 'install', 'as' => 'install.'], function (Router $router) {
     $router->get('/', ['as' => 'index', 'uses' => 'InstallController@index']);
 

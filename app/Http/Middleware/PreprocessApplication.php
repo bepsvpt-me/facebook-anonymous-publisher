@@ -2,9 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App;
 use App\Config;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Jenssegers\Agent\Facades\Agent;
 
 class PreprocessApplication
 {
@@ -34,6 +37,8 @@ class PreprocessApplication
      */
     public function handle($request, Closure $next)
     {
+        $this->setLocale();
+
         // Set the cookie https only if the connection is secure.
         config(['session.secure' => $request->secure()]);
 
@@ -45,5 +50,41 @@ class PreprocessApplication
         }
 
         return $next($request);
+    }
+
+    /**
+     * Set Carbon and App locale.
+     *
+     * @return void
+     */
+    protected function setLocale()
+    {
+        foreach (Agent::languages() as $lang) {
+            if (str_contains($lang, '-')) {
+                list($l, $e) = explode('-', $lang);
+
+                $lang = $l.'-'.strtoupper($e);
+            }
+
+            if (file_exists($this->carbonLangPath($lang))) {
+                Carbon::setLocale($lang);
+
+                App::setLocale($lang);
+
+                break;
+            }
+        }
+    }
+
+    /**
+     * Get the Carbon lang src path.
+     *
+     * @param string $lang
+     *
+     * @return string
+     */
+    protected function carbonLangPath($lang)
+    {
+        return base_path(file_build_path('vendor', 'nesbot', 'carbon', 'src', 'Carbon', 'Lang', $lang.'.php'));
     }
 }

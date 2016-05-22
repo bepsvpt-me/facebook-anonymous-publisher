@@ -10,10 +10,14 @@
     <meta property="og:url" content="{{ config('app.url') }}">
     <meta property="og:locale" content="zh_TW">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    @stack('styles')
   </head>
   <body>
     <main class="container">
-      @include('flash::message')
+      <section style="margin: 20px 0;">
+        @include('flash::message')
+      </section>
 
       @yield('main')
     </main>

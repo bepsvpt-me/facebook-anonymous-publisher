@@ -2,8 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Post extends \Eloquent
 {
+    use SoftDeletes;
+
     /**
      * The table associated with the model.
      *
@@ -23,7 +27,7 @@ class Post extends \Eloquent
      *
      * @var array
      */
-    protected $dates = ['published_at'];
+    protected $dates = ['created_at', 'published_at', 'deleted_at'];
 
     /**
      * The attributes that should be cast to native types.
