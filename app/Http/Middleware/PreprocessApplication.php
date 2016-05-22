@@ -34,6 +34,10 @@ class PreprocessApplication
      */
     public function handle($request, Closure $next)
     {
+        // Set the cookie https only if the connection is secure.
+        config(['session.secure' => $request->secure()]);
+
+        // Share the application service to all views.
         $application = Config::getConfig('application-service');
 
         if (! is_null($application)) {
