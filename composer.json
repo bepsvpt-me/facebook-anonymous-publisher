@@ -14,6 +14,7 @@
     "jenssegers/agent": "^2.3",
     "laracasts/flash": "^2.0",
     "laravelcollective/html": "^5.2",
+    "overtrue/pinyin": "~3.0",
     "predis/predis": "^1.0"
   },
   "require-dev": {

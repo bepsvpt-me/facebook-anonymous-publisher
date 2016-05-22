@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Block;
 use App\Config;
 use App\Http\Requests\KobeRequest;
 use App\Post;
@@ -11,6 +12,7 @@ use Facebook\FacebookResponse;
 use Facebook\FileUpload\FacebookFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Overtrue\Pinyin\Pinyin;
 
 class KobeController extends Controller
 {
@@ -70,7 +72,13 @@ class KobeController extends Controller
      */
     protected function savePost(Request $request)
     {
-        $content = $this->normalizeNewLine($this->stripCharacters($request->input('content')));
+        $content = $this->filterBlockWords(
+            $this->normalizeNewLine(
+                $this->stripCharacters(
+                    $request->input('content')
+                )
+            )
+        );
 
         $this->post->setAttribute('content', $this->transformHashTag($content));
         $this->post->setAttribute('link', $this->findLink($content));
@@ -122,6 +130,59 @@ class KobeController extends Controller
     protected function newLines($multiplier = 1)
     {
         return str_repeat(PHP_EOL, $multiplier);
+    }
+
+    /**
+     * Filter the block words.
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function filterBlockWords($content)
+    {
+        $words = Block::where('type', 'keyword')->get();
+
+        foreach ($words as $word) {
+            $content = $this->replaceBlockWord($word, $content);
+        }
+
+        return $content;
+    }
+
+    /**
+     * Replace block word with ♥ symbol.
+     *
+     * @param Block $word
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function replaceBlockWord(Block $word, $content)
+    {
+        $blockWordLen = mb_strlen($word->getAttribute('value'));
+
+        $contentLen = mb_strlen($content) - $blockWordLen;
+
+        $pinyin = new Pinyin();
+
+        $blockWordPinyin = $pinyin->sentence($word->getAttribute('value'));
+
+        for ($i = 0; $i < $contentLen; ++$i) {
+            $sub = mb_substr($content, $i, $blockWordLen);
+
+            if ($pinyin->sentence($sub) === $blockWordPinyin) {
+                $content = implode('', [
+                    mb_substr($content, 0, $i),
+                    str_repeat('♥', $blockWordLen),
+                    mb_substr($content, $i + $blockWordLen),
+                ]);
+
+                $i += $blockWordLen;
+            }
+        }
+
+        return $content;
     }
 
     /**
