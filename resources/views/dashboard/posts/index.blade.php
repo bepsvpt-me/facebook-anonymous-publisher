@@ -4,7 +4,7 @@
 
 @section('main')
   <section>
-    <h1 class="text-center">文章列表</h1>
+    <h1 class="text-center">PO文列表</h1>
   </section>
 
   @include('components.pagination', ['pagination' => $posts])
