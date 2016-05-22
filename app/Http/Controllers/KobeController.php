@@ -84,7 +84,8 @@ class KobeController extends Controller
         $this->post->setAttribute('link', $this->findLink($content));
         $this->post->setAttribute('has_image', $request->hasFile('image'));
         $this->post->setAttribute('user_agent', $request->header('user-agent'));
-        $this->post->setAttribute('ip', $request->ip());
+        // Need check
+        $this->post->setAttribute('ip', $request->header('x-forwarded-for'));
         $this->post->setAttribute('created_at', Carbon::now());
 
         return $this->post->save();
