@@ -28,7 +28,7 @@
           <tr>
             <td>{{ $post->getAttribute('id') }}</td>
             <td>
-              <pre class="text-left">{{ $post->getAttribute('content') }}</pre>
+              <pre class="text-left" style="max-width: 480px; white-space: pre-line;">{{ $post->getAttribute('content') }}</pre>
             </td>
             <td>
               @if(! is_null($post->getAttribute('fbid')))
