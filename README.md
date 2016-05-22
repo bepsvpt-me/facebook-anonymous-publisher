@@ -2,6 +2,16 @@
 
 [![StyleCI](https://styleci.io/repos/59216090/shield?style=flat)](https://styleci.io/repos/59216090)
 
+# Feature
+
+- Image Upload
+
+- Append Link to Hashtag
+
+- Url Detect
+
+- Block Words Replace ( Support Simple and Traditional Chinese )
+
 # Installation
 
 Clone the repository and set up environment configuration
