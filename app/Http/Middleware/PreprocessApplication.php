@@ -3,11 +3,14 @@
 namespace App\Http\Middleware;
 
 use App;
+use App\Block;
 use App\Config;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Jenssegers\Agent\Facades\Agent;
+use Log;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PreprocessApplication
 {
@@ -37,6 +40,8 @@ class PreprocessApplication
      */
     public function handle($request, Closure $next)
     {
+        $this->blockBlacklistIp($request->ip());
+
         $this->setLocale();
 
         // Set the cookie https only if the connection is secure.
@@ -50,6 +55,24 @@ class PreprocessApplication
         }
 
         return $next($request);
+    }
+
+    /**
+     * Block black list ips.
+     *
+     * @param string $userIp
+     */
+    protected function blockBlacklistIp($userIp)
+    {
+        $ips = Block::where('type', 'ip')->get();
+
+        foreach ($ips as $ip) {
+            if ($ip->getAttribute('value') === $userIp) {
+                Log::info('blacklist-ip', ['ip' => $userIp]);
+
+                throw new AccessDeniedHttpException;
+            }
+        }
     }
 
     /**
