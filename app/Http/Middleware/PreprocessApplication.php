@@ -63,7 +63,7 @@ class PreprocessApplication
             if (str_contains($lang, '-')) {
                 list($l, $e) = explode('-', $lang);
 
-                $lang = $l.'-'.strtoupper($e);
+                $lang = $l.'-'.mb_strtoupper($e);
             }
 
             if (file_exists($this->carbonLangPath($lang))) {
