@@ -144,40 +144,50 @@ class KobeController extends Controller
         $words = Block::where('type', 'keyword')->get();
 
         foreach ($words as $word) {
-            $content = $this->replaceBlockWord($word, $content);
+            $content = $this->replaceBlockWord($this->transformBlockWord($word), $content);
         }
 
         return $content;
     }
 
     /**
-     * Replace block word with ♥ symbol.
+     * Get block word length and pinyin.
      *
      * @param Block $word
+     *
+     * @return array
+     */
+    protected function transformBlockWord(Block $word)
+    {
+        return [
+            'len' => mb_strlen($word->getAttribute('value')),
+            'pinyin' => (new Pinyin())->sentence($word->getAttribute('value')),
+        ];
+    }
+
+    /**
+     * Replace block word with ♥ symbol.
+     *
+     * @param array $word
      * @param string $content
      *
      * @return string
      */
-    protected function replaceBlockWord(Block $word, $content)
+    protected function replaceBlockWord($word, $content)
     {
         $pinyin = new Pinyin();
 
-        $blockWordLen = mb_strlen($word->getAttribute('value'));
-        $blockWordPinyin = $pinyin->sentence($word->getAttribute('value'));
-
-        $contentLen = mb_strlen($content) - $blockWordLen + 1;
+        $contentLen = mb_strlen($content) - $word['len'] + 1;
 
         for ($i = 0; $i < $contentLen; ++$i) {
-            $sub = mb_substr($content, $i, $blockWordLen);
-
-            if ($pinyin->sentence($sub) === $blockWordPinyin) {
+            if ($pinyin->sentence(mb_substr($content, $i, $word['len'])) === $word['pinyin']) {
                 $content = implode('', [
                     mb_substr($content, 0, $i),
-                    str_repeat('♥', $blockWordLen),
-                    mb_substr($content, $i + $blockWordLen),
+                    str_repeat('♥', $word['len']),
+                    mb_substr($content, $i + $word['len']),
                 ]);
 
-                $i += ($blockWordLen - 1);
+                $i += ($word['len'] - 1);
             }
         }
 
