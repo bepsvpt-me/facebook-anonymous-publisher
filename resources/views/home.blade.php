@@ -93,3 +93,11 @@
     </div>
   </div>
 @endsection
+
+@push('scripts')
+  <script>
+    $(document).on('submit', 'form', function () {
+      $('button.btn-success').attr('disabled', true)
+    })
+  </script>
+@endpush
