@@ -13,6 +13,12 @@ $router->post('kobe', ['as' => 'kobe', 'uses' => 'KobeController@kobe']);
 $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function (Router $router) {
     $router->get('posts', ['as' => 'posts.index', 'uses' => 'PostController@index']);
     $router->get('posts/{id}/delete', ['as' => 'posts.delete', 'uses' => 'PostController@destroy']);
+
+    $router->group(['prefix' => 'block-words', 'as' => 'block-words.'], function (Router $router) {
+        $router->get('/', ['as' => 'index', 'uses' => 'BlockWordController@index']);
+        $router->post('/', ['as' => 'store', 'uses' => 'BlockWordController@store']);
+        $router->get('{value}/delete', ['as' => 'delete', 'uses' => 'BlockWordController@destroy']);
+    });
 });
 
 $router->group(['prefix' => 'install', 'as' => 'install.'], function (Router $router) {

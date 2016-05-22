@@ -18,6 +18,7 @@ class FacebookRequest extends Request
             'app_secret' => 'required|string',
             'default_graph_version' => 'required|string',
             'default_access_token' => 'required|string',
+            'page_id' => 'required|string',
         ];
     }
 }
