@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'cookie' => 'kobeccu',
+    'cookie' => 'facebook-anonymous-publisher',
 
     /*
     |--------------------------------------------------------------------------

@@ -14,7 +14,7 @@
             <ul>
               <li>當文章中有連結時，系統會用第一個連結當作欲分享的連結</li>
               <li>當文章中出現{{ $pageName }}的 hashtag 時，系統會自動在後方附上連結</li>
-              <li>專案開源於 <a href="https://github.com/BePsvPT/kobeccu" target="_blank">Github</a></li>
+              <li>專案開源於 <a href="https://github.com/BePsvPT/Facebook-Anonymous-Publisher" target="_blank">Github</a></li>
             </ul>
           </div>
         </div>

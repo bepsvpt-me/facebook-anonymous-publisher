@@ -1,4 +1,4 @@
-# Kobe CCU
+# Facebook Anonymous Publisher
 
 [![StyleCI](https://styleci.io/repos/59216090/shield?style=flat)](https://styleci.io/repos/59216090)
 
@@ -7,7 +7,7 @@
 Clone the repository and set up environment configuration
 
 ```sh
-git clone https://github.com/BePsvPT/kobeccu.git
+git clone https://github.com/BePsvPT/Facebook-Anonymous-Publisher.git
 
 cp .env.example .env
 ```
