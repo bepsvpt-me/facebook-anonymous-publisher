@@ -316,8 +316,8 @@ class KobeController extends Controller
             $this->newLines(1),
 
             // Link that redirect to the kobe page
-            '發文請至：'.route('redirect', ['rand' => Str::quickRandom(8)]),
-            $this->newLines(1),
+//            '靠北請至：'.route('redirect', ['rand' => Str::quickRandom(8)]),
+//            $this->newLines(1),
 
             // Extra content that should insert to the post
             $this->application['extra_content'],
