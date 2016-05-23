@@ -1,16 +1,12 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Facebook;
 
-use App\Config;
 use App\Post;
-use Carbon\Carbon;
-use Facebook\Facebook;
 use Facebook\FacebookRequest;
-use Illuminate\Console\Command;
 use Log;
 
-class SyncFacebookLikes extends Command
+class SyncLikes extends FacebookCommand
 {
     /**
      * The name and signature of the console command.
@@ -27,51 +23,13 @@ class SyncFacebookLikes extends Command
     protected $description = 'Command description';
 
     /**
-     * @var array|null
-     */
-    protected $config;
-
-    /**
-     * @var Facebook|null
-     */
-    protected $fb;
-
-    /**
-     * @var Carbon
-     */
-    protected $now;
-
-    /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->config = Config::getConfig('facebook-service');
-
-        if (! is_null($this->config)) {
-            $this->fb = new Facebook($this->config);
-        }
-
-        $this->now = Carbon::now();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
-        if (is_null($this->fb)) {
-            $this->error('Facebook service not set.');
-
-            return;
-        }
-
         $posts = Post::whereNotNull('fbid')
-            ->whereNotNull('published_at')
             ->where('published_at', '>=', $this->now->copy()->subMonth())
             ->oldest('sync_at')
             ->take(25)

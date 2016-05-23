@@ -11,12 +11,18 @@ class KobeRequest extends Request
      */
     public function rules()
     {
-        return [
+        $rules = [
             'content' => 'required|string|max:500',
             'image' => 'image|max:3072',
-//            'g-recaptcha-response' => 'bail|required|recaptcha',
+            'g-recaptcha-response' => 'bail|required|recaptcha',
             'accept-license' => 'required|boolean',
         ];
+
+        if ('127.0.0.1' === $this->ip()) {
+            unset($rules['g-recaptcha-response']);
+        }
+
+        return $rules;
     }
 
     /**
