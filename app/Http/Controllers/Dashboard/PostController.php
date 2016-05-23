@@ -38,9 +38,12 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id, ['id', 'ip']);
 
-        Block::updateOrCreate(['type' => 'ip'], [
-            'value' => $post->getAttribute('ip'),
-        ]);
+        if (! Block::where('type', 'ip')->where('value', $post->getAttribute('ip'))->exists()) {
+            Block::create([
+                'type' => 'ip',
+                'value' => $post->getAttribute('ip'),
+            ]);
+        }
 
         Flash::success('封鎖成功');
 
