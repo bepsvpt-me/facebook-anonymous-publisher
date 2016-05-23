@@ -58,18 +58,27 @@
           </div>
         </div>
 
-        <div class="form-group {{ empty($application['license']) ? 'hidden' : '' }}">
+        <div class="form-group">
           <div class="panel panel-info">
             <div class="panel-heading">
               <h3 class="panel-title">服務條款及隱私政策</h3>
             </div>
             <div class="panel-body">
-              <pre>{{ $application['license'] }}</pre>
+              <ol>
+                <li>嚴禁發表任何違反中華民國法律之內容</li>
+                <li>嚴禁發表任何違反新加坡法律之內容</li>
+                <li>嚴禁發表任何違反 Facebook 社群使用規則之內容</li>
+                <li>嚴禁指名道姓、透漏任何個資或隱私資訊</li>
+                <li>請善用「x」取代敏感資訊，取代程度須達到不足以辨別當事者</li>
+                <li>本網站是以即時上載發文的方式運作，對所有發文的真實性、完整性及立場等，不負任何法律責任。而一切發文之言論只代表發文者個人意見，並非本網站之立場，用戶不應信賴內容，並應自行判斷內容之真實性。於有關情形下，用戶應尋求專業意見(包含但不限於醫療、法律或投資等問題)。由於本網站受到「即時上載留言」運作方式所規限，故不能完全監察所有發文，若讀者發現有發文出現問題，請聯絡我們。本網站有權刪除任何發文及拒絕任何人士上載發文，同時亦有不刪除發文的權利。切勿撰寫粗言穢語、誹謗、渲染色情暴力或人身攻擊的言論，敬請自律。本網站保留一切法律權利。</li>
+              </ol>
+
+              {{--<pre>{{ $application['license'] }}</pre>--}}
 
               <div class="checkbox">
                 <label>
-                  {!! Form::checkbox('accept-license', true, empty($application['license']) ? true : false, ['data-error' => '您必須同意本站隱私條款', 'required']) !!}
-                  <span>我同意並已詳細閱讀服務條款及隱私政策</span>
+                  {!! Form::checkbox('accept-license', true, null, ['data-error' => '您必須同意本站隱私條款', 'required']) !!}
+                  <span>我同意並已詳細閱讀服務條款及隱私政策，並同意於按下送出按鈕後放棄對本網站所有法律追訴權</span>
                 </label>
               </div>
             </div>
