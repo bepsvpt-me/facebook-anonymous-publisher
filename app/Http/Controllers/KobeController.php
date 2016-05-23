@@ -144,7 +144,13 @@ class KobeController extends Controller
         $words = Block::where('type', 'keyword')->orderByRaw('LENGTH(`value`) DESC')->get();
 
         foreach ($words as $word) {
-            $content = $this->replaceBlockWord($this->transformBlockWord($word), $content);
+            $value = $word->getAttribute('value');
+
+            $content = str_replace($value, str_repeat('♥', mb_strlen($value)), $content, $count);
+
+            if (0 === $count) {
+                $content = $this->replaceBlockWord($this->transformBlockWord($value), $content);
+            }
         }
 
         return $content;
@@ -153,15 +159,15 @@ class KobeController extends Controller
     /**
      * Get block word length and pinyin.
      *
-     * @param Block $word
+     * @param string $word
      *
      * @return array
      */
-    protected function transformBlockWord(Block $word)
+    protected function transformBlockWord($word)
     {
         return [
-            'len' => mb_strlen($word->getAttribute('value')),
-            'pinyin' => (new Pinyin())->sentence($word->getAttribute('value')),
+            'len' => mb_strlen($word),
+            'pinyin' => (new Pinyin())->sentence($word),
         ];
     }
 
