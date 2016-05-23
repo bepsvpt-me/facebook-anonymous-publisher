@@ -29,6 +29,16 @@ class RankingController extends Controller
     }
 
     /**
+     * Get monthly ranking posts.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function monthly()
+    {
+        return $this->posts(30);
+    }
+
+    /**
      * @param int $days
      *
      * @return \Illuminate\View\View
@@ -42,6 +52,6 @@ class RankingController extends Controller
 
         $pageId = Config::getConfig('facebook-service')['page_id'];
 
-        return view('ranking', compact('posts', 'pageId'));
+        return view('ranking', compact('days', 'posts', 'pageId'));
     }
 }

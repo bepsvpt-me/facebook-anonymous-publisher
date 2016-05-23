@@ -72,7 +72,7 @@ class SyncFacebookLikes extends Command
 
         $posts = Post::whereNotNull('fbid')
             ->whereNotNull('published_at')
-            ->where('published_at', '>=', $this->now->copy()->subWeek())
+            ->where('published_at', '>=', $this->now->copy()->subMonth())
             ->oldest('sync_at')
             ->take(25)
             ->get(['id', 'likes', 'fbid', 'sync_at']);

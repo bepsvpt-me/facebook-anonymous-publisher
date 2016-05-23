@@ -2,6 +2,12 @@
 
 @section('main')
   <section>
+    <h1 class="text-center">{{ [1 => '日', 7 => '週', 30 => '月'][$days] }}排行榜</h1>
+
+    <p class="lead text-center">Top {{ $posts->currentPage() * 5 - 4 }} ~ {{ $posts->currentPage() * 5 }}</p>
+  </section>
+
+  <section>
     <div class="row">
       @foreach($posts as $post)
         <div class="col-xs-12 col-md-offset-3 col-md-6" style="padding: 25px 15px;">
@@ -10,6 +16,7 @@
       @endforeach
     </div>
   </section>
+
   @include('components.pagination', ['pagination' => $posts])
 @endsection
 

@@ -11,9 +11,16 @@
     <meta property="og:locale" content="zh_TW">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <style>
+      body {
+        padding-top: 50px;
+      }
+    </style>
     @stack('styles')
   </head>
   <body>
+    @include('layouts.navbar')
+
     <main class="container">
       <section style="margin: 20px 0;">
         @include('flash::message')
