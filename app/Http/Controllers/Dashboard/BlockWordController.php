@@ -49,9 +49,7 @@ class BlockWordController extends Controller
      */
     public function destroy($value)
     {
-        $word = Block::where('type', 'keyword')->where('value', $value)->firstOrFail();
-
-        $word->delete();
+        Block::where('type', 'keyword')->where('value', $value)->delete();
 
         Flash::success('刪除成功');
 
