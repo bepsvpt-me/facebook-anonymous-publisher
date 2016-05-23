@@ -10,6 +10,11 @@ $router->get('r/{rand}', ['as' => 'redirect', 'uses' => 'HomeController@redirect
 
 $router->post('kobe', ['as' => 'kobe', 'uses' => 'KobeController@kobe']);
 
+$router->group(['prefix' => 'ranking', 'as' => 'ranking.'], function (Router $router) {
+    $router->get('daily', ['as' => 'daily', 'uses' => 'RankingController@daily']);
+    $router->get('weekly', ['as' => 'weekly', 'uses' => 'RankingController@weekly']);
+});
+
 $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function (Router $router) {
     $router->group(['prefix' => 'posts', 'as' => 'posts.'], function (Router $router) {
         $router->get('/', ['as' => 'index', 'uses' => 'PostController@index']);
