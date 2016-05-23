@@ -12,6 +12,8 @@
 
 - Block Words Replace ( Support Simple and Traditional Chinese )
 
+- Block Blacklist Ips ( Support using CloudFlare )
+
 # Installation
 
 Clone the repository and set up environment configuration
