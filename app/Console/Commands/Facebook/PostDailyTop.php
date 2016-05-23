@@ -47,7 +47,7 @@ class PostDailyTop extends FacebookCommand
             'form_params' => [
                 'content' => $this->now->toDateString().' Top 5'.PHP_EOL.implode(PHP_EOL, $urls ?? []),
                 'accept-license' => true,
-            ]
+            ],
         ]);
     }
 }

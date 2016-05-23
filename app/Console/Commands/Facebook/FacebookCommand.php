@@ -38,7 +38,7 @@ abstract class FacebookCommand extends Command
         }
 
         $this->fb = new Facebook($this->config);
-        
+
         $this->now = Carbon::now();
     }
 }

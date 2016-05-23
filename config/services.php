@@ -37,6 +37,6 @@ return [
 
     'bitly' => [
         'token' => env('BITLY_TOKEN'),
-    ]
+    ],
 
 ];
