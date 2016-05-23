@@ -47,12 +47,7 @@ class PreprocessApplication
         // Set the cookie https only if the connection is secure.
         config(['session.secure' => $request->secure()]);
 
-        // Share the application service to all views.
-        $application = Config::getConfig('application-service');
-
-        if (! is_null($application)) {
-            $this->view->share('pageName', $application['page_name']);
-        }
+        $this->shareView();
 
         return $next($request);
     }
@@ -107,5 +102,19 @@ class PreprocessApplication
     protected function carbonLangPath($lang)
     {
         return base_path(file_build_path('vendor', 'nesbot', 'carbon', 'src', 'Carbon', 'Lang', $lang.'.php'));
+    }
+
+    /**
+     * Share the pageName to all views.
+     *
+     * @return void
+     */
+    protected function shareView()
+    {
+        $application = Config::getConfig('application-service');
+
+        if (! is_null($application)) {
+            $this->view->share('pageName', $application['page_name']);
+        }
     }
 }

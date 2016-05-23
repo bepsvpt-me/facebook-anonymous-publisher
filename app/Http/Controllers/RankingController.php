@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Config;
 use App\Post;
 use Carbon\Carbon;
 
@@ -39,6 +40,8 @@ class RankingController extends Controller
             ->orderBy('likes', 'desc')
             ->paginate(5, ['id', 'fbid']);
 
-        return view('ranking', compact('posts'));
+        $pageId = Config::getConfig('facebook-service')['page_id'];
+
+        return view('ranking', compact('posts', 'pageId'));
     }
 }

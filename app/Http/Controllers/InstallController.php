@@ -10,21 +10,9 @@ use App\User;
 use Artisan;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Redirect;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class InstallController extends Controller
 {
-    /**
-     * InstallController constructor.
-     */
-    public function __construct()
-    {
-        // If the application was installed, it will throw the exception.
-        if (Config::getConfig('installed')) {
-            throw new BadRequestHttpException;
-        }
-    }
-
     /**
      * Just redirect.
      *

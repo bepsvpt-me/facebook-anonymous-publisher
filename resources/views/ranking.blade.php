@@ -5,12 +5,11 @@
     <div class="row">
       @foreach($posts as $post)
         <div class="col-xs-12 col-md-offset-3 col-md-6" style="padding: 25px 15px;">
-          <div class="fb-post" data-href="https://www.facebook.com/{{ $post->getAttribute('fbid') }}"></div>
+          <div class="fb-post" data-href="https://www.facebook.com/{{ $pageId }}/posts/{{ $post->getAttribute('fbid') }}"></div>
         </div>
       @endforeach
     </div>
   </section>
-
   @include('components.pagination', ['pagination' => $posts])
 @endsection
 
