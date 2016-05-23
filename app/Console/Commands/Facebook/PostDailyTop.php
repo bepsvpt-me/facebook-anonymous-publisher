@@ -43,12 +43,12 @@ class PostDailyTop extends FacebookCommand
             $urls[] = 'Top'.($index + 1).' : '.$url;
         }
 
-        (new Client())->post('http://127.0.0.1/kobe', [
+        (new Client())->post(route('kobe.non-secure'), [
             'form_params' => [
                 'content' => $this->now->toDateString().' Top 5'.PHP_EOL.implode(PHP_EOL, $urls ?? []),
                 'accept-license' => true,
+                'scheduling-auth' => config('services.bitly.token'),
             ],
-            'verify' => false,
         ]);
     }
 }

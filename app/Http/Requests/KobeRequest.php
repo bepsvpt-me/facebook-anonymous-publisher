@@ -15,10 +15,12 @@ class KobeRequest extends Request
             'content' => 'required|string|max:500',
             'image' => 'image|max:3072',
             'g-recaptcha-response' => 'bail|required|recaptcha',
-            'accept-license' => 'required|boolean',
+            'accept-license' => 'required|accepted',
         ];
 
-        if ('127.0.0.1' === $this->ip()) {
+        if ($this->is('kobe-non-secure')) {
+            $rules['scheduling-auth'] = 'required|in:'.config('services.bitly.token');
+
             unset($rules['g-recaptcha-response']);
         }
 
