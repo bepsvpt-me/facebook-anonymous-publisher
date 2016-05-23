@@ -40,7 +40,7 @@ class PreprocessApplication
      */
     public function handle($request, Closure $next)
     {
-        $this->blockBlacklistIp($request->ip(), $request->header('x-forwarded-for'));
+        $this->blockBlacklistIp(realIp($request));
 
         $this->setLocale();
 
@@ -60,19 +60,16 @@ class PreprocessApplication
     /**
      * Block black list ips.
      *
-     * @param string $userIp
-     * @param string $forwardedIp
+     * @param string $ip
      */
-    protected function blockBlacklistIp($userIp, $forwardedIp)
+    protected function blockBlacklistIp($ip)
     {
-        $ips = Block::where('type', 'ip')->get();
+        $ips = Block::where('type', 'ip')->get(['value'])->pluck('value')->toArray();
 
-        foreach ($ips as $ip) {
-            if (in_array($ip->getAttribute('value'), [$userIp, $forwardedIp], true)) {
-                Log::info('blacklist-ip', ['ip' => $userIp, 'forwardedIp' => $forwardedIp]);
+        if (in_array($ip, $ips, true)) {
+            Log::info('blacklist-ip', ['ip' => $ip]);
 
-                throw new AccessDeniedHttpException;
-            }
+            throw new AccessDeniedHttpException;
         }
     }
 

@@ -84,8 +84,7 @@ class KobeController extends Controller
         $this->post->setAttribute('link', $this->findLink($content));
         $this->post->setAttribute('has_image', $request->hasFile('image'));
         $this->post->setAttribute('user_agent', $request->header('user-agent'));
-        // Need check
-        $this->post->setAttribute('ip', $request->header('x-forwarded-for'));
+        $this->post->setAttribute('ip', realIp($request));
         $this->post->setAttribute('created_at', Carbon::now());
 
         return $this->post->save();
@@ -142,7 +141,7 @@ class KobeController extends Controller
      */
     protected function filterBlockWords($content)
     {
-        $words = Block::where('type', 'keyword')->get();
+        $words = Block::where('type', 'keyword')->orderByRaw('LENGTH(`value`) DESC')->get();
 
         foreach ($words as $word) {
             $content = $this->replaceBlockWord($this->transformBlockWord($word), $content);
