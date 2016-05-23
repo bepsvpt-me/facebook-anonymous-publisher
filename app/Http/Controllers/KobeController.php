@@ -73,8 +73,8 @@ class KobeController extends Controller
     protected function savePost(Request $request)
     {
         $content = $this->filterBlockWords(
-            $this->normalizeNewLine(
-                $this->stripCharacters(
+            $this->stripCharacters(
+                $this->normalizeNewLine(
                     $request->input('content')
                 )
             )
@@ -99,7 +99,19 @@ class KobeController extends Controller
      */
     protected function stripCharacters($string)
     {
-        return str_replace([d('&lrm;')], '', $string);
+        $len = mb_strlen($string);
+
+        $removes = [];
+
+        for ($i = 0; $i < $len; ++$i) {
+            $char = mb_substr($string, $i, 1);
+
+            if ((1 === strlen($char)) && "\n" !== $char && ! in_array($char, $removes, true) && (! ctype_print($char) || ctype_cntrl($char))) {
+                $removes[] = $char;
+            }
+        }
+
+        return str_replace(array_merge($removes, [d('&lrm;')]), '', $string);
     }
 
     /**
