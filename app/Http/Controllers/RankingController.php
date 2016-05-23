@@ -48,6 +48,7 @@ class RankingController extends Controller
         $posts = Post::where('published_at', '>=', Carbon::now()->subDays($days))
             ->whereNotNull('fbid')
             ->orderBy('likes', 'desc')
+            ->latest('published_at')
             ->paginate(5, ['id', 'fbid']);
 
         $pageId = Config::getConfig('facebook-service')['page_id'];
