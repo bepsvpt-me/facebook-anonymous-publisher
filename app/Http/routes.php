@@ -11,8 +11,11 @@ $router->get('r/{rand}', ['as' => 'redirect', 'uses' => 'HomeController@redirect
 $router->post('kobe', ['as' => 'kobe', 'uses' => 'KobeController@kobe']);
 
 $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function (Router $router) {
-    $router->get('posts', ['as' => 'posts.index', 'uses' => 'PostController@index']);
-    $router->get('posts/{id}/delete', ['as' => 'posts.delete', 'uses' => 'PostController@destroy']);
+    $router->group(['prefix' => 'posts', 'as' => 'posts.'], function (Router $router) {
+        $router->get('/', ['as' => 'index', 'uses' => 'PostController@index']);
+        $router->get('{id}/block', ['as' => 'block', 'uses' => 'PostController@block']);
+        $router->get('{id}/delete', ['as' => 'delete', 'uses' => 'PostController@destroy']);
+    });
 
     $router->group(['prefix' => 'block-words', 'as' => 'block-words.'], function (Router $router) {
         $router->get('/', ['as' => 'index', 'uses' => 'BlockWordController@index']);

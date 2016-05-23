@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Block;
 use App\Config;
 use App\Http\Controllers\Controller;
 use App\Post;
@@ -24,6 +25,26 @@ class PostController extends Controller
         ]);
 
         return view('dashboard.posts.index', compact('posts'));
+    }
+
+    /**
+     * Block the poster ip.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function block($id)
+    {
+        $post = Post::findOrFail($id, ['id', 'ip']);
+
+        Block::updateOrCreate(['type' => 'ip'], [
+            'value' => $post->getAttribute('ip'),
+        ]);
+
+        Flash::success('封鎖成功');
+
+        return Redirect::route('dashboard.posts.index');
     }
 
     /**

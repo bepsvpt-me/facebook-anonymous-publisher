@@ -17,6 +17,7 @@
           <th class="text-center">內容</th>
           <th class="text-center">連結</th>
           <th class="text-center">資訊</th>
+          <th class="text-center">封鎖</th>
           <th class="text-center">刪除</th>
         </tr>
       </thead>
@@ -43,6 +44,11 @@
               <p title="{{ $post->getAttribute('created_at') }}">提交於 {{ $post->getAttribute('created_at')->diffForHumans(\Carbon\Carbon::now()) }}</p>
               <p>來源 {{ $post->getAttribute('ip') }}</p>
               <p>{{ $agent->browser().' on '.$agent->platform() }}</p>
+            </td>
+            <td>
+              <a href="{{ route('dashboard.posts.block', ['id' => $post->getKey()]) }}">
+                <button type="button" class="btn btn-warning"><i class="fa fa-ban" aria-hidden="true"></i></button>
+              </a>
             </td>
             <td>
               <a href="{{ route('dashboard.posts.delete', ['id' => $post->getKey()]) }}">
