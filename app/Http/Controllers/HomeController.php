@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Config;
 use Redirect;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class HomeController extends Controller
 {
@@ -15,13 +13,7 @@ class HomeController extends Controller
      */
     public function home()
     {
-        if (! Config::getConfig('installed')) {
-            throw new ServiceUnavailableHttpException;
-        }
-
-        return view('home', [
-            'application' => Config::getConfig('application-service'),
-        ]);
+        return view('home');
     }
 
     /**

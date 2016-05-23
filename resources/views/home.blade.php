@@ -4,7 +4,7 @@
   <div class="row" xmlns="http://www.w3.org/1999/html">
     <div class="col-xs-12 col-md-offset-2 col-md-8">
       <header>
-        <h1 class="text-center">{{ $pageName }}</h1>
+        <h1 class="text-center">{{ $application['page_name'] }}</h1>
       </header>
 
       <section>
@@ -13,7 +13,7 @@
           <div class="panel-body">
             <ul>
               <li>當文章中有連結時，系統會用第一個連結當作欲分享的連結</li>
-              <li>當文章中出現{{ $pageName }}的 hashtag 時，系統會自動在後方附上連結</li>
+              <li>當文章中出現{{ $application['page_name'] }}的 hashtag 時，系統會自動在後方附上連結</li>
               <li>專案開源於 <a href="https://github.com/BePsvPT/Facebook-Anonymous-Publisher" target="_blank">Github</a></li>
             </ul>
           </div>
@@ -93,14 +93,6 @@
 
         {!! Form::close() !!}
       </section>
-
-      @unless(empty($application['ga']))
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-          ga('create', '{{ $application['ga'] }}', 'auto');
-          ga('send', 'pageview');
-        </script>
-      @endunless
     </div>
   </div>
 @endsection

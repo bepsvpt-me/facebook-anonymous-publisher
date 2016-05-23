@@ -114,7 +114,7 @@ class PreprocessApplication
         $application = Config::getConfig('application-service');
 
         if (! is_null($application)) {
-            $this->view->share('pageName', $application['page_name']);
+            $this->view->share('application', $application);
         }
     }
 }
