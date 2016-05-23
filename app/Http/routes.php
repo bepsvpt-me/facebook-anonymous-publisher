@@ -14,6 +14,7 @@ $router->group(['middleware' => ['installed']], function (Router $router) {
     $router->group(['prefix' => 'ranking', 'as' => 'ranking.'], function (Router $router) {
         $router->get('daily', ['as' => 'daily', 'uses' => 'RankingController@daily']);
         $router->get('weekly', ['as' => 'weekly', 'uses' => 'RankingController@weekly']);
+        $router->get('monthly', ['as' => 'monthly', 'uses' => 'RankingController@monthly']);
     });
 
     $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function (Router $router) {

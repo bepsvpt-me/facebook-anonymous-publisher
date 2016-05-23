@@ -18,6 +18,7 @@
           <ul class="dropdown-menu">
             <li><a href="{{ route('ranking.daily') }}">日排行</a></li>
             <li><a href="{{ route('ranking.weekly') }}">週排行</a></li>
+            <li><a href="{{ route('ranking.monthly') }}">月排行</a></li>
           </ul>
         </li>
       </ul>
