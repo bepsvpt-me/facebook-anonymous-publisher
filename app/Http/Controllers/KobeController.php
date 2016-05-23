@@ -19,7 +19,7 @@ class KobeController extends Controller
     /**
      * The application config.
      *
-     * @var array|null
+     * @var array
      */
     protected $application;
 
@@ -86,6 +86,7 @@ class KobeController extends Controller
         $this->post->setAttribute('user_agent', $request->header('user-agent'));
         $this->post->setAttribute('ip', realIp($request));
         $this->post->setAttribute('created_at', Carbon::now());
+        $this->post->setAttribute('sync_at', Carbon::now());
 
         return $this->post->save();
     }

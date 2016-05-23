@@ -23,6 +23,13 @@ class Post extends \Eloquent
     public $timestamps = false;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['likes', 'sync_at'];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array

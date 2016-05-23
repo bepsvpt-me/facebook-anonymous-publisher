@@ -14,7 +14,7 @@ class KobeRequest extends Request
         return [
             'content' => 'required|string|max:500',
             'image' => 'image|max:3072',
-            'g-recaptcha-response' => 'bail|required|recaptcha',
+//            'g-recaptcha-response' => 'bail|required|recaptcha',
             'accept-license' => 'required|boolean',
         ];
     }
