@@ -27,7 +27,7 @@ class Post extends \Eloquent
      *
      * @var array
      */
-    protected $fillable = ['likes', 'sync_at'];
+    protected $fillable = ['ranks', 'sync_at'];
 
     /**
      * The attributes that should be mutated to dates.

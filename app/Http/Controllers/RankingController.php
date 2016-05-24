@@ -52,7 +52,7 @@ class RankingController extends Controller
         $posts = Cache::remember($key, 30, function () use ($days) {
             return Post::where('published_at', '>=', Carbon::now()->subDays($days))
                 ->whereNotNull('fbid')
-                ->orderBy('likes', 'desc')
+                ->orderBy('ranks', 'desc')
                 ->latest('published_at')
                 ->paginate(5, ['fbid']);
         });

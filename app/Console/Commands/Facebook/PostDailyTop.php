@@ -31,7 +31,7 @@ class PostDailyTop extends FacebookCommand
     {
         $posts = Post::whereNotNull('fbid')
             ->where('published_at', '>=', $this->now->copy()->subDays(2))
-            ->orderBy('likes', 'desc')
+            ->orderBy('ranks', 'desc')
             ->take(5)
             ->get(['id', 'fbid']);
 
@@ -47,6 +47,7 @@ class PostDailyTop extends FacebookCommand
             'form_params' => [
                 'content' => $this->now->toDateString().' Top 5'.PHP_EOL.implode(PHP_EOL, $urls ?? []),
                 'accept-license' => true,
+                'nolink' => true,
                 'scheduling-auth' => config('services.bitly.token'),
             ],
         ]);

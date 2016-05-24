@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Facebook\PostDailyTop::class,
-        Commands\Facebook\SyncLikes::class,
+        Commands\Facebook\SyncRanks::class,
         Commands\UpdateLang::class,
     ];
 
@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('facebook:sync-likes')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('facebook:sync-ranks')->everyThirtyMinutes()->withoutOverlapping();
 
         $schedule->command('facebook:post-daily-top')->dailyAt('22:45')->withoutOverlapping();
     }
