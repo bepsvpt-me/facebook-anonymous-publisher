@@ -33,6 +33,15 @@
         <div class="row">
           <div class="col-xs-12 col-md-6">
             <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  {!! Form::checkbox('post-by-image', true, false, ['id' => 'post-by-image']) !!}
+                  <span>以圖片發文</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="post-image" class="form-group">
               {!! Form::label('image', '圖片（可選）') !!}
               {!! Form::file('image', ['accept' => 'image/*']) !!}
               <p class="help-block">大小需小於 3 MB</p>
@@ -69,6 +78,7 @@
                 <li>嚴禁發表任何違反新加坡法律之內容</li>
                 <li>嚴禁發表任何違反 Facebook 社群使用規則之內容</li>
                 <li>嚴禁指名道姓、透漏任何個資或隱私資訊，請善用「x」取代敏感資訊，取代程度須達到不足以辨別當事者</li>
+                <li>嚴禁發表政治文以及非靠北文</li>
                 <li>本網站是以即時上載發文的方式運作，對所有發文的真實性、完整性及立場等，不負任何法律責任</li>
                 <li>本網站受到「即時上載發文」運作方式所規限，故不能完全監察所有發文，若讀者發現有發文出現問題，請至粉絲專頁聯絡我們</li>
                 <li>本網站有權刪除任何發文及拒絕任何人士上載發文，同時亦有不刪除發文的權利</li>
@@ -100,7 +110,11 @@
 @push('scripts')
   <script>
     $(document).on('submit', 'form', function () {
-      $('button.btn-success').attr('disabled', true)
-    })
+      $('button.btn-success').attr('disabled', true);
+    });
+
+    $(document).on('change', '#post-by-image', function () {
+      $("#post-image").toggle(! this.checked);
+    });
   </script>
 @endpush

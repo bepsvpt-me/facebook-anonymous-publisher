@@ -12,6 +12,8 @@ use Facebook\Facebook;
 use Facebook\FacebookResponse;
 use Facebook\FileUpload\FacebookFile;
 use Illuminate\Http\Request;
+use Image;
+use Intervention\Image\Gd\Font;
 use Overtrue\Pinyin\Pinyin;
 
 class KobeController extends Controller
@@ -58,7 +60,9 @@ class KobeController extends Controller
 
         $this->savePost($request);
 
-        $this->posted($this->postFeed($request->file('image')));
+        $file = $request->has('post-by-image') ? $this->canvas() : $request->file('image');
+
+        $this->posted($this->postFeed($file));
 
         return redirect("https://www.facebook.com/{$this->post->getAttribute('fbid')}");
     }
@@ -82,7 +86,7 @@ class KobeController extends Controller
 
         $this->post->setAttribute('content', $this->transformHashTag($content));
         $this->post->setAttribute('link', $request->has('nolink') ? null : $this->findLink($content));
-        $this->post->setAttribute('has_image', $request->hasFile('image'));
+        $this->post->setAttribute('has_image', $request->has('post-by-image') || $request->hasFile('image'));
         $this->post->setAttribute('user_agent', $request->header('user-agent'));
         $this->post->setAttribute('ip', realIp($request));
         $this->post->setAttribute('created_at', Carbon::now());
@@ -277,10 +281,11 @@ class KobeController extends Controller
      * Find links in content.
      *
      * @param $content
+     * @param bool $all
      *
      * @return null|string
      */
-    protected function findLink($content)
+    protected function findLink($content, $all = false)
     {
         $amount = preg_match_all(
             '/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]/i',
@@ -292,7 +297,58 @@ class KobeController extends Controller
             return null;
         }
 
-        return $matches[0][0];
+        return $all ? $matches[0] : $matches[0][0];
+    }
+
+    /**
+     * Create an image using the post content and return the image path.
+     *
+     * @return string
+     */
+    protected function canvas()
+    {
+        $filePath = file_build_path($this->getImageDirectory(), $this->post->getKey().'.jpg');
+
+        $canvas = $this->getCanvasWidthAndHeight($this->post->getAttribute('content'));
+
+        Image::canvas($canvas['width'], $canvas['height'], '#000')
+            ->text($this->post->getAttribute('content'), $canvas['width'] / 2, $canvas['height'] / 2, function (Font $font) {
+                $font->file($this->getFontPath());
+                $font->size(48);
+                $font->color('#fff');
+                $font->align('center');
+                $font->valign('middle');
+            })
+            ->save($filePath, 100);
+
+        return $filePath;
+    }
+
+    /**
+     * Get canvas width and height.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    protected function getCanvasWidthAndHeight($content)
+    {
+        $box = imagettfbbox(48, 0, $this->getFontPath(), $content);
+
+        return [
+            'width' => abs($box[4] - $box[0]),
+            'height' => abs($box[5] - $box[1]),
+        ];
+    }
+
+    /**
+     * Get the text font path.
+     *
+     * @return string
+     */
+    protected function getFontPath()
+    {
+        return storage_path('app/fonts/NotoSansCJKtc-Regular.otf');
     }
 
     /**
@@ -317,14 +373,21 @@ class KobeController extends Controller
     /**
      * Post a photo.
      *
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $file
      *
      * @return FacebookResponse
      */
     protected function postPhotos($file)
     {
+        if (is_string($file)) {
+            return $this->fb->post('/me/photos', [
+                'source' => new FacebookFile($file),
+                'caption' => $this->content(true),
+            ]);
+        }
+
         $file = $file->move(
-            storage_path(file_build_path('app', 'images', intval(floor($this->post->getKey() / 5000)))),
+            $this->getImageDirectory(),
             $this->post->getKey().'.'.$file->guessExtension()
         );
 
@@ -335,11 +398,23 @@ class KobeController extends Controller
     }
 
     /**
-     * Get post content.
+     * Get the directory that store images.
      *
      * @return string
      */
-    protected function content()
+    protected function getImageDirectory()
+    {
+        return storage_path(file_build_path('app', 'images', intval(floor($this->post->getKey() / 5000))));
+    }
+
+    /**
+     * Get post content.
+     *
+     * @param bool $textImage
+     *
+     * @return string
+     */
+    protected function content($textImage = false)
     {
         return implode('', [
             // Page hash tag
@@ -351,12 +426,28 @@ class KobeController extends Controller
             $this->newLines(2),
 
             // User post content
-            $this->post->getAttribute('content'),
+            $textImage ? $this->getTextImageLinks() : $this->post->getAttribute('content'),
             $this->newLines(2),
 
             // Post submitted time
             'Submitted At: '.$this->post->getAttribute('created_at'),
         ]);
+    }
+
+    /**
+     * Get all links from text image.
+     *
+     * @return string
+     */
+    protected function getTextImageLinks()
+    {
+        $links = $this->findLink($this->post->getAttribute('content'), true);
+
+        if (is_null($links)) {
+            return '';
+        }
+
+        return implode($this->newLines(), $links);
     }
 
     /**
