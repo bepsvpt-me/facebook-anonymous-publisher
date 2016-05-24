@@ -37,26 +37,21 @@ class SyncLikes extends FacebookCommand
 
         $likes = $this->fb->sendBatchRequest($this->prepareRequests($posts))->getDecodedBody();
 
-        $result = [];
-
         foreach ($likes as $index => $like) {
-            $success = false;
-
-            if (200 === $like['code']) {
+            if (200 !== $like['code']) {
+                Log::notice('facebook-sync-likes', [
+                    'fbid' => $posts[$index]->getAttribute('fbid'),
+                    'code' => $like['code'],
+                ]);
+            } else {
                 $info = json_decode($like['body'], true);
 
                 $posts[$index]->update([
                     'likes' => $info['summary']['total_count'],
                     'sync_at' => $this->now,
                 ]);
-
-                $success = true;
             }
-
-            $result[$posts[$index]->getAttribute('fbid')] = $success;
         }
-
-        Log::info('facebook-sync-likes', $result);
 
         $this->info('Sync facebook likes success!');
     }
