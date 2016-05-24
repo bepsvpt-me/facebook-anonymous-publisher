@@ -37,17 +37,23 @@ class SyncLikes extends FacebookCommand
 
         $likes = $this->fb->sendBatchRequest($this->prepareRequests($posts))->getDecodedBody();
 
-        foreach ($likes as $index => $like) {
-            if (200 !== $like['code']) {
+        $size = count($likes);
+
+        for ($i = 0; $i < $size; $i += 2) {
+            if (200 !== $likes[$i]['code'] || 200 !== $likes[$i+1]['code']) {
                 Log::notice('facebook-sync-likes', [
-                    'fbid' => $posts[$index]->getAttribute('fbid'),
-                    'code' => $like['code'],
+                    'fbid' => $posts[$i >> 1]->getAttribute('fbid'),
+                    'code' => [
+                        'likes' => $likes[$i]['code'],
+                        'comments' => $likes[$i+1]['code'],
+                    ],
                 ]);
             } else {
-                $info = json_decode($like['body'], true);
+                $ranking = json_decode($likes[$i]['body'], true)['summary']['total_count'] * 2
+                    + json_decode($likes[$i+1]['body'], true)['summary']['total_count'];
 
-                $posts[$index]->update([
-                    'likes' => $info['summary']['total_count'],
+                $posts[$i >> 1]->update([
+                    'likes' => $ranking,
                     'sync_at' => $this->now,
                 ]);
             }
@@ -67,13 +73,20 @@ class SyncLikes extends FacebookCommand
     {
         $requests = [];
 
+        $objects = [
+            'likes?summary=true&limit=1',
+            'comments?summary=true&limit=1',
+        ];
+
         foreach ($posts as $post) {
-            $requests[] = new FacebookRequest(
-                null,
-                null,
-                'GET',
-                "/{$this->config['page_id']}_{$post->getAttribute('fbid')}/likes?summary=true&limit=1"
-            );
+            foreach ($objects as $object) {
+                $requests[] = new FacebookRequest(
+                    null,
+                    null,
+                    'GET',
+                    "/{$this->config['page_id']}_{$post->getAttribute('fbid')}/{$object}"
+                );
+            }
         }
 
         return $requests;
