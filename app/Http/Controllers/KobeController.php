@@ -6,12 +6,12 @@ use App\Block;
 use App\Config;
 use App\Http\Requests\KobeRequest;
 use App\Post;
+use Cache;
 use Carbon\Carbon;
 use Facebook\Facebook;
 use Facebook\FacebookResponse;
 use Facebook\FileUpload\FacebookFile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Overtrue\Pinyin\Pinyin;
 
 class KobeController extends Controller
@@ -38,9 +38,13 @@ class KobeController extends Controller
      */
     protected function init()
     {
-        $this->application = Config::getConfig('application-service');
+        $this->application = Cache::rememberForever('application-service', function () {
+            return Config::getConfig('application-service');
+        });
 
-        $this->fb = new Facebook(Config::getConfig('facebook-service'));
+        $this->fb = new Facebook(Cache::rememberForever('facebook-service', function () {
+            return Config::getConfig('facebook-service');
+        }));
 
         $this->post = new Post;
     }
@@ -81,7 +85,7 @@ class KobeController extends Controller
         );
 
         $this->post->setAttribute('content', $this->transformHashTag($content));
-        $this->post->setAttribute('link', $this->findLink($content));
+        $this->post->setAttribute('link', $request->has('nolink') ? null : $this->findLink($content));
         $this->post->setAttribute('has_image', $request->hasFile('image'));
         $this->post->setAttribute('user_agent', $request->header('user-agent'));
         $this->post->setAttribute('ip', realIp($request));
@@ -154,19 +158,31 @@ class KobeController extends Controller
      */
     protected function filterBlockWords($content)
     {
-        $words = Block::where('type', 'keyword')->orderByRaw('LENGTH(`value`) DESC')->get();
-
-        foreach ($words as $word) {
-            $value = $word->getAttribute('value');
-
-            $content = str_replace($value, str_repeat('♥', mb_strlen($value)), $content, $count);
+        foreach ($this->getBlockWords() as $word) {
+            $content = str_replace($word, str_repeat('♥', mb_strlen($word)), $content, $count);
 
             if (0 === $count) {
-                $content = $this->replaceBlockWord($this->transformBlockWord($value), $content);
+                $content = $this->replaceBlockWord($this->transformBlockWord($word), $content);
             }
         }
 
         return $content;
+    }
+
+    /**
+     * Get block words.
+     *
+     * @return array
+     */
+    protected function getBlockWords()
+    {
+        return Cache::remember('block-words', 30, function () {
+            return Block::where('type', 'keyword')
+                ->orderByRaw('LENGTH(`value`) DESC')
+                ->get(['value'])
+                ->pluck('value')
+                ->toArray();
+        });
     }
 
     /**
@@ -333,10 +349,6 @@ class KobeController extends Controller
             // Page hash tag
             '#'.$this->application['page_name'].$this->post->getKey(),
             $this->newLines(1),
-
-            // Link that redirect to the kobe page
-//            '靠北請至：'.route('redirect', ['rand' => Str::quickRandom(8)]),
-//            $this->newLines(1),
 
             // Extra content that should insert to the post
             $this->application['extra_content'],

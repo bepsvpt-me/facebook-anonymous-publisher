@@ -60,7 +60,7 @@ class PreprocessApplication
      */
     protected function blockBlacklistIp($ip)
     {
-        $ips = Cache::remember('blacklist-ip', 30, function () {
+        $ips = Cache::remember('blacklist-ip', 5, function () {
             return Block::where('type', 'ip')->get(['value'])->pluck('value')->toArray();
         });
 
