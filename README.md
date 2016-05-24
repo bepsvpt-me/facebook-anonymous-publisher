@@ -10,6 +10,8 @@
 
 - Url Detect
 
+- Daily, Weekly and Monthly Top Posts
+
 - Block Words Replace ( Support Simple and Traditional Chinese )
 
 - Block Blacklist Ips ( Support using CloudFlare )
@@ -41,3 +43,7 @@ php artisan migrate
 The next step is using your browser to visit the install page to set up the rest configuration
 
 > http://your-domain/install
+
+The final step is set up the schedule crontab, please refer the following link
+
+> https://laravel.com/docs/5.2/scheduling#introduction

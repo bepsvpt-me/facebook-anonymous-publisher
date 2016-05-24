@@ -15,23 +15,23 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span><i class="fa fa-line-chart fa-fw" aria-hidden="true"></i> 排行榜 </span><span class="caret"></span>
+            <span><i class="fa fa-line-chart fa-fw" aria-hidden="true"></i> {{ trans('kobe.navbar.ranking.title') }} </span><span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="{{ route('ranking.daily') }}">日排行</a></li>
-            <li><a href="{{ route('ranking.weekly') }}">週排行</a></li>
-            <li><a href="{{ route('ranking.monthly') }}">月排行</a></li>
+            <li><a href="{{ route('ranking.daily') }}">{{ trans('kobe.navbar.ranking.daily') }}</a></li>
+            <li><a href="{{ route('ranking.weekly') }}">{{ trans('kobe.navbar.ranking.weekly') }}</a></li>
+            <li><a href="{{ route('ranking.monthly') }}">{{ trans('kobe.navbar.ranking.monthly') }}</a></li>
           </ul>
         </li>
 
         @if(Auth::check())
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <span><i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> Dashboard </span><span class="caret"></span>
+              <span><i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> {{ trans('kobe.navbar.dashboard.title') }} </span><span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="{{ route('dashboard.posts.index') }}">文章列表</a></li>
-              <li><a href="{{ route('dashboard.block-words.index') }}">關鍵字封鎖</a></li>
+              <li><a href="{{ route('dashboard.posts.index') }}">{{ trans('kobe.navbar.dashboard.posts') }}</a></li>
+              <li><a href="{{ route('dashboard.block-words.index') }}">{{ trans('kobe.navbar.dashboard.block-words') }}</a></li>
             </ul>
           </li>
         @endif

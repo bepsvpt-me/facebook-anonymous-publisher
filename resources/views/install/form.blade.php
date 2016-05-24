@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-xs-12 col-md-offset-2 col-md-8">
       <header>
-        <h1 class="text-center">{{ ucfirst($service) }} 服務設定</h1>
+        <h1 class="text-center">{{ ucfirst($service) }} {{ trans('kobe.install.service-setting') }}</h1>
       </header>
 
       <section>
@@ -14,7 +14,7 @@
 
         @include("install.{$service}")
 
-        @include('components.submitButton', ['text' => '下一步'])
+        @include('components.submitButton', ['text' => trans('kobe.install.next-step')])
 
         {!! Form::close() !!}
       </section>

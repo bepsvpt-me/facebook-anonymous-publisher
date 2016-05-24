@@ -30,7 +30,7 @@ class PostDailyTop extends FacebookCommand
     public function handle()
     {
         $posts = Post::whereNotNull('fbid')
-            ->where('published_at', '>=', $this->now->copy()->subDays(2))
+            ->where('published_at', '>=', $this->now->copy()->subDays(1))
             ->orderBy('ranks', 'desc')
             ->take(5)
             ->get(['id', 'fbid']);
@@ -45,7 +45,7 @@ class PostDailyTop extends FacebookCommand
 
         (new Client())->post(route('kobe.non-secure'), [
             'form_params' => [
-                'content' => $this->now->toDateString().' Top 5'.PHP_EOL.implode(PHP_EOL, $urls ?? []),
+                'content' => $this->now->toDateString().' 本日 Top 5'.PHP_EOL.implode(PHP_EOL, $urls ?? []),
                 'accept-license' => true,
                 'nolink' => true,
                 'scheduling-auth' => config('services.bitly.token'),

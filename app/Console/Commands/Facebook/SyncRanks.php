@@ -36,7 +36,9 @@ class SyncRanks extends FacebookCommand
         $size = count($collection);
 
         for ($i = 0; $i < $size; $i += 2) {
-            if (! $this->isLogFails($posts[$i >> 1]->getAttribute('fbid'), $collection[$i]['code'], $collection[$i + 1]['code'])) {
+            if ($this->isLogFails($posts[$i >> 1]->getAttribute('fbid'), $collection[$i]['code'], $collection[$i + 1]['code'])) {
+                $posts[$i >> 1]->delete();
+            } else {
                 $posts[$i >> 1]->update([
                     'ranks' => $this->getRanks($collection[$i]['body'], $collection[$i + 1]['body']),
                     'sync_at' => $this->now,

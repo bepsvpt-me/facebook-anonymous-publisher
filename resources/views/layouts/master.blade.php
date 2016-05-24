@@ -4,8 +4,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <title>{{ $application['page_name'] or '匿名靠北' }}</title>
-    <meta property="og:title" content="{{ $application['page_name'] or '匿名靠北' }}">
+    <title>{{ $application['page_name'] or trans('kobe.website-title') }}</title>
+    <meta property="og:title" content="{{ $application['page_name'] or trans('kobe.website-title') }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ config('app.url') }}">
     <meta property="og:locale" content="zh_TW">
