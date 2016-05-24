@@ -36,7 +36,7 @@ class PostController extends Controller
      */
     public function block($id)
     {
-        $post = Post::findOrFail($id, ['id', 'ip']);
+        $post = Post::withTrashed()->findOrFail($id, ['id', 'ip']);
 
         if (! Block::where('type', 'ip')->where('value', $post->getAttribute('ip'))->exists()) {
             Block::create([
