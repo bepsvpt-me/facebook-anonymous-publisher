@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Cache;
+
 class Config extends \Eloquent
 {
     /**
@@ -59,7 +61,9 @@ class Config extends \Eloquent
     public static function getConfig($key, $default = null)
     {
         try {
-            $config = self::find($key);
+            $config = Cache::rememberForever($key, function () use ($key) {
+                return self::find($key);
+            });
         } catch (\Exception $e) {
             $config = null;
         }

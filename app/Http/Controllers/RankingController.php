@@ -57,9 +57,7 @@ class RankingController extends Controller
                 ->paginate(5, ['fbid']);
         });
 
-        $pageId = Cache::rememberForever('page-id', function () {
-            return Config::getConfig('facebook-service')['page_id'];
-        });
+        $pageId = Config::getConfig('facebook-service')['page_id'];
 
         return view('ranking', compact('days', 'posts', 'pageId'));
     }

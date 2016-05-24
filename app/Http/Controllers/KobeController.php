@@ -38,13 +38,9 @@ class KobeController extends Controller
      */
     protected function init()
     {
-        $this->application = Cache::rememberForever('application-service', function () {
-            return Config::getConfig('application-service');
-        });
+        $this->application = Config::getConfig('application-service');
 
-        $this->fb = new Facebook(Cache::rememberForever('facebook-service', function () {
-            return Config::getConfig('facebook-service');
-        }));
+        $this->fb = new Facebook(Config::getConfig('facebook-service'));
 
         $this->post = new Post;
     }

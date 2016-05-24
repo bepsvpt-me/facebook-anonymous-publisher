@@ -114,9 +114,7 @@ class PreprocessApplication
      */
     protected function shareView()
     {
-        $application = Cache::rememberForever('application-service', function () {
-            return Config::getConfig('application-service');
-        });
+        $application = Config::getConfig('application-service');
 
         if (! is_null($application)) {
             $this->view->share('application', $application);
