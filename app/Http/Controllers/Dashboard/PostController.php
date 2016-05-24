@@ -20,7 +20,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest('id')->paginate(null, [
+        $posts = Post::withTrashed()->latest('id')->paginate(null, [
             'id', 'content', 'fbid', 'user_agent', 'ip', 'created_at',
         ]);
 

@@ -32,12 +32,14 @@
               <pre class="text-left" style="max-width: 480px; white-space: pre-line;">{{ $post->getAttribute('content') }}</pre>
             </td>
             <td>
-              @if(! is_null($post->getAttribute('fbid')))
+              @if(is_null($post->getAttribute('fbid')))
+                <span>尚未發布</span>
+              @elseif($post->trashed())
+                <span>-</span>
+              @else
                 <a href="https://www.facebook.com/{{ $post->getAttribute('fbid') }}" target="_blank">
                   <i class="fa fa-link" aria-hidden="true"></i>
                 </a>
-              @else
-                <span>尚未發布</span>
               @endif
             </td>
             <td>
@@ -51,9 +53,13 @@
               </a>
             </td>
             <td>
-              <a href="{{ route('dashboard.posts.delete', ['id' => $post->getKey()]) }}">
-                <button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
-              </a>
+              @if($post->trashed())
+                <span>-</span>
+              @else
+                <a href="{{ route('dashboard.posts.delete', ['id' => $post->getKey()]) }}">
+                  <button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                </a>
+              @endif
             </td>
           </tr>
         @endforeach
