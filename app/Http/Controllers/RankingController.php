@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Config;
 use App\Post;
+use Cache;
 use Carbon\Carbon;
+use Request;
 
 class RankingController extends Controller
 {
@@ -45,13 +47,19 @@ class RankingController extends Controller
      */
     protected function posts($days)
     {
-        $posts = Post::where('published_at', '>=', Carbon::now()->subDays($days))
-            ->whereNotNull('fbid')
-            ->orderBy('likes', 'desc')
-            ->latest('published_at')
-            ->paginate(5, ['id', 'fbid']);
+        $key = 'ranking-'.$days.'-page-'.intval(Request::input('page', 1));
 
-        $pageId = Config::getConfig('facebook-service')['page_id'];
+        $posts = Cache::remember($key, 30, function () use ($days) {
+            return Post::where('published_at', '>=', Carbon::now()->subDays($days))
+                ->whereNotNull('fbid')
+                ->orderBy('likes', 'desc')
+                ->latest('published_at')
+                ->paginate(5, ['fbid']);
+        });
+
+        $pageId = Cache::rememberForever('page-id', function () {
+            return Config::getConfig('facebook-service')['page_id'];
+        });
 
         return view('ranking', compact('days', 'posts', 'pageId'));
     }

@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use App\Config;
 use Closure;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class InstalledMiddleware
@@ -14,20 +13,14 @@ class InstalledMiddleware
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @param null $installed
+     * @param null|string $exceptInstalled
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $installed = null)
+    public function handle($request, Closure $next, $exceptInstalled = null)
     {
-        $result = Config::getConfig('installed');
-
-        $installed = is_null($installed);
-
-        if ($installed && ! $result) {
+        if (boolval(Config::getConfig('installed')) !== is_null($exceptInstalled)) {
             throw new ServiceUnavailableHttpException;
-        } elseif (! $installed && $result) {
-            throw new BadRequestHttpException;
         }
 
         return $next($request);

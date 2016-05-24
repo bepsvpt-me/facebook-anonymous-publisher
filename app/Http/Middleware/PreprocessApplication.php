@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App;
 use App\Block;
 use App\Config;
+use Cache;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\View\Factory as ViewFactory;
@@ -59,10 +60,12 @@ class PreprocessApplication
      */
     protected function blockBlacklistIp($ip)
     {
-        $ips = Block::where('type', 'ip')->get(['value'])->pluck('value')->toArray();
+        $ips = Cache::remember('blacklist-ip', 30, function () {
+            return Block::where('type', 'ip')->get(['value'])->pluck('value')->toArray();
+        });
 
         if (in_array($ip, $ips, true)) {
-            Log::info('blacklist-ip', ['ip' => $ip]);
+            Log::notice('blacklist-ip', ['ip' => $ip]);
 
             throw new AccessDeniedHttpException;
         }
@@ -111,7 +114,9 @@ class PreprocessApplication
      */
     protected function shareView()
     {
-        $application = Config::getConfig('application-service');
+        $application = Cache::rememberForever('application-service', function () {
+            return Config::getConfig('application-service');
+        });
 
         if (! is_null($application)) {
             $this->view->share('application', $application);
