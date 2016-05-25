@@ -1,6 +1,22 @@
 <?php
 
-if (! function_exists('realIp')) {
+if (! function_exists('isBlockIp')) {
+    /**
+     * Check the current request ip is in block list.
+     *
+     * @return bool
+     */
+    function is_block_ip()
+    {
+        $ips = Cache::rememberForever('blacklist-ip', function () {
+            return \App\Block::where('type', 'ip')->get(['value'])->pluck('value')->toArray();
+        });
+
+        return in_array(real_ip(Request::instance()), $ips, true);
+    }
+}
+
+if (! function_exists('real_ip')) {
     /**
      * Get user real ip if the application is behind CloudFlare.
      *
@@ -8,7 +24,7 @@ if (! function_exists('realIp')) {
      *
      * @return string
      */
-    function realIp(Illuminate\Http\Request $request)
+    function real_ip(Illuminate\Http\Request $request)
     {
         static $cloudFlareIps = [
             '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',

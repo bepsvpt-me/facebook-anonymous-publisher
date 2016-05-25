@@ -6,6 +6,7 @@ use App\Block;
 use App\Config;
 use App\Http\Controllers\Controller;
 use App\Post;
+use Cache;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use Flash;
@@ -44,6 +45,8 @@ class PostController extends Controller
                 'value' => $post->getAttribute('ip'),
             ]);
         }
+
+        Cache::forget('blacklist-ip');
 
         Flash::success('封鎖成功');
 

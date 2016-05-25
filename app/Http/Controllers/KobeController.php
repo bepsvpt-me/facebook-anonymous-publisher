@@ -89,7 +89,7 @@ class KobeController extends Controller
         $this->post->setAttribute('link', $request->has('nolink') ? null : $this->findLink($content));
         $this->post->setAttribute('has_image', $request->has('post-by-image') || $request->hasFile('image'));
         $this->post->setAttribute('user_agent', $request->header('user-agent'));
-        $this->post->setAttribute('ip', realIp($request));
+        $this->post->setAttribute('ip', real_ip($request));
         $this->post->setAttribute('created_at', Carbon::now());
         $this->post->setAttribute('sync_at', Carbon::now());
 

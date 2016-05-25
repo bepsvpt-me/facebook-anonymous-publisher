@@ -7,8 +7,8 @@ use Illuminate\Routing\Router;
 $router->group(['middleware' => ['installed']], function (Router $router) {
     $router->get('/', ['as' => 'home', 'uses' => 'HomeController@home']);
 
-    $router->post('kobe', ['as' => 'kobe', 'uses' => 'KobeController@kobe']);
-    $router->post('kobe-non-secure', ['as' => 'kobe.non-secure', 'uses' => 'KobeController@kobe']);
+    $router->post('kobe', ['as' => 'kobe', 'middleware' => ['ip'], 'uses' => 'KobeController@kobe']);
+    $router->post('kobe-non-secure', ['as' => 'kobe.non-secure', 'middleware' => ['ip'], 'uses' => 'KobeController@kobe']);
 
     $router->get('s/{hash}', ['as' => 'short-url', 'uses' => 'HomeController@shortUrlRedirect']);
 

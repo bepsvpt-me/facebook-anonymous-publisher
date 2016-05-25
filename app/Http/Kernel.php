@@ -49,6 +49,7 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
         'installed' => \App\Http\Middleware\InstalledMiddleware::class,
+        'ip' => \App\Http\Middleware\BlockBlacklistIp::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
 }
