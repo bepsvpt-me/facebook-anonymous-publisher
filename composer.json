@@ -17,6 +17,7 @@
     "intervention/image": "^2.3",
     "jenssegers/agent": "^2.3",
     "laracasts/flash": "^2.0",
+    "laravel/socialite": "^2.0",
     "laravelcollective/html": "^5.2",
     "mexitek/phpcolors": "^0.4",
     "overtrue/pinyin": "~3.0",

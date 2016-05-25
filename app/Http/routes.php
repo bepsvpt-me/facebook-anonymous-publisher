@@ -18,6 +18,11 @@ $router->group(['middleware' => ['installed']], function (Router $router) {
         $router->get('monthly', ['as' => 'monthly', 'uses' => 'RankingController@monthly']);
     });
 
+    $router->group(['prefix' => 'oauth', 'as' => 'oauth.'], function (Router $router) {
+        $router->get('facebook', ['as' => 'facebook', 'uses' => 'OAuthController@facebook']);
+        $router->get('facebook/callback', ['as' => 'facebook.callback', 'uses' => 'OAuthController@facebookCallback']);
+    });
+
     $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function (Router $router) {
         $router->group(['prefix' => 'posts', 'as' => 'posts.'], function (Router $router) {
             $router->get('/', ['as' => 'index', 'uses' => 'PostController@index']);

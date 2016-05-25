@@ -29,7 +29,25 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function overrideConfig()
     {
+        $this->overrideFacebook();
         $this->overrideRecaptcha();
+    }
+
+    /**
+     * Using config store in database to override the environment config.
+     *
+     * @return void
+     */
+    protected function overrideFacebook()
+    {
+        $facebook = Config::getConfig('facebook-service');
+
+        if (! is_null($facebook)) {
+            config([
+                'services.facebook.client_id' => $facebook['app_id'],
+                'services.facebook.client_secret' => $facebook['app_secret'],
+            ]);
+        }
     }
 
     /**
