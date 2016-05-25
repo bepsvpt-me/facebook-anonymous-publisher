@@ -21,7 +21,7 @@ return [
     'facebook' => [
         'client_id' => '',
         'client_secret' => '',
-        'redirect' => 'http://your-callback-url',
+        'redirect' => env('APP_URL').'/oauth/facebook/callback',
     ],
 
 ];
