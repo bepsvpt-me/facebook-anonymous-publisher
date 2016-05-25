@@ -70,13 +70,13 @@ class PostController extends Controller
             $response = $fb->delete($config['page_id'].'_'.$post->getAttribute('fbid'));
 
             if ($response->getDecodedBody()['success']) {
-                $post->delete();
-
                 Flash::success('刪除成功');
             }
         } catch (FacebookSDKException $e) {
             Flash::error('刪除失敗，文章不存在或沒有權限刪除');
         }
+
+        $post->delete();
 
         return Redirect::route('dashboard.posts.index');
     }
