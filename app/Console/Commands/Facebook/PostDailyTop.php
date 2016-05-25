@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Facebook;
 
 use App\Post;
+use App\Shortener;
 use GabrielKaputa\Bitly\Bitly;
 use GuzzleHttp\Client;
 
@@ -35,10 +36,8 @@ class PostDailyTop extends FacebookCommand
             ->take(5)
             ->get(['id', 'fbid']);
 
-        $bitly = Bitly::withGenericAccessToken(config('services.bitly.token'));
-
         foreach ($posts as $index => $post) {
-            $url = $bitly->shortenUrl("https://www.facebook.com/{$this->config['page_id']}/posts/{$post->getAttribute('fbid')}");
+            $url = $this->getShortenUrl("https://www.facebook.com/{$this->config['page_id']}/posts/{$post->getAttribute('fbid')}");
 
             $urls[] = 'Top'.($index + 1).' : '.$url;
         }
@@ -51,5 +50,51 @@ class PostDailyTop extends FacebookCommand
                 'scheduling-auth' => config('services.bitly.token'),
             ],
         ]);
+    }
+
+    /**
+     * Shorten the url.
+     *
+     * @param string $url
+     *
+     * @return bool|string
+     */
+    protected function getShortenUrl($url)
+    {
+        if (is_null(config('services.bitly.token'))) {
+            return $this->shortenUsingLocal($url);
+        }
+
+        return $this->shortenUsingBitly($url);
+    }
+
+    /**
+     * Shorten the url using local shortener.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    protected function shortenUsingLocal($url)
+    {
+        return Shortener::shorten($url);
+    }
+
+    /**
+     * Shorten the url using bitly.
+     *
+     * @param string $url
+     *
+     * @return bool|string
+     */
+    protected function shortenUsingBitly($url)
+    {
+        static $bitly = null;
+
+        if (is_null($bitly)) {
+            $bitly = Bitly::withGenericAccessToken(config('services.bitly.token'));
+        }
+
+        return $bitly->shortenUrl($url);
     }
 }

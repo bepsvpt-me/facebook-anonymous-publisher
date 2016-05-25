@@ -212,6 +212,10 @@ class KobeController extends Controller
     {
         $pinyin = new Pinyin();
 
+        if (! str_contains($pinyin->sentence($content), $word['pinyin'])) {
+            return $content;
+        }
+
         $contentLen = mb_strlen($content) - $word['len'] + 1;
 
         for ($i = 0; $i < $contentLen; ++$i) {

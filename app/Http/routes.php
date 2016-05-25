@@ -10,6 +10,8 @@ $router->group(['middleware' => ['installed']], function (Router $router) {
     $router->post('kobe', ['as' => 'kobe', 'uses' => 'KobeController@kobe']);
     $router->post('kobe-non-secure', ['as' => 'kobe.non-secure', 'uses' => 'KobeController@kobe']);
 
+    $router->get('s/{hash}', ['as' => 'short-url', 'uses' => 'HomeController@shortUrlRedirect']);
+
     $router->group(['prefix' => 'ranking', 'as' => 'ranking.'], function (Router $router) {
         $router->get('daily', ['as' => 'daily', 'uses' => 'RankingController@daily']);
         $router->get('weekly', ['as' => 'weekly', 'uses' => 'RankingController@weekly']);
