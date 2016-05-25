@@ -14,6 +14,7 @@ use Facebook\FileUpload\FacebookFile;
 use Illuminate\Http\Request;
 use Image;
 use Intervention\Image\Gd\Font;
+use Mexitek\PHPColors\Color;
 use Overtrue\Pinyin\Pinyin;
 
 class KobeController extends Controller
@@ -60,7 +61,7 @@ class KobeController extends Controller
 
         $this->savePost($request);
 
-        $file = $request->has('post-by-image') ? $this->canvas() : $request->file('image');
+        $file = $request->has('post-by-image') ? $this->canvas($request->input('color')) : $request->file('image');
 
         $this->posted($this->postFeed($file));
 
@@ -307,19 +308,21 @@ class KobeController extends Controller
     /**
      * Create an image using the post content and return the image path.
      *
+     * @param string $color
+     *
      * @return string
      */
-    protected function canvas()
+    protected function canvas($color)
     {
         $filePath = file_build_path($this->getImageDirectory(), $this->post->getKey().'.jpg');
 
         $canvas = $this->getCanvasWidthAndHeight($this->post->getAttribute('content'));
 
-        Image::canvas($canvas['width'], $canvas['height'], '#000')
-            ->text($this->post->getAttribute('content'), $canvas['width'] / 2, $canvas['height'] / 2, function (Font $font) {
+        Image::canvas($canvas['width'], $canvas['height'], '#'.$color)
+            ->text($this->post->getAttribute('content'), $canvas['width'] / 2, $canvas['height'] / 2, function (Font $font) use ($color) {
                 $font->file($this->getFontPath());
                 $font->size(48);
-                $font->color('#fff');
+                $font->color((new Color($color))->isDark() ? '#fff' : '#000');
                 $font->align('center');
                 $font->valign('middle');
             })

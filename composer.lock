@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4340d7327dbb26dd6bf606e9d8e37b12",
-    "content-hash": "dc775af8903e22148b92568e73530204",
+    "hash": "f2d972baf4866af19ea482a2a4efefdc",
+    "content-hash": "d32815d2ab75e341b645cf59b8322f7a",
     "packages": [
         {
             "name": "caouecs/laravel-lang",
-            "version": "3.0.4",
+            "version": "3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/caouecs/Laravel-lang.git",
-                "reference": "02a6884abda30314013ccac25b1217a169969a65"
+                "reference": "52d7aba50e9585e1d29dedbeeb2bfdb1bc4cb041"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/02a6884abda30314013ccac25b1217a169969a65",
-                "reference": "02a6884abda30314013ccac25b1217a169969a65",
+                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/52d7aba50e9585e1d29dedbeeb2bfdb1bc4cb041",
+                "reference": "52d7aba50e9585e1d29dedbeeb2bfdb1bc4cb041",
                 "shasum": ""
             },
             "require-dev": {
@@ -45,7 +45,7 @@
                 "laravel",
                 "lpm"
             ],
-            "time": "2016-05-16 19:14:02"
+            "time": "2016-05-23 05:54:40"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -1555,6 +1555,51 @@
                 "storage"
             ],
             "time": "2016-04-28 06:53:12"
+        },
+        {
+            "name": "mexitek/phpcolors",
+            "version": "v0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mexitek/phpColors.git",
+                "reference": "89bf30473a68dc8845e46e9db3e536b969e18c11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mexitek/phpColors/zipball/89bf30473a68dc8845e46e9db3e536b969e18c11",
+                "reference": "89bf30473a68dc8845e46e9db3e536b969e18c11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arlo Carreon",
+                    "homepage": "http://arlocarreon.com",
+                    "role": "creator"
+                }
+            ],
+            "description": "A series of methods that let you manipulate colors. Just incase you ever need different shades of one color on the fly.",
+            "homepage": "http://mexitek.github.com/phpColors/",
+            "keywords": [
+                "color",
+                "css",
+                "design",
+                "frontend",
+                "ui"
+            ],
+            "time": "2015-09-09 15:43:06"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

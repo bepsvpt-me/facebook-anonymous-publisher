@@ -13,6 +13,11 @@ class KobeRequest extends Request
     {
         $rules = [
             'content' => 'required|string|max:500',
+            'color' => [
+                'bail',
+                'required',
+                'regex:/^[a-fA-F0-9]{6}$/',
+            ],
             'image' => 'image|max:3072',
             'g-recaptcha-response' => 'bail|required|recaptcha',
             'accept-license' => 'required|accepted',
@@ -36,6 +41,7 @@ class KobeRequest extends Request
     {
         return [
             'g-recaptcha-response.required' => 'Please ensure that you are a human!',
+            'color.regex' => 'Invalid color value.',
         ];
     }
 }

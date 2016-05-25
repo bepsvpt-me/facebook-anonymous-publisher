@@ -38,6 +38,9 @@
                   {!! Form::checkbox('post-by-image', true, false, ['id' => 'post-by-image']) !!}
                   <span>以圖片發文</span>
                 </label>
+
+                {!! Form::hidden('color', '000000', ['id' => 'post-image-color']) !!}
+                <button class="jscolor {valueElement: 'post-image-color'}">Pick a color</button>
               </div>
             </div>
 
@@ -108,6 +111,7 @@
 @endsection
 
 @push('scripts')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
   <script>
     $(document).on('submit', 'form', function () {
       $('button.btn-success').attr('disabled', true);
