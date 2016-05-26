@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a class="navbar-brand" href="{{ route('home') }}">{{ $application['page_name'] }}</a>
+      <a class="navbar-brand" href="{{ route('home') }}"><i class="fa fa-bullhorn fa-fw" aria-hidden="true"></i> {{ $application['page_name'] }}</a>
     </div>
 
     <div class="collapse navbar-collapse" id="navbar-collapse">

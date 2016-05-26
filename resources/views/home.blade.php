@@ -14,7 +14,6 @@
             <ul>
               <li>當文章中有連結時，系統會用第一個連結當作欲分享的連結</li>
               <li>當文章中出現{{ $application['page_name'] }}的 hashtag 時，系統會自動在後方附上連結</li>
-              <li>專案開源於 <a href="https://github.com/BePsvPT/Facebook-Anonymous-Publisher" target="_blank">Github</a></li>
             </ul>
           </div>
         </div>
@@ -98,8 +97,7 @@
       @unless(empty($application['ad-client']) || empty($application['ad-slot']))
         <section>
           <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-          <ins class="adsbygoogle"
-               style="display:block"
+          <ins class="adsbygoogle block"
                data-ad-client="{{ $application['ad-client'] }}"
                data-ad-slot="{{ $application['ad-slot'] }}"
                data-ad-format="auto"></ins>

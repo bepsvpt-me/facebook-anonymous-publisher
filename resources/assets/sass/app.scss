@@ -1,2 +1,55 @@
-// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+html {
+  overflow-y: scroll;
+}
 
+body {
+  padding-top: 50px;
+}
+
+table {
+  th {
+    text-align: center;
+  }
+
+  &.table-middle td {
+    vertical-align: middle !important;
+  }
+}
+
+.page-footer {
+  margin-top: 30px;
+  margin-bottom: 20px;
+
+  button {
+    margin: 0 20px;
+  }
+}
+
+.nav.navbar-nav ul.dropdown-menu {
+  width: 100%;
+  min-width: inherit;
+}
+
+.block {
+  display: block;
+}
+
+.flash-message {
+  margin: 20px 0;
+}
+
+.form-inline {
+  margin: 20px 0;
+}
+
+.post-content {
+  min-width: 170px;
+  max-width: 95%;
+  margin: 0 auto;
+  text-align: left;
+  white-space: pre-line;
+
+  &-th {
+    width: 60%;
+  }
+}

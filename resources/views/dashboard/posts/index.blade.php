@@ -4,7 +4,7 @@
 
 @section('main')
   <section>
-    <h1 class="text-center">PO文列表</h1>
+    <h1 class="text-center">發文列表</h1>
   </section>
 
   @include('components.pagination', ['pagination' => $posts])
@@ -13,12 +13,12 @@
     <table class="table table-bordered table-hover text-center table-middle">
       <thead>
         <tr>
-          <th class="text-center">編號</th>
-          <th class="text-center">內容</th>
-          <th class="text-center">連結</th>
-          <th class="text-center">資訊</th>
-          <th class="text-center">封鎖</th>
-          <th class="text-center">刪除</th>
+          <th>編號</th>
+          <th class="post-content-th">內容</th>
+          <th>連結</th>
+          <th>資訊</th>
+          <th>封鎖</th>
+          <th>刪除</th>
         </tr>
       </thead>
 
@@ -29,7 +29,7 @@
           <tr>
             <td>{{ $post->getAttribute('id') }}</td>
             <td>
-              <pre class="text-left" style="max-width: 480px; white-space: pre-line;">{{ $post->getAttribute('content') }}</pre>
+              <pre class="post-content">{{ $post->getAttribute('content') }}</pre>
             </td>
             <td>
               @if($post->trashed())
@@ -69,7 +69,3 @@
 
   @include('components.pagination', ['pagination' => $posts])
 @endsection
-
-@push('styles')
-  @include('components.styles.table-middle')
-@endpush
