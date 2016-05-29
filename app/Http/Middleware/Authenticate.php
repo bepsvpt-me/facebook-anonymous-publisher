@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Auth;
 use Closure;
+use Redirect;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class Authenticate
 {
@@ -12,12 +14,18 @@ class Authenticate
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @param string|null $guard
+     * @param string|null $role
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next, $role = null)
     {
-        return Auth::guard($guard)->basic('username') ?: $next($request);
+        if (Auth::guest()) {
+            return Redirect::route('auth.sign-in');
+        } elseif (! is_null($role) && ! Auth::user()->is($role)) {
+            throw new AccessDeniedHttpException;
+        }
+
+        return $next($request);
     }
 }

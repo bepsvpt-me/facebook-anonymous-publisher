@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use App\User;
+use Auth;
+use Facebook\Exceptions\FacebookSDKException;
+use Flash;
 use Redirect;
 use Socialite;
 
@@ -25,8 +28,16 @@ class OAuthController extends Controller
      */
     public function facebookCallback()
     {
-        Socialite::driver('facebook')->user();
+        try {
+            $user = User::firstOrCreate([
+                'username' => 'facebook-'.Socialite::driver('facebook')->user()->getId(),
+            ]);
 
-        return Redirect::route('home');
+            Auth::login($user, true);
+        } catch (FacebookSDKException $e) {
+            Flash::error('登入失敗');
+        }
+
+        return Redirect::home();
     }
 }

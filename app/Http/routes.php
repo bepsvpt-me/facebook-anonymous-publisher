@@ -18,12 +18,13 @@ $router->group(['middleware' => ['installed']], function (Router $router) {
         $router->get('monthly', ['as' => 'monthly', 'uses' => 'RankingController@monthly']);
     });
 
-    $router->group(['prefix' => 'oauth', 'as' => 'oauth.'], function (Router $router) {
-        $router->get('facebook', ['as' => 'facebook', 'uses' => 'OAuthController@facebook']);
-        $router->get('facebook/callback', ['as' => 'facebook.callback', 'uses' => 'OAuthController@facebookCallback']);
-    });
+    $router->get('auth/sign-in', ['as' => 'auth.sign-in', 'uses' => 'AuthController@signIn']);
+    $router->post('auth/auth', ['as' => 'auth.auth', 'uses' => 'AuthController@auth']);
 
-    $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function (Router $router) {
+    $router->get('oauth/facebook', ['as' => 'oauth.facebook', 'uses' => 'OAuthController@facebook']);
+    $router->get('oauth/facebook/callback', ['as' => 'oauth.facebook.callback', 'uses' => 'OAuthController@facebookCallback']);
+
+    $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth:manager'], function (Router $router) {
         $router->group(['prefix' => 'posts', 'as' => 'posts.'], function (Router $router) {
             $router->get('/', ['as' => 'index', 'uses' => 'PostController@index']);
             $router->get('{id}/block', ['as' => 'block', 'uses' => 'PostController@block']);

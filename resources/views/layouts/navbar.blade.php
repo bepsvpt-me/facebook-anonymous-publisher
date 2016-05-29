@@ -13,6 +13,10 @@
 
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
+        @if(Auth::guest())
+          <li><a href="{{ route('oauth.facebook') }}"><i class="fa fa-facebook-official" aria-hidden="true"></i> 登入</a></li>
+        @endif
+
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span><i class="fa fa-line-chart fa-fw" aria-hidden="true"></i> {{ trans('kobe.navbar.ranking.title') }} </span><span class="caret"></span>
@@ -24,7 +28,7 @@
           </ul>
         </li>
 
-        @if(Auth::check())
+        @if(Auth::check() && Auth::user()->is('manager'))
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <span><i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> {{ trans('kobe.navbar.dashboard.title') }} </span><span class="caret"></span>

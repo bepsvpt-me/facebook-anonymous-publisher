@@ -104,6 +104,7 @@ class InstallController extends Controller
     {
         User::updateOrCreate(['username' => $request->input('username')], [
             'password' => bcrypt($request->input('password')),
+            'role' => 'admin',
         ]);
 
         return $this->storeConfig(

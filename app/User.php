@@ -30,4 +30,23 @@ class User extends \Eloquent implements AuthenticatableContract, AuthorizableCon
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Check the user has specific role.
+     *
+     * @param string|array $role
+     * @return bool
+     */
+    public function is($role)
+    {
+        if (! $this->exists) {
+            return false;
+        } elseif ('admin' === $this->getAttribute('role')) {
+            return true;
+        } elseif (is_array($role)) {
+            return in_array($this->getAttribute('role'), $role, true);
+        }
+
+        return $role === $this->getAttribute('role');
+    }
 }
