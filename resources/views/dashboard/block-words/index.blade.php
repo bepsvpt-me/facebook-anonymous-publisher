@@ -34,9 +34,9 @@
       <tbody>
         @foreach($words as $word)
           <tr>
-            <td>{{ $word->getAttribute('value') }}</td>
+            <td>{{ $word }}</td>
             <td>
-              <a href="{{ route('dashboard.block-words.delete', ['value' => $word->getAttribute('value')]) }}">
+              <a href="{{ route('dashboard.block-words.delete', ['value' => $word]) }}">
                 <button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
               </a>
             </td>

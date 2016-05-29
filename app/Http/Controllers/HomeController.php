@@ -34,8 +34,6 @@ class HomeController extends Controller
             throw new NotFoundHttpException;
         }
 
-        $short = Shortener::findOrFail($id[0]);
-
-        return Redirect::to($short->getAttribute('url'));
+        return Redirect::to(Shortener::findOrFail($id[0])->getAttribute('url'));
     }
 }

@@ -17,7 +17,7 @@ class BlockWordController extends Controller
      */
     public function index()
     {
-        $words = Block::where('type', 'keyword')->get();
+        $words = Block::where('type', 'keyword')->get()->pluck('value')->toArray();
 
         return view('dashboard.block-words.index', compact('words'));
     }

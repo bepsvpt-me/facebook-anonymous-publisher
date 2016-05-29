@@ -37,12 +37,12 @@ class PostController extends Controller
      */
     public function block($id)
     {
-        $post = Post::withTrashed()->findOrFail($id, ['id', 'ip']);
+        $ip = Post::withTrashed()->findOrFail($id, ['ip'])->getAttribute('ip');
 
-        if (! Block::where('type', 'ip')->where('value', $post->getAttribute('ip'))->exists()) {
+        if (! Block::where('type', 'ip')->where('value', $ip)->exists()) {
             Block::create([
                 'type' => 'ip',
-                'value' => $post->getAttribute('ip'),
+                'value' => $ip,
             ]);
         }
 
@@ -59,6 +59,7 @@ class PostController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @throws \Exception
      */
     public function destroy($id)
