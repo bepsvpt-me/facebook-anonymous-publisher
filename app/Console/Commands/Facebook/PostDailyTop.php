@@ -45,6 +45,7 @@ class PostDailyTop extends FacebookCommand
         (new Client())->post(route('kobe.non-secure'), [
             'form_params' => [
                 'content' => $this->now->toDateString().' 本日 Top 5'.PHP_EOL.implode(PHP_EOL, $urls ?? []),
+                'color' => '000000',
                 'accept-license' => true,
                 'nolink' => true,
                 'scheduling-auth' => config('services.bitly.token'),
