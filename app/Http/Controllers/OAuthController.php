@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Auth;
-use Facebook\Exceptions\FacebookSDKException;
 use Flash;
 use Redirect;
 use Socialite;
@@ -34,7 +33,7 @@ class OAuthController extends Controller
             ]);
 
             Auth::login($user, true);
-        } catch (FacebookSDKException $e) {
+        } catch (\Exception $e) {
             Flash::error('登入失敗');
         }
 
