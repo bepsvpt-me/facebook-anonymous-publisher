@@ -34,17 +34,22 @@ class SyncRanks extends FacebookCommand
 
         $collection = $this->fb->sendBatchRequest($this->prepareRequests($posts))->getDecodedBody();
 
-        $size = count($collection);
+        $i = 0;
 
-        for ($i = 0; $i < $size; $i += 2) {
-            if ($this->isLogFails($posts[$i >> 1]->getAttribute('fbid'), $collection[$i]['code'], $collection[$i + 1]['code'])) {
-                $posts[$i >> 1]->delete();
+        foreach ($collection as $item) {
+            if ($this->isLogFails($posts[$i]->getAttribute('fbid'), $item['code'])) {
+                $posts[$i]->delete();
             } else {
-                $posts[$i >> 1]->update([
-                    'ranks' => $this->getRanks($collection[$i]['body'], $collection[$i + 1]['body']),
+                $ranks = $this->getRanks($item['body']);
+
+                $posts[$i]->update([
+                    'ranks' => $ranks['ranks'],
+                    'ranks_data' => $ranks,
                     'sync_at' => $this->now,
                 ]);
             }
+
+            ++$i;
         }
 
         Log::info('facebook-sync-ranks');
@@ -59,9 +64,9 @@ class SyncRanks extends FacebookCommand
      */
     protected function getPosts()
     {
-        $count = User::where('username', 'like', 'facebook-%')->count();
+        $count = User::where('username', 'like', 'facebook-%')->count(['id']);
 
-        $nums = min(25, 5 + $count * 10);
+        $nums = min(50, 1 + $count);
 
         return Post::whereNotNull('fbid')
             ->where('published_at', '>=', $this->now->copy()->subMonth())
@@ -81,18 +86,11 @@ class SyncRanks extends FacebookCommand
     {
         $requests = [];
 
-        $objects = [
-            'likes?summary=true&limit=1',
-            'comments?summary=true&limit=1',
-        ];
-
         foreach ($posts as $post) {
-            foreach ($objects as $object) {
-                $requests[] = new FacebookRequest(
-                    null, null, 'GET',
-                    "/{$this->config['page_id']}_{$post->getAttribute('fbid')}/{$object}"
-                );
-            }
+            $requests[] = new FacebookRequest(
+                null, null, 'GET',
+                "/{$this->config['page_id']}_{$post->getAttribute('fbid')}?fields=comments.summary(true).limit(0),likes.summary(true).limit(0)"
+            );
         }
 
         return $requests;
@@ -102,23 +100,19 @@ class SyncRanks extends FacebookCommand
      * Log if the response code are not all 200.
      *
      * @param int $fbid
-     * @param int $likesCode
-     * @param int $commentsCode
+     * @param int $code
      *
      * @return bool
      */
-    protected function isLogFails($fbid, $likesCode, $commentsCode)
+    protected function isLogFails($fbid, $code)
     {
-        if (count(array_diff([$likesCode, $commentsCode], [200])) === 0) {
+        if (200 === $code) {
             return false;
         }
 
         Log::notice('facebook-sync-likes', [
             'fbid' => $fbid,
-            'code' => [
-                'likes' => $likesCode,
-                'comments' => $commentsCode,
-            ],
+            'code' => $code,
         ]);
 
         return true;
@@ -127,17 +121,22 @@ class SyncRanks extends FacebookCommand
     /**
      * Get the post ranks.
      *
-     * @param string $likes
-     * @param string $comments
+     * @param string $body
      *
      * @return int
      */
-    protected function getRanks($likes, $comments)
+    protected function getRanks($body)
     {
-        $likes = json_decode($likes, true)['summary']['total_count'];
+        $data = json_decode($body, true);
 
-        $comments = json_decode($comments, true)['summary']['total_count'];
+        $likes = $data['likes']['summary']['total_count'];
 
-        return intval(floatval($likes) * 1.2 + $comments);
+        $comments = $data['comments']['summary']['total_count'];
+
+        return [
+            'likes' => $likes,
+            'comments' => $comments,
+            'ranks' => intval($likes + $comments * 8.7),
+        ];
     }
 }

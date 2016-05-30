@@ -27,14 +27,14 @@ class Post extends \Eloquent
      *
      * @var array
      */
-    protected $fillable = ['ranks', 'sync_at'];
+    protected $fillable = ['ranks', 'ranks_data', 'sync_at'];
 
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $dates = ['created_at', 'published_at', 'deleted_at'];
+    protected $dates = ['created_at', 'published_at', 'sync_at', 'deleted_at'];
 
     /**
      * The attributes that should be cast to native types.
@@ -42,6 +42,7 @@ class Post extends \Eloquent
      * @var array
      */
     protected $casts = [
+        'ranks_data' => 'array',
         'has_image' => 'boolean',
     ];
 }
