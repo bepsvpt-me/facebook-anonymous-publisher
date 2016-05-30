@@ -60,7 +60,7 @@ class KobeController extends Controller
         $this->init();
 
         $this->savePost($request);
-dd('break');
+
         $file = $request->has('post-by-image') ? $this->canvas($request->input('color')) : $request->file('image');
 
         $this->posted($this->postFeed($file));
