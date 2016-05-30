@@ -13,7 +13,7 @@ Form::macro('submitButton', function ($text = null, $style = 'success', $block =
 
     $block = $block ? ' btn-block' : '';
 
-    $html =<<<EOF
+    $html = <<<EOF
 <div class="form-group">
   <button type="submit" class="btn btn-{$style}{$block}">{$text}</button>
 </div>
