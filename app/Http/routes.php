@@ -25,6 +25,8 @@ $router->group(['middleware' => ['installed']], function (Router $router) {
     $router->get('oauth/facebook', ['as' => 'oauth.facebook', 'uses' => 'OAuthController@facebook']);
     $router->get('oauth/facebook/callback', ['as' => 'oauth.facebook.callback', 'uses' => 'OAuthController@facebookCallback']);
 
+    $router->get('terms-of-service-and-privacy-policy', ['as' => 'tos-pp', 'uses' => 'HomeController@tosAndPp']);
+
     $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth:manager'], function (Router $router) {
         $router->group(['prefix' => 'posts', 'as' => 'posts.'], function (Router $router) {
             $router->get('/', ['as' => 'index', 'uses' => 'PostController@index']);
@@ -37,6 +39,9 @@ $router->group(['middleware' => ['installed']], function (Router $router) {
             $router->post('/', ['as' => 'store', 'uses' => 'BlockWordController@store']);
             $router->get('{value}/delete', ['as' => 'delete', 'uses' => 'BlockWordController@destroy']);
         });
+
+        $router->get('terms-of-service-privacy-policy', ['as' => 'tos-pp.index', 'uses' => 'ApplicationController@tosAndPpView']);
+        $router->post('terms-of-service-privacy-policy', ['as' => 'tos-pp.update', 'uses' => 'ApplicationController@tosAndPp']);
     });
 });
 

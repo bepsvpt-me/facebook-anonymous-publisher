@@ -13,11 +13,13 @@
 
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
-        @if(Auth::guest())
-          <li><a href="{{ route('oauth.facebook') }}">{{ Html::icon('facebook-official', true) }} 登入</a></li>
-        @else
-          <li><a href="{{ route('auth.sign-out') }}">{{ Html::icon('sign-out', true) }} 登出</a></li>
-        @endif
+        <li>
+          @if(Auth::guest())
+            <a href="{{ route('oauth.facebook') }}">{{ Html::icon('facebook-official', true) }} {{ trans('kobe.navbar.auth.sign-in') }}</a>
+          @else
+            <a href="{{ route('auth.sign-out') }}">{{ Html::icon('sign-out', true) }} {{ trans('kobe.navbar.auth.sign-out') }}</a>
+          @endif
+        </li>
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -38,6 +40,7 @@
             <ul class="dropdown-menu">
               <li>{{ Html::linkRoute('dashboard.posts.index', trans('kobe.navbar.dashboard.posts')) }}</li>
               <li>{{ Html::linkRoute('dashboard.block-words.index', trans('kobe.navbar.dashboard.block-words')) }}</li>
+              <li>{{ Html::linkRoute('dashboard.tos-pp.index', '條款更新') }}</li>
             </ul>
           </li>
         @endif

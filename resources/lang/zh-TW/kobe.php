@@ -3,6 +3,7 @@
 return [
 
     'website-title' => '匿名靠北',
+    'terms-of-service' => '服務條款',
 
     'navbar' => [
 
@@ -17,6 +18,11 @@ return [
             'title' => '管理介面',
             'posts' => '文章列表',
             'block-words' => '關鍵字封鎖',
+        ],
+
+        'auth' => [
+            'sign-in' => '登入',
+            'sign-out' => '登出',
         ],
     ],
 

@@ -110,7 +110,7 @@ class InstallController extends Controller
         return $this->storeConfig(
             'application-service',
             $request->only([
-                'page_name', 'extra_content', 'license',
+                'page_name', 'extra_content', 'terms_of_service', 'privacy_policy',
                 'ga', 'ad-client', 'ad-slot',
             ]),
             'install.finish'

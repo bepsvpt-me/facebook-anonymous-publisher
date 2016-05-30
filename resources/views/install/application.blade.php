@@ -23,25 +23,26 @@
 </div>
 
 <div class="form-group">
-  {{ Form::label('license', '服務條款及隱私政策') }}
-  {{ Form::textarea('license', null, ['class' => 'form-control']) }}
-  {{ Form::validatorHelper() }}
+  {{ Form::label('terms_of_service', '服務條款') }}
+  {{ Form::textarea('terms_of_service', null, ['class' => 'form-control']) }}
+</div>
+
+<div class="form-group">
+  {{ Form::label('privacy_policy', '隱私政策') }}
+  {{ Form::textarea('privacy_policy', null, ['class' => 'form-control']) }}
 </div>
 
 <div class="form-group">
   {{ Form::label('ga', 'Google Analytics 編號') }}
   {{ Form::text('ga', null, ['class' => 'form-control', 'placeholder' => 'UA-xxxxxxxx-x']) }}
-  {{ Form::validatorHelper() }}
 </div>
 
 <div class="form-group">
   {{ Form::label('ad-client', 'Google AdSense Client') }}
   {{ Form::text('ad-client', null, ['class' => 'form-control', 'placeholder' => 'ca-pub-xxxxxxxx']) }}
-  {{ Form::validatorHelper() }}
 </div>
 
 <div class="form-group">
   {{ Form::label('ad-slot', 'Google AdSense Slot') }}
   {{ Form::text('ad-slot', null, ['class' => 'form-control']) }}
-  {{ Form::validatorHelper() }}
 </div>

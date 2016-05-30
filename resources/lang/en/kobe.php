@@ -3,6 +3,7 @@
 return [
 
     'website-title' => 'Anonymous Publisher',
+    'terms-of-service' => 'Terms of Service',
 
     'navbar' => [
 
@@ -17,6 +18,11 @@ return [
             'title' => 'Dashboard',
             'posts' => 'Posts List',
             'block-words' => 'Keyword Block',
+        ],
+
+        'auth' => [
+            'sign-in' => 'Sign In',
+            'sign-out' => 'Sign Out',
         ],
     ],
 
