@@ -7,7 +7,7 @@
     <h1 class="text-center">發文列表</h1>
   </section>
 
-  @include('components.pagination', ['pagination' => $posts])
+  {{ Html::pagination($posts) }}
 
   <section class="table-responsive">
     <table class="table table-bordered table-hover text-center table-middle">
@@ -37,9 +37,7 @@
               @elseif(is_null($post->getAttribute('fbid')))
                 <span>尚未發布</span>
               @else
-                <a href="https://www.facebook.com/{{ $post->getAttribute('fbid') }}" target="_blank">
-                  <i class="fa fa-link" aria-hidden="true"></i>
-                </a>
+                <a href="https://www.facebook.com/{{ $post->getAttribute('fbid') }}" target="_blank">{{ Html::icon('link') }}</a>
               @endif
             </td>
             <td>
@@ -47,18 +45,12 @@
               <p>來源 {{ $post->getAttribute('ip') }}</p>
               <p>{{ $agent->browser().' on '.$agent->platform() }}</p>
             </td>
-            <td>
-              <a href="{{ route('dashboard.posts.block', ['id' => $post->getKey()]) }}">
-                <button type="button" class="btn btn-warning"><i class="fa fa-ban" aria-hidden="true"></i></button>
-              </a>
-            </td>
+            <td>{{ Html::linkButton('dashboard.posts.block', ['id' => $post->getKey()], 'btn-warning', 'ban') }}</td>
             <td>
               @if($post->trashed())
                 <span>-</span>
               @else
-                <a href="{{ route('dashboard.posts.delete', ['id' => $post->getKey()]) }}">
-                  <button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                </a>
+                {{ Html::linkButton('dashboard.posts.delete', ['id' => $post->getKey()], 'btn-danger', 'trash') }}
               @endif
             </td>
           </tr>
@@ -67,5 +59,5 @@
     </table>
   </section>
 
-  @include('components.pagination', ['pagination' => $posts])
+  {{ Html::pagination($posts) }}
 @endsection

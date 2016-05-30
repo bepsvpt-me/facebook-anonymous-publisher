@@ -20,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->overrideConfig();
+
+        $this->includeFormAndHtmlMacro();
     }
 
     /**
@@ -65,6 +67,17 @@ class AppServiceProvider extends ServiceProvider
                 'recaptcha.private_key' => $recaptcha['private_key'],
             ]);
         }
+    }
+
+    /**
+     * Include the form and html macros.
+     *
+     * @return void
+     */
+    protected function includeFormAndHtmlMacro()
+    {
+        require_once app_path(file_build_path('Libraries', 'form.php'));
+        require_once app_path(file_build_path('Libraries', 'html.php'));
     }
 
     /**

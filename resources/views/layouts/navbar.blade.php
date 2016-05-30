@@ -8,34 +8,36 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a class="navbar-brand" href="{{ route('home') }}"><i class="fa fa-bullhorn fa-fw" aria-hidden="true"></i> {{ $application['page_name'] }}</a>
+      <a class="navbar-brand" href="{{ route('home') }}">{{ Html::icon('bullhorn', true) }} {{ $application['page_name'] }}</a>
     </div>
 
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
         @if(Auth::guest())
-          <li><a href="{{ route('oauth.facebook') }}"><i class="fa fa-facebook-official" aria-hidden="true"></i> 登入</a></li>
+          <li><a href="{{ route('oauth.facebook') }}">{{ Html::icon('facebook-official', true) }} 登入</a></li>
+        @else
+          <li><a href="{{ route('auth.sign-out') }}">{{ Html::icon('sign-out', true) }} 登出</a></li>
         @endif
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span><i class="fa fa-line-chart fa-fw" aria-hidden="true"></i> {{ trans('kobe.navbar.ranking.title') }} </span><span class="caret"></span>
+            <span>{{ Html::icon('line-chart', true) }} {{ trans('kobe.navbar.ranking.title') }} </span><span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="{{ route('ranking.daily') }}">{{ trans('kobe.navbar.ranking.daily') }}</a></li>
-            <li><a href="{{ route('ranking.weekly') }}">{{ trans('kobe.navbar.ranking.weekly') }}</a></li>
-            <li><a href="{{ route('ranking.monthly') }}">{{ trans('kobe.navbar.ranking.monthly') }}</a></li>
+            <li>{{ Html::linkRoute('ranking.daily', trans('kobe.navbar.ranking.daily')) }}</li>
+            <li>{{ Html::linkRoute('ranking.weekly', trans('kobe.navbar.ranking.weekly')) }}</li>
+            <li>{{ Html::linkRoute('ranking.monthly', trans('kobe.navbar.ranking.monthly')) }}</li>
           </ul>
         </li>
 
         @if(Auth::check() && Auth::user()->is('manager'))
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <span><i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> {{ trans('kobe.navbar.dashboard.title') }} </span><span class="caret"></span>
+              <span>{{ Html::icon('tachometer', true) }} {{ trans('kobe.navbar.dashboard.title') }} </span><span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="{{ route('dashboard.posts.index') }}">{{ trans('kobe.navbar.dashboard.posts') }}</a></li>
-              <li><a href="{{ route('dashboard.block-words.index') }}">{{ trans('kobe.navbar.dashboard.block-words') }}</a></li>
+              <li>{{ Html::linkRoute('dashboard.posts.index', trans('kobe.navbar.dashboard.posts')) }}</li>
+              <li>{{ Html::linkRoute('dashboard.block-words.index', trans('kobe.navbar.dashboard.block-words')) }}</li>
             </ul>
           </li>
         @endif

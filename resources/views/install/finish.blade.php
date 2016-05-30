@@ -16,7 +16,7 @@
 
         <br>
 
-        <a href="{{ route('home') }}">回首頁</a>
+        {{ Html::linkRoute('home', '回首頁') }}
       </section>
     </div>
   </div>

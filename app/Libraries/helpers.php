@@ -4,10 +4,16 @@ if (! function_exists('isBlockIp')) {
     /**
      * Check the current request ip is in block list.
      *
+     * @param bool $checkSignIn
+     *
      * @return bool
      */
-    function is_block_ip()
+    function is_block_ip($checkSignIn = true)
     {
+        if ($checkSignIn && ! is_null(Request::user())) {
+            return false;
+        }
+
         $ips = Cache::rememberForever('blacklist-ip', function () {
             return \App\Block::where('type', 'ip')->get(['value'])->pluck('value')->toArray();
         });

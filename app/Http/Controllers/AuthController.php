@@ -33,4 +33,16 @@ class AuthController extends Controller
 
         return Redirect::home();
     }
+
+    /**
+     * Sign out the application.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function signOut()
+    {
+        Auth::logout();
+
+        return Redirect::home();
+    }
 }

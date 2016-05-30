@@ -2,6 +2,8 @@
   <hr>
 
   <section class="text-center">
-    <a class="btn btn-success" href="https://github.com/BePsvPT/Facebook-Anonymous-Publisher" target="_blank" role="button"><i class="fa fa-github fa-fw" aria-hidden="true"></i> Github</a>
+    <a class="btn btn-success" href="https://github.com/BePsvPT/Facebook-Anonymous-Publisher" target="_blank" role="button">
+      {{ Html::icon('github', true) }} <span>Github</span>
+    </a>
   </section>
 </footer>

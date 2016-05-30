@@ -8,15 +8,15 @@
       </header>
 
       <section>
-        @include('components.form-errors')
+        {{ Html::formErrors() }}
 
-        {!! Form::model(\App\Config::getConfig("$service-service"), ['route' => "install.{$service}.store", 'method' => 'POST', 'role' => 'form', 'data-toggle' => 'validator']) !!}
+        {{ Form::model(\App\Config::getConfig("$service-service"), ['route' => "install.{$service}.store", 'method' => 'POST', 'role' => 'form', 'data-toggle' => 'validator']) }}
 
         @include("install.{$service}")
 
-        @include('components.submitButton', ['text' => trans('kobe.install.next-step')])
+        {{ Form::submitButton(trans('kobe.install.next-step')) }}
 
-        {!! Form::close() !!}
+        {{ Form::close() }}
       </section>
     </div>
   </div>

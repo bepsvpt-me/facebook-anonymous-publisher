@@ -7,24 +7,25 @@
                 <div class="panel-heading">登入</div>
 
                 <div class="panel-body">
-                  {!! Form::open(['route' => 'auth.auth', 'method' => 'POST', 'role' => 'form', 'data-toggle' => 'validator']) !!}
+                  {{ Form::open(['route' => 'auth.auth', 'method' => 'POST', 'role' => 'form', 'data-toggle' => 'validator']) }}
+
                   <div class="form-group">
-                    {!! Form::label('username', 'Username') !!}
-                    {!! Form::text('username', null, ['class' => 'form-control', 'required']) !!}
-                    <div class="help-block with-errors"></div>
+                    {{ Form::label('username', 'Username') }}
+                    {{ Form::text('username', null, ['class' => 'form-control', 'required']) }}
+                    {{ Form::validatorHelper() }}
                   </div>
 
                   <div class="form-group">
-                    {!! Form::label('password', 'Password') !!}
-                    {!! Form::password('password', ['class' => 'form-control', 'required']) !!}
-                    <div class="help-block with-errors"></div>
+                    {{ Form::label('password', 'Password') }}
+                    {{ Form::password('password', ['class' => 'form-control', 'required']) }}
+                    {{ Form::validatorHelper() }}
                   </div>
 
-                  @include('components.submitButton', ['text' => '登入'])
+                  {{ Form::submitButton('登入') }}
 
-                  {!! Form::close() !!}
+                  {{ Form::close() }}
 
-                  @include('components.form-errors')
+                  {{ Html::formErrors() }}
                 </div>
             </div>
         </div>

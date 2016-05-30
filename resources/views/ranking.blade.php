@@ -17,7 +17,7 @@
     </div>
   </section>
 
-  @include('components.pagination', ['pagination' => $posts])
+  {{ Html::pagination($posts) }}
 @endsection
 
 @push('scripts')

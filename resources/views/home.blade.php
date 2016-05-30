@@ -7,48 +7,46 @@
         <h1 class="text-center">{{ $application['page_name'] }}</h1>
       </header>
 
-      <section>
-        <div class="panel panel-success">
-          <div class="panel-heading">發文教學</div>
-          <div class="panel-body">
-            <ul>
-              <li>當文章中有連結時，系統會用第一個連結當作欲分享的連結</li>
-              <li>當文章中出現{{ $application['page_name'] }}的 hashtag 時，系統會自動在後方附上連結</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
       @if(is_block_ip())
         <section>
-          <h3 class="text-center text-info">很抱歉，因技術上原因，發文系統目前無法使用</h3>
+          <h3 class="text-center text-info">您的ＩＰ位址可能因下列原因而被系統封鎖，目前無法使用發文系統</h3>
+
+          <ol>
+            <li>過去發文紀錄中，有違反法律條文之紀錄</li>
+            <li>過去發文紀錄中，有違反 Facebook 使用條款之紀錄</li>
+            <li>過去發文紀錄中，有指名道姓、透漏任何個資或隱私資訊之紀錄</li>
+            <li>過去發文紀錄中，有惡意洗版之行為</li>
+            <li>過去發文紀錄中，有足以造成本專頁有法律風險之紀錄</li>
+            <li>以上為常見被封鎖原因，如您為共用ＩＰ之使用者，只要其中一位住戶違反相關規定，將會連累不能使用，請特別注意</li>
+            <li>如您的ＩＰ位址被封鎖，則可以透過登入的方式解除此限制，請特別注意，<strong class="text-danger">此時發文即不是匿名，如果您想要匿名發言，又不想任何負責，很抱歉，此系統無法滿足您的需求</strong>，在其餘狀況下，只要您的ＩＰ位址未被封鎖，不管是否有登入，本系統皆不會紀錄足以辨別使用者之資訊</li>
+          </ol>
         </section>
       @else
         <section>
-          @include('components.form-errors')
+          {{ Html::formErrors() }}
 
-          {!! Form::open(['route' => 'kobe', 'method' => 'POST', 'files' => true, 'role' => 'form', 'data-toggle' => 'validator']) !!}
+          {{ Form::open(['route' => 'kobe', 'method' => 'POST', 'files' => true, 'role' => 'form', 'data-toggle' => 'validator']) }}
 
           <div class="form-group">
-            {!! Form::textarea('content', null, ['class' => 'form-control', 'placeholder' => '今天要靠北什麼？', 'maxlength' => 500, 'data-error' => '至少需要靠北點東西', 'required']) !!}
-            <div class="help-block with-errors"></div>
+            {{ Form::textarea('content', null, ['class' => 'form-control', 'placeholder' => '今天要靠北什麼？', 'maxlength' => 500, 'data-error' => '至少需要靠北點東西', 'required']) }}
+            {{ Form::validatorHelper() }}
           </div>
 
           <div class="form-group">
             <div class="checkbox">
               <label>
-                {!! Form::checkbox('post-by-image', true, false, ['id' => 'post-by-image']) !!}
+                {{ Form::checkbox('post-by-image', true, false, ['id' => 'post-by-image']) }}
                 <span>使用文字圖片</span>
               </label>
 
-              {!! Form::hidden('color', '000000', ['id' => 'post-image-color']) !!}
+              {{ Form::hidden('color', '000000', ['id' => 'post-image-color']) }}
               <button class="jscolor {valueElement: 'post-image-color'}">背景顏色</button>
             </div>
           </div>
 
           <div id="post-image" class="form-group">
-            {!! Form::label('image', '圖片（可選）') !!}
-            {!! Form::file('image', ['accept' => 'image/*']) !!}
+            {{ Form::label('image', '圖片（可選）') }}
+            {{ Form::file('image', ['accept' => 'image/*']) }}
             <p class="help-block">大小需小於 3 MB</p>
           </div>
 
@@ -78,7 +76,7 @@
 
                 <div class="checkbox">
                   <label>
-                    {!! Form::checkbox('accept-license', true, null, ['data-error' => '您必須同意本站隱私條款', 'required']) !!}
+                    {{ Form::checkbox('accept-license', true, null, ['data-error' => '您必須同意本站隱私條款', 'required']) }}
                     <span>我同意並已詳細閱讀服務條款及隱私政策，並同意於按下送出按鈕後放棄對本網站所有法律追訴權</span>
                   </label>
                 </div>
@@ -86,11 +84,9 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <button type="submit" class="btn btn-success btn-block">送出</button>
-          </div>
+          {{ Form::submitButton('送出') }}
 
-          {!! Form::close() !!}
+          {{ Form::close() }}
         </section>
       @endif
 
@@ -109,7 +105,8 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
+  {{ Html::script('https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js') }}
+
   <script>
     $(document).on('submit', 'form', function () {
       $('button.btn-success').attr('disabled', true);

@@ -60,7 +60,7 @@ class KobeController extends Controller
         $this->init();
 
         $this->savePost($request);
-
+dd('break');
         $file = $request->has('post-by-image') ? $this->canvas($request->input('color')) : $request->file('image');
 
         $this->posted($this->postFeed($file));
@@ -85,6 +85,7 @@ class KobeController extends Controller
             )
         );
 
+        $this->post->setAttribute('user_id', (is_block_ip(false) && ! is_null($request->user())) ? $request->user()->getKey() : null);
         $this->post->setAttribute('content', $this->transformHashTag($content));
         $this->post->setAttribute('link', $request->has('nolink') ? null : $this->findLink($content));
         $this->post->setAttribute('has_image', $request->has('post-by-image') || $request->hasFile('image'));

@@ -20,6 +20,7 @@ $router->group(['middleware' => ['installed']], function (Router $router) {
 
     $router->get('auth/sign-in', ['as' => 'auth.sign-in', 'uses' => 'AuthController@signIn']);
     $router->post('auth/auth', ['as' => 'auth.auth', 'uses' => 'AuthController@auth']);
+    $router->get('auth/sign-out', ['as' => 'auth.sign-out', 'uses' => 'AuthController@signOut']);
 
     $router->get('oauth/facebook', ['as' => 'oauth.facebook', 'uses' => 'OAuthController@facebook']);
     $router->get('oauth/facebook/callback', ['as' => 'oauth.facebook.callback', 'uses' => 'OAuthController@facebookCallback']);
