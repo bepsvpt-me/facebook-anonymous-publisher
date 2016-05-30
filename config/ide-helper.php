@@ -112,7 +112,7 @@ return [
     |  ),
     |
     */
-    
+
     'custom_db_types' => [
         //
     ],

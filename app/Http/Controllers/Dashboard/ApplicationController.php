@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Config;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Cache;
 use Flash;

@@ -5,7 +5,7 @@ use Illuminate\Support\HtmlString;
 Html::macro('icon', function ($icon, $fw = false) {
     $fw = $fw ? ' fa-fw' : '';
 
-    $html =<<<EOF
+    $html = <<<EOF
 <i class="fa fa-{$icon}{$fw}" aria-hidden="true"></i>
 EOF;
 
@@ -15,7 +15,7 @@ EOF;
 Html::macro('pagination', function ($data) {
     $pagination = $data->links();
 
-    $html =<<<EOF
+    $html = <<<EOF
 <section class="text-center">
   {$pagination}
 </section>
