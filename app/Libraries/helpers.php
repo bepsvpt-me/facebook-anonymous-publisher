@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('isBlockIp')) {
+if (! function_exists('is_block_ip')) {
     /**
      * Check the current request ip is in block list.
      *

@@ -30,11 +30,7 @@ class PostDailyTop extends FacebookCommand
      */
     public function handle()
     {
-        $posts = Post::whereNotNull('fbid')
-            ->where('published_at', '>=', $this->now->copy()->subDays(1))
-            ->orderBy('ranks', 'desc')
-            ->take(5)
-            ->get(['id', 'fbid']);
+        $posts = $this->getPosts();
 
         foreach ($posts as $index => $post) {
             $url = $this->getShortenUrl("https://www.facebook.com/{$this->config['page_id']}/posts/{$post->getAttribute('fbid')}");
@@ -42,15 +38,21 @@ class PostDailyTop extends FacebookCommand
             $urls[] = 'Top'.($index + 1).' : '.$url;
         }
 
-        (new Client())->post(route('kobe.non-secure'), [
-            'form_params' => [
-                'content' => $this->now->toDateString().' 本日 Top 5'.PHP_EOL.implode(PHP_EOL, $urls ?? []),
-                'color' => '000000',
-                'accept-license' => true,
-                'nolink' => true,
-                'scheduling-auth' => config('services.bitly.token'),
-            ],
-        ]);
+        $this->sendPost($urls ?? []);
+    }
+
+    /**
+     * Get the daily top posts.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function getPosts()
+    {
+        return Post::whereNotNull('fbid')
+            ->where('published_at', '>=', $this->now->copy()->subDays(1))
+            ->orderBy('ranks', 'desc')
+            ->take(5)
+            ->get(['id', 'fbid']);
     }
 
     /**
@@ -97,5 +99,29 @@ class PostDailyTop extends FacebookCommand
         }
 
         return $bitly->shortenUrl($url);
+    }
+
+    /**
+     * Send the post request.
+     *
+     * @param array $urls
+     *
+     * @return void
+     */
+    protected function sendPost($urls)
+    {
+        if (empty($urls)) {
+            return;
+        }
+
+        (new Client())->post(route('kobe.non-secure'), [
+            'form_params' => [
+                'content' => $this->now->toDateString().' 本日 Top 5'.PHP_EOL.implode(PHP_EOL, $urls),
+                'color' => '000000',
+                'accept-license' => true,
+                'nolink' => true,
+                'scheduling-auth' => config('services.bitly.token'),
+            ],
+        ]);
     }
 }

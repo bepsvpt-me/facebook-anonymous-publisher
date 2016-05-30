@@ -27,11 +27,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('facebook:sync-ranks')->everyMinute()->withoutOverlapping();
-
-        $schedule->command('facebook:post-daily-top')->dailyAt('22:45')->skip(function () {
+        $schedule->command('facebook:sync-ranks')->everyMinute()->skip(function () {
             return $this->isLateAtNight();
         })->withoutOverlapping();
+
+        $schedule->command('facebook:post-daily-top')->dailyAt('22:45')->withoutOverlapping();
     }
 
     /**

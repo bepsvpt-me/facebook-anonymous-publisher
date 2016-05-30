@@ -3,11 +3,28 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Redirect;
 
 class AuthController extends Controller
 {
+    use ThrottlesLogins;
+
+    /**
+     * The maximum number of login attempts for delaying further attempts.
+     *
+     * @var int
+     */
+    protected $maxLoginAttempts = 3;
+
+    /**
+     * The number of seconds to delay further login attempts.
+     *
+     * @var int
+     */
+    protected $lockoutTime = 300;
+
     /**
      * Get the sign in view.
      *
@@ -27,7 +44,13 @@ class AuthController extends Controller
      */
     public function auth(Request $request)
     {
+        if ($this->hasTooManyLoginAttempts($request)) {
+            return $this->sendLockoutResponse($request);
+        }
+
         if (! Auth::attempt($request->only(['username', 'password']), true)) {
+            $this->incrementLoginAttempts($request);
+
             return back()->withInput()->withErrors(['sign-in' => trans('auth.failed')]);
         }
 
@@ -44,5 +67,15 @@ class AuthController extends Controller
         Auth::logout();
 
         return Redirect::home();
+    }
+
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    protected function loginUsername()
+    {
+        return '';
     }
 }
