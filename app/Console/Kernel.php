@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('facebook:sync-ranks')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('facebook:sync-ranks')->everyFiveMinutes()->withoutOverlapping();
 
         $schedule->command('facebook:post-daily-top')->dailyAt('22:45')->withoutOverlapping();
     }

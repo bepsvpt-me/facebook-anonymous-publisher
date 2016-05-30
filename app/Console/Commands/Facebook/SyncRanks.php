@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Facebook;
 
 use App\Post;
+use App\User;
 use Facebook\FacebookRequest;
 use Log;
 
@@ -58,10 +59,14 @@ class SyncRanks extends FacebookCommand
      */
     protected function getPosts()
     {
+        $count = User::where('username', 'like', 'facebook-%')->count();
+
+        $nums = min(25, 5 + $count * 10);
+
         return Post::whereNotNull('fbid')
             ->where('published_at', '>=', $this->now->copy()->subMonth())
             ->oldest('sync_at')
-            ->take(20)
+            ->take($nums)
             ->get(['id', 'ranks', 'fbid', 'sync_at']);
     }
 
@@ -133,6 +138,6 @@ class SyncRanks extends FacebookCommand
 
         $comments = json_decode($comments, true)['summary']['total_count'];
 
-        return intval(floatval($likes) * 1.5 + $comments);
+        return intval(floatval($likes) * 1.2 + $comments);
     }
 }
