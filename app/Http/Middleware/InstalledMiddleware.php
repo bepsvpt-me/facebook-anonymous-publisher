@@ -13,13 +13,12 @@ class InstalledMiddleware
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @param null|string $exceptInstalled
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $exceptInstalled = null)
+    public function handle($request, Closure $next)
     {
-        if (boolval(Config::getConfig('installed')) !== is_null($exceptInstalled)) {
+        if ($request->is('install*') === boolval(Config::getConfig('installed'))) {
             throw new ServiceUnavailableHttpException;
         }
 

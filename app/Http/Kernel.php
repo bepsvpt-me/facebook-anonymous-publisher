@@ -16,6 +16,7 @@ class Kernel extends HttpKernel
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \App\Http\Middleware\PreprocessApplication::class,
+        \App\Http\Middleware\InstalledMiddleware::class,
     ];
 
     /**
@@ -48,7 +49,6 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
-        'installed' => \App\Http\Middleware\InstalledMiddleware::class,
         'ip' => \App\Http\Middleware\BlockBlacklistIp::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
