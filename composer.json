@@ -1,7 +1,7 @@
 {
-  "name": "laravel/laravel",
-  "description": "The Laravel Framework.",
-  "keywords": ["framework", "laravel"],
+  "name": "bepsvpt/facebook-anonymous-publisher",
+  "description": "Facebook Anonymous Publisher",
+  "keywords": ["facebook", "publisher"],
   "license": "MIT",
   "type": "project",
   "require": {
@@ -9,7 +9,7 @@
     "laravel/framework": "5.2.*",
     "caouecs/laravel-lang": "^3.0",
     "doctrine/dbal": "^2.5",
-    "facebook/php-sdk-v4": "^5.1",
+    "facebook/php-sdk-v4": "^5.2",
     "gabrielkaputa/bitly": "^1.0",
     "greggilbert/recaptcha": "^2.1",
     "guzzlehttp/guzzle": "^6.2",
@@ -26,9 +26,9 @@
   "require-dev": {
     "barryvdh/laravel-debugbar": "^2.2",
     "barryvdh/laravel-ide-helper": "^2.1",
-    "fzaninotto/faker": "~1.4",
+    "fzaninotto/faker": "~1.6",
     "mockery/mockery": "0.9.*",
-    "phpunit/phpunit": "~4.0",
+    "phpunit/phpunit": "~4.8",
     "symfony/css-selector": "2.8.*|3.0.*",
     "symfony/dom-crawler": "2.8.*|3.0.*"
   },
