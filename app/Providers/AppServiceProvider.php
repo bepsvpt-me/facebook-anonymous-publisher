@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->overrideConfig();
 
-        $this->includeFormAndHtmlMacro();
+        $this->includeMacros();
     }
 
     /**
@@ -74,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function includeFormAndHtmlMacro()
+    protected function includeMacros()
     {
         require_once app_path(file_build_path('Libraries', 'form.php'));
         require_once app_path(file_build_path('Libraries', 'html.php'));

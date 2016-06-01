@@ -20,6 +20,26 @@ class HomeController extends Controller
     }
 
     /**
+     * Get the changelog view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function changelog()
+    {
+        return view('changelog');
+    }
+
+    /**
+     * Get the terms of service and privacy policy view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function tosAndPp()
+    {
+        return view('tos-pp');
+    }
+
+    /**
      * Redirect to the original url from short url.
      *
      * @param string $hash
@@ -35,15 +55,5 @@ class HomeController extends Controller
         }
 
         return Redirect::to(Shortener::findOrFail($id[0])->getAttribute('url'));
-    }
-
-    /**
-     * Get the terms of service and privacy policy view.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function tosAndPp()
-    {
-        return view('tos-pp');
     }
 }

@@ -11,7 +11,7 @@
     <meta property="og:locale" content="{{ App::getLocale() }}">
     {{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css') }}
     {{ Html::style('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css') }}
-    {{ Html::style('css/app.css') }}
+    {{ Html::style(elixir('css/app.css')) }}
   </head>
   <body>
     @include('layouts.navbar')
