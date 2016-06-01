@@ -21,5 +21,5 @@
 @endsection
 
 @push('scripts')
-  <script src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&amp;version=v2.2" async></script>
+  <script src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&amp;version=v2.2" defer></script>
 @endpush

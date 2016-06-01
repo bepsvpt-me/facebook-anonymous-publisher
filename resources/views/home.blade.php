@@ -58,7 +58,7 @@
             <div class="checkbox">
               <label>
                 {{ Form::checkbox('accept-license', true, null, ['data-error' => '您必須同意本站隱私條款', 'required']) }}
-                <span>我同意並已詳細閱讀{{ Html::linkRoute('tos-pp', '服務條款', [], ['target' => '_blank']) }}及{{ Html::linkRoute('tos-pp', '隱私政策', [], ['target' => '_blank']) }}，並同意於按下送出按鈕後放棄對本網站所有法律追訴權</span>
+                <span>我同意並已詳細閱讀 {{ Html::linkRoute('tos-pp', '服務條款', [], ['target' => '_blank']) }} 及 {{ Html::linkRoute('tos-pp', '隱私政策', [], ['target' => '_blank']) }}，並同意於按下送出按鈕後放棄對本網站所有法律追訴權</span>
               </label>
             </div>
           </div>
@@ -71,12 +71,7 @@
 
       @unless(empty($application['ad-client']) || empty($application['ad-slot']))
         <section>
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-          <ins class="adsbygoogle block"
-               data-ad-client="{{ $application['ad-client'] }}"
-               data-ad-slot="{{ $application['ad-slot'] }}"
-               data-ad-format="auto"></ins>
-          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          <script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script><ins class="adsbygoogle block" data-ad-client="{{ $application['ad-client'] }}" data-ad-slot="{{ $application['ad-slot'] }}" data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </section>
       @endunless
     </div>
@@ -84,7 +79,7 @@
 @endsection
 
 @push('scripts')
-  {{ Html::script('https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js') }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js" defer></script>
 
   <script>
     $(document).on('submit', 'form', function () {

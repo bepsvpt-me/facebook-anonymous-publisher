@@ -15,7 +15,7 @@
 @endsection
 
 @push('scripts')
-  {{ Html::script('https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js') }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
 
   <script>
     document.querySelector('#changelog').innerHTML = marked(document.querySelector('#changelog').innerHTML);
