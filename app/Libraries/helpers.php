@@ -1,5 +1,25 @@
 <?php
 
+if (! function_exists('is_support_country')) {
+    /**
+     * Check the current request ip is support country.
+     *
+     * @return bool
+     */
+    function is_support_country()
+    {
+        $reader = new \GeoIp2\Database\Reader(config('services.geoip2.path'));
+
+        try {
+            $isoCode = $reader->country(real_ip(Request::instance()))->country->isoCode;
+        } catch (Exception $e) {
+            return true;
+        }
+
+        return 'TW' === $isoCode;
+    }
+}
+
 if (! function_exists('is_block_ip')) {
     /**
      * Check the current request ip is in block list.

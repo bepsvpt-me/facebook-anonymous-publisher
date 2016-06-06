@@ -21,6 +21,12 @@
             <li>如您的ＩＰ位址被封鎖，則可以透過登入的方式解除此限制，請特別注意，<strong class="text-danger">此時發文即不是匿名，如果您想要匿名發言，又不想任何負責，很抱歉，此系統無法滿足您的需求</strong>，在其餘狀況下，只要您的ＩＰ位址未被封鎖，不管是否有登入，本系統皆不會紀錄足以辨別使用者之資訊</li>
           </ol>
         </section>
+      @elseif(! is_support_country())
+        <section class="text-center">
+          <h3 class="text-info">本服務不支援您所在的國家/地區</h3>
+
+          <span>This product includes GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com" target="_blank">http://www.maxmind.com</a>.</span>
+        </section>
       @else
         <section>
           {{ Html::formErrors() }}
@@ -58,7 +64,7 @@
             <div class="checkbox">
               <label>
                 {{ Form::checkbox('accept-license', true, null, ['data-error' => '您必須同意本站隱私條款', 'required']) }}
-                <span>我同意並已詳細閱讀 {{ Html::linkRoute('tos-pp', '服務條款', [], ['target' => '_blank']) }} 及 {{ Html::linkRoute('tos-pp', '隱私政策', [], ['target' => '_blank']) }}，並同意於按下送出按鈕後放棄對本網站所有法律追訴權</span>
+                <span>我同意並已詳細閱讀 {{ Html::linkRoute('tos-pp', '服務條款', [], ['target' => '_blank']) }} 及 {{ Html::linkRoute('tos-pp', '隱私政策', [], ['target' => '_blank']) }}</span>
               </label>
             </div>
           </div>

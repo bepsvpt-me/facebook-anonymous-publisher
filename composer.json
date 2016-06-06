@@ -11,6 +11,7 @@
     "doctrine/dbal": "^2.5",
     "facebook/php-sdk-v4": "^5.2",
     "gabrielkaputa/bitly": "^1.0",
+    "geoip2/geoip2": "~2.4",
     "greggilbert/recaptcha": "^2.1",
     "guzzlehttp/guzzle": "^6.2",
     "hashids/hashids": "^1.0",
