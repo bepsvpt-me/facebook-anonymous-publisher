@@ -2,8 +2,9 @@
 
 ## 1.x
 
-- dev
+- 1.0.1 (2016-06-08)
   - Fix incorrect form error message
+  - Fix incorrect user role check
   - Support ipv6 if application is behind cloudflare
   - Support restrict user country
 
