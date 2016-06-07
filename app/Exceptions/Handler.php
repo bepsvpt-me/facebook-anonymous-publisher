@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof TokenMismatchException) {
             Log::notice('Token-Mismatch', [
-                'ip' => real_ip(Request::instance()),
+                'ip' => real_ip(),
                 'user_agent' => Request::header('user-agent'),
             ]);
         }

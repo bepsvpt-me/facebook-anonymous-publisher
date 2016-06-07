@@ -18,7 +18,7 @@ class BlockBlacklistIp
     public function handle($request, Closure $next)
     {
         if (! is_support_country() || is_block_ip()) {
-            Log::notice('blacklist-ip', ['ip' => real_ip($request)]);
+            Log::notice('blacklist-ip', ['ip' => real_ip()]);
 
             throw new AccessDeniedHttpException;
         }

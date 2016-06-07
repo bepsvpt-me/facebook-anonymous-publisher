@@ -1,5 +1,7 @@
 <?php
 
+use Vectorface\Whip\Whip;
+
 if (! function_exists('is_support_country')) {
     /**
      * Check the current request ip is support country.
@@ -11,7 +13,7 @@ if (! function_exists('is_support_country')) {
         $reader = new \GeoIp2\Database\Reader(config('services.geoip2.path'));
 
         try {
-            $isoCode = $reader->country(real_ip(Request::instance()))->country->isoCode;
+            $isoCode = $reader->country(real_ip())->country->isoCode;
         } catch (Exception $e) {
             return true;
         }
@@ -38,7 +40,7 @@ if (! function_exists('is_block_ip')) {
             return \App\Block::where('type', 'ip')->get(['value'])->pluck('value')->toArray();
         });
 
-        return in_array(real_ip(Request::instance()), $ips, true);
+        return in_array(real_ip(), $ips, true);
     }
 }
 
@@ -46,33 +48,24 @@ if (! function_exists('real_ip')) {
     /**
      * Get user real ip if the application is behind CloudFlare.
      *
-     * @param \Illuminate\Http\Request $request
-     *
      * @return string
      */
-    function real_ip(Illuminate\Http\Request $request)
+    function real_ip()
     {
-        static $cloudFlareIps = [
-            '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',
-            '104.16.0.0/12', '108.162.192.0/18', '131.0.72.0/22',
-            '141.101.64.0/18', '162.158.0.0/15', '172.64.0.0/13',
-            '173.245.48.0/20', '188.114.96.0/20', '190.93.240.0/20',
-            '197.234.240.0/22', '198.41.128.0/17', '199.27.128.0/21',
-        ];
-
         static $ip = null;
 
         if (! is_null($ip)) {
             return $ip;
         }
 
-        $ip = $request->ip();
+        $whip = new Whip(Whip::CLOUDFLARE_HEADERS | Whip::REMOTE_ADDR, [
+            Whip::CLOUDFLARE_HEADERS => [
+                Whip::IPV4 => config('cloudflare.ipv4'),
+                Whip::IPV6 => config('cloudflare.ipv6'),
+            ],
+        ]);
 
-        if (\Symfony\Component\HttpFoundation\IpUtils::checkIp($ip, $cloudFlareIps)) {
-            $ip = $request->header('cf-connecting-ip', $request->header('x-forwarded-for', $ip));
-        }
-
-        return $ip;
+        return $ip = $whip->getValidIpAddress();
     }
 }
 
