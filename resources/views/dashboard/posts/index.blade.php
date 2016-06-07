@@ -42,7 +42,11 @@
             </td>
             <td>
               <p title="{{ $post->getAttribute('created_at') }}">提交於 {{ $post->getAttribute('created_at')->diffForHumans(\Carbon\Carbon::now()) }}</p>
-              <p>來源 {{ $post->getAttribute('ip') }}</p>
+
+              @if(Auth::user()->is('admin'))
+                <p>來源 {{ $post->getAttribute('ip') }}</p>
+              @endif
+
               <p>{{ $agent->browser().' on '.$agent->platform() }}</p>
             </td>
             <td>{{ Html::linkButton('dashboard.posts.block', ['id' => $post->getKey()], 'btn-warning', 'ban') }}</td>
