@@ -21,7 +21,7 @@ class SyncRanks extends FacebookCommand
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sync the ranks of facebook posts.';
 
     /**
      * Execute the console command.
@@ -30,26 +30,20 @@ class SyncRanks extends FacebookCommand
      */
     public function handle()
     {
-        $posts = $this->getPosts();
+        $posts = $this->posts();
 
-        $collection = $this->fb->sendBatchRequest($this->prepareRequests($posts))->getDecodedBody();
+        if (false === $posts) {
+            return;
+        }
 
-        $i = 0;
+        $items = $this->fb
+            ->sendBatchRequest($this->prepareRequests($posts))
+            ->getDecodedBody();
 
-        foreach ($collection as $item) {
-            if ($this->isLogFails($posts[$i]->getAttribute('fbid'), $item['code'])) {
-                $posts[$i]->delete();
-            } else {
-                $ranks = $this->getRanks($item['body']);
-
-                $posts[$i]->update([
-                    'ranks' => $ranks['ranks'],
-                    'ranks_data' => $ranks,
-                    'sync_at' => $this->now,
-                ]);
+        foreach ($items as $index => $item) {
+            if (! $this->isFail($posts[$index], $item['code'])) {
+                $this->updateRanks($posts[$index], $item['body']);
             }
-
-            ++$i;
         }
 
         Log::info('facebook-sync-ranks');
@@ -62,17 +56,23 @@ class SyncRanks extends FacebookCommand
      *
      * @return array
      */
-    protected function getPosts()
+    protected function posts()
     {
-        $count = User::where('username', 'like', 'facebook-%')->count(['id']);
+        try {
+            $count = User::where('username', 'like', 'facebook-%')->count(['id']);
 
-        $nums = min(50, 1 + $count);
+            $nums = min(50, 1 + $count);
 
-        return Post::whereNotNull('fbid')
-            ->where('published_at', '>=', $this->now->copy()->subMonth())
-            ->oldest('sync_at')
-            ->take($nums)
-            ->get(['id', 'ranks', 'fbid', 'sync_at']);
+            return Post::whereNotNull('fbid')
+                ->where('published_at', '>=', $this->now->copy()->subMonth())
+                ->oldest('sync_at')
+                ->take($nums)
+                ->get(['id', 'ranks', 'fbid', 'sync_at']);
+        } catch (\PDOException $e) {
+            Log::error('database-connection-refused');
+
+            return false;
+        }
     }
 
     /**
@@ -84,12 +84,14 @@ class SyncRanks extends FacebookCommand
      */
     protected function prepareRequests($posts)
     {
+        $queryString = 'fields=comments.summary(true).limit(0),likes.summary(true).limit(0)';
+
         $requests = [];
 
         foreach ($posts as $post) {
             $requests[] = new FacebookRequest(
                 null, null, 'GET',
-                "/{$this->config['page_id']}_{$post->getAttribute('fbid')}?fields=comments.summary(true).limit(0),likes.summary(true).limit(0)"
+                "/{$this->config['page_id']}_{$post->getAttribute('fbid')}?{$queryString}"
             );
         }
 
@@ -97,25 +99,57 @@ class SyncRanks extends FacebookCommand
     }
 
     /**
-     * Log if the response code are not all 200.
+     * Log and delete the post if the response code is not 200.
      *
-     * @param int $fbid
+     * @param Post $post
      * @param int $code
      *
      * @return bool
      */
-    protected function isLogFails($fbid, $code)
+    protected function isFail(Post $post, $code)
     {
         if (200 === $code) {
             return false;
         }
 
         Log::notice('facebook-sync-likes', [
-            'fbid' => $fbid,
+            'fbid' => $post->getAttribute('fbid'),
             'code' => $code,
         ]);
 
+        try {
+            $post->delete();
+        } catch (\PDOException $e) {
+            Log::error('database-connection-refused');
+        }
+
         return true;
+    }
+
+    /**
+     * Update the ranks of the post.
+     *
+     * @param Post $post
+     * @param string $body
+     *
+     * @return void
+     */
+    protected function updateRanks(Post $post, $body)
+    {
+        $ranks = $this->ranks($body);
+
+        try {
+            $post->update([
+                'ranks' => $ranks['ranks'],
+                'ranks_data' => $ranks,
+                'sync_at' => $this->now,
+            ]);
+        } catch (\PDOException $e) {
+            Log::error('database-connection-refused', [
+                'schedule' => 'update post ranks',
+                'fbid' => $post->getAttribute('fbid'),
+            ]);
+        }
     }
 
     /**
@@ -125,7 +159,7 @@ class SyncRanks extends FacebookCommand
      *
      * @return int
      */
-    protected function getRanks($body)
+    protected function ranks($body)
     {
         $data = json_decode($body, true);
 
