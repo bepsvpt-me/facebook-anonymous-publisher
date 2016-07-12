@@ -32,7 +32,7 @@ class SyncRanks extends FacebookCommand
     {
         $posts = $this->posts();
 
-        if (false === $posts) {
+        if (false === $posts || $posts->isEmpty()) {
             return;
         }
 
@@ -54,7 +54,7 @@ class SyncRanks extends FacebookCommand
     /**
      * Get posts that need to sync.
      *
-     * @return array
+     * @return \Illuminate\Database\Eloquent\Collection|bool
      */
     protected function posts()
     {
@@ -78,7 +78,7 @@ class SyncRanks extends FacebookCommand
     /**
      * Prepare the facebook batch request.
      *
-     * @param array $posts
+     * @param \Illuminate\Database\Eloquent\Collection $posts
      *
      * @return array
      */
