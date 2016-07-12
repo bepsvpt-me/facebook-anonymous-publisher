@@ -24,7 +24,6 @@ $router->get('auth/sign-out', ['as' => 'auth.sign-out', 'uses' => 'AuthControlle
 $router->get('oauth/facebook', ['as' => 'oauth.facebook', 'uses' => 'OAuthController@facebook']);
 $router->get('oauth/facebook/callback', ['as' => 'oauth.facebook.callback', 'uses' => 'OAuthController@facebookCallback']);
 
-$router->get('changelog', ['as' => 'changelog', 'uses' => 'HomeController@changelog']);
 $router->get('terms-of-service-and-privacy-policy', ['as' => 'tos-pp', 'uses' => 'HomeController@tosAndPp']);
 
 $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.', 'middleware' => 'auth:manager'], function (Router $router) {

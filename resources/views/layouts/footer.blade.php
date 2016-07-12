@@ -2,7 +2,7 @@
   <hr>
 
   <section class="text-center link-button">
-    <a class="btn btn-success" href="{{ route('changelog') }}" role="button">
+    <a class="btn btn-success" href="https://github.com/BePsvPT/Facebook-Anonymous-Publisher/blob/master/CHANGELOG.md" target="_blank" role="button">
       {{ Html::icon('history', true) }} <span>Changelog</span>
     </a>
 
