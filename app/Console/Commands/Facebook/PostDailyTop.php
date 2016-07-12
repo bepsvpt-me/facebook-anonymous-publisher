@@ -4,8 +4,10 @@ namespace App\Console\Commands\Facebook;
 
 use App\Post;
 use App\Shortener;
+use Crypt;
 use GabrielKaputa\Bitly\Bitly;
 use GuzzleHttp\Client;
+use Log;
 
 class PostDailyTop extends FacebookCommand
 {
@@ -21,7 +23,7 @@ class PostDailyTop extends FacebookCommand
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Post the top five facebook posts link.';
 
     /**
      * Execute the console command.
@@ -30,15 +32,19 @@ class PostDailyTop extends FacebookCommand
      */
     public function handle()
     {
-        $posts = $this->getPosts();
+        $posts = $this->posts();
+
+        if (false === $posts) {
+            return;
+        }
 
         foreach ($posts as $index => $post) {
-            $url = $this->getShortenUrl("https://www.facebook.com/{$this->config['page_id']}/posts/{$post->getAttribute('fbid')}");
+            $url = $this->shortenUrl("https://www.facebook.com/{$this->config['page_id']}/posts/{$post->getAttribute('fbid')}");
 
             $urls[] = 'Top'.($index + 1).' : '.$url;
         }
 
-        $this->sendPost($urls ?? []);
+        $this->send($urls ?? []);
     }
 
     /**
@@ -46,13 +52,19 @@ class PostDailyTop extends FacebookCommand
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected function getPosts()
+    protected function posts()
     {
-        return Post::whereNotNull('fbid')
-            ->where('published_at', '>=', $this->now->copy()->subDays(1))
-            ->orderBy('ranks', 'desc')
-            ->take(5)
-            ->get(['id', 'fbid']);
+        try {
+            return Post::whereNotNull('fbid')
+                ->where('published_at', '>=', $this->now->copy()->subDays(1))
+                ->orderBy('ranks', 'desc')
+                ->take(5)
+                ->get(['id', 'fbid']);
+        } catch (\PDOException $e) {
+            Log::error('database-connection-refused');
+
+            return false;
+        }
     }
 
     /**
@@ -62,7 +74,7 @@ class PostDailyTop extends FacebookCommand
      *
      * @return bool|string
      */
-    protected function getShortenUrl($url)
+    protected function shortenUrl($url)
     {
         if (is_null(config('services.bitly.token'))) {
             return $this->shortenUsingLocal($url);
@@ -108,7 +120,7 @@ class PostDailyTop extends FacebookCommand
      *
      * @return void
      */
-    protected function sendPost($urls)
+    protected function send($urls)
     {
         if (empty($urls)) {
             return;
@@ -120,7 +132,7 @@ class PostDailyTop extends FacebookCommand
                 'color' => '000000',
                 'accept-license' => true,
                 'nolink' => true,
-                'scheduling-auth' => config('services.bitly.token'),
+                'scheduling-auth' => Crypt::encrypt('daily-top'),
             ],
         ]);
     }

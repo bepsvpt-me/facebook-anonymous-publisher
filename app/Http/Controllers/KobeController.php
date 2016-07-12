@@ -8,14 +8,17 @@ use App\Http\Requests\KobeRequest;
 use App\Post;
 use Cache;
 use Carbon\Carbon;
+use Crypt;
 use Facebook\Facebook;
 use Facebook\FacebookResponse;
 use Facebook\FileUpload\FacebookFile;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Image;
 use Intervention\Image\Gd\Font;
 use Mexitek\PHPColors\Color;
 use Overtrue\Pinyin\Pinyin;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class KobeController extends Controller
 {
@@ -37,6 +40,54 @@ class KobeController extends Controller
     protected $post;
 
     /**
+     * Post kobe.
+     *
+     * @param KobeRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function kobe(KobeRequest $request)
+    {
+        $this->verify($request);
+
+        $this->init();
+
+        $this->save($request);
+
+        $file = $request->has('post-by-image') ? $this->canvas($request->input('color')) : $request->file('image');
+
+        $this->posted($this->postFeed($file));
+
+        return redirect("https://www.facebook.com/{$this->post->getAttribute('fbid')}");
+    }
+
+    /**
+     * Verify the request is valid or not.
+     *
+     * @param Request $request
+     *
+     * @return void
+     */
+    protected function verify(Request $request)
+    {
+        if ('kobe.non-secure' === $request->route()->getName()) {
+            $legal = true;
+
+            try {
+                if ('daily-top' !== Crypt::decrypt($request->input('scheduling-auth', ''))) {
+                    $legal = false;
+                }
+            } catch (DecryptException $e) {
+                $legal = false;
+            }
+
+            if (! $legal) {
+                throw new AccessDeniedHttpException;
+            }
+        }
+    }
+
+    /**
      * Initialize the kobe.
      */
     protected function init()
@@ -49,33 +100,13 @@ class KobeController extends Controller
     }
 
     /**
-     * Post kobe.
-     *
-     * @param KobeRequest $request
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function kobe(KobeRequest $request)
-    {
-        $this->init();
-
-        $this->savePost($request);
-
-        $file = $request->has('post-by-image') ? $this->canvas($request->input('color')) : $request->file('image');
-
-        $this->posted($this->postFeed($file));
-
-        return redirect("https://www.facebook.com/{$this->post->getAttribute('fbid')}");
-    }
-
-    /**
      * Create post.
      *
      * @param Request $request
      *
      * @return bool
      */
-    protected function savePost(Request $request)
+    protected function save(Request $request)
     {
         $content = $this->filterBlockWords(
             $this->stripCharacters(
@@ -98,30 +129,6 @@ class KobeController extends Controller
     }
 
     /**
-     * Strip special characters.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    protected function stripCharacters($string)
-    {
-        $len = mb_strlen($string);
-
-        $removes = [];
-
-        for ($i = 0; $i < $len; ++$i) {
-            $char = mb_substr($string, $i, 1);
-
-            if ((1 === strlen($char)) && "\n" !== $char && ! in_array($char, $removes, true) && (! ctype_print($char) || ctype_cntrl($char))) {
-                $removes[] = $char;
-            }
-        }
-
-        return str_replace(array_merge($removes, [d('&lrm;')]), '', $string);
-    }
-
-    /**
      * Normalize new line symbol.
      *
      * @param string $content
@@ -140,15 +147,23 @@ class KobeController extends Controller
     }
 
     /**
-     * Get specific amount of new lines.
+     * Strip special characters.
      *
-     * @param int $multiplier
+     * @param string $string
      *
      * @return string
      */
-    protected function newLines($multiplier = 1)
+    protected function stripCharacters($string)
     {
-        return str_repeat(PHP_EOL, $multiplier);
+        $removes = [];
+
+        foreach ($this->stringToArray($string) as $char) {
+            if ((1 === strlen($char)) && ($this->newLines(1) !== $char) && (! ctype_print($char) || ctype_cntrl($char))) {
+                $removes[] = $char;
+            }
+        }
+
+        return str_replace(array_merge(array_unique($removes, SORT_REGULAR), [d('&lrm;')]), '', $string);
     }
 
     /**
@@ -160,11 +175,11 @@ class KobeController extends Controller
      */
     protected function filterBlockWords($content)
     {
-        foreach ($this->getBlockWords() as $word) {
+        foreach ($this->blockWords() as $word) {
             $content = str_replace($word, str_repeat('♥', mb_strlen($word)), $content, $count);
 
-            if (0 === $count) {
-                $content = $this->replaceBlockWord($this->transformBlockWord($word), $content);
+            if (0 === $count && preg_match("/\p{Han}+/uU", $word)) {
+                $content = $this->advanceFilter($this->transformBlockWord($word), $content);
             }
         }
 
@@ -176,7 +191,7 @@ class KobeController extends Controller
      *
      * @return array
      */
-    protected function getBlockWords()
+    protected function blockWords()
     {
         return Cache::remember('block-words', 30, function () {
             return Block::where('type', 'keyword')
@@ -209,8 +224,9 @@ class KobeController extends Controller
      * @param string $content
      *
      * @return string
+     * @todo Optimize
      */
-    protected function replaceBlockWord($word, $content)
+    protected function advanceFilter($word, $content)
     {
         $pinyin = new Pinyin();
 
@@ -244,13 +260,13 @@ class KobeController extends Controller
      */
     protected function transformHashTag($content)
     {
-        if (0 === preg_match_all('/#'.$this->application['page_name'].'(\d+)/', $content, $matches)) {
+        if (0 === preg_match_all('/#('.$this->application['page_name'].')?(\d+)/', $content, $matches)) {
             return $content;
         }
 
         $stack = [];
 
-        foreach ($matches[1] as $index => $match) {
+        foreach ($matches[2] as $index => $match) {
             $post = Post::find($match, ['fbid']);
 
             if (is_null($post) || in_array($post->getAttribute('fbid'), $stack)) {
@@ -315,12 +331,14 @@ class KobeController extends Controller
      */
     protected function canvas($color)
     {
-        $filePath = file_build_path($this->getImageDirectory(), $this->post->getKey().'.jpg');
+        $filePath = file_build_path($this->imageDirectory(), $this->post->getKey().'.jpg');
 
-        $canvas = $this->getCanvasWidthAndHeight($this->post->getAttribute('content'));
+        $content = $this->breakLine($this->post->getAttribute('content'));
+
+        $canvas = $this->getCanvasWidthAndHeight($content);
 
         Image::canvas($canvas['width'], $canvas['height'], '#'.$color)
-            ->text($this->post->getAttribute('content'), $canvas['width'] / 2, $canvas['height'] / 2, function (Font $font) use ($color) {
+            ->text($content, $canvas['width'] / 2, $canvas['height'] / 2, function (Font $font) use ($color) {
                 $font->file($this->getFontPath());
                 $font->size(48);
                 $font->color((new Color($color))->isDark() ? '#fff' : '#000');
@@ -330,6 +348,51 @@ class KobeController extends Controller
             ->save($filePath, 100);
 
         return $filePath;
+    }
+
+    /**
+     * Break the line to multiple lines if length is too long.
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function breakLine($content)
+    {
+        $lines = explode($this->newLines(1), $content);
+
+        foreach ($lines as &$line) {
+            if (mb_strwidth($line) > 48) {
+                $line = $this->partitionLine($line);
+            }
+        }
+
+        return implode($this->newLines(1), $lines);
+    }
+
+    /**
+     * Ensure the length of the line is not longer than 48.
+     *
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function partitionLine($line)
+    {
+        list($lines, $temp, $width) = [[], '', 0];
+
+        foreach ($this->stringToArray($line) as $word) {
+            if ($width + mb_strwidth($word) > 48) {
+                $lines[] = $temp;
+                $temp = '';
+                $width = 0;
+            }
+
+            $temp .= $word;
+            $width += mb_strwidth($word);
+        }
+
+        return implode($this->newLines(1), $lines);
     }
 
     /**
@@ -356,7 +419,7 @@ class KobeController extends Controller
      */
     protected function getFontPath()
     {
-        return storage_path('app/fonts/NotoSansCJKtc-Regular.otf');
+        return storage_path(file_build_path('app', 'fonts', 'NotoSansCJKtc-Regular.otf'));
     }
 
     /**
@@ -395,7 +458,7 @@ class KobeController extends Controller
         }
 
         $file = $file->move(
-            $this->getImageDirectory(),
+            $this->imageDirectory(),
             $this->post->getKey().'.'.$file->guessExtension()
         );
 
@@ -410,7 +473,7 @@ class KobeController extends Controller
      *
      * @return string
      */
-    protected function getImageDirectory()
+    protected function imageDirectory()
     {
         return storage_path(file_build_path('app', 'images', intval(floor($this->post->getKey() / 5000))));
     }
@@ -455,7 +518,7 @@ class KobeController extends Controller
             return '';
         }
 
-        return implode($this->newLines(), $links);
+        return implode($this->newLines(1), $links);
     }
 
     /**
@@ -473,5 +536,29 @@ class KobeController extends Controller
         $this->post->setAttribute('published_at', Carbon::now());
 
         return $this->post->save();
+    }
+
+    /**
+     * Convert string to array.
+     *
+     * @param string $string
+     *
+     * @return array
+     */
+    protected function stringToArray($string)
+    {
+        return preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * Get specific amount of new lines.
+     *
+     * @param int $multiplier
+     *
+     * @return string
+     */
+    protected function newLines($multiplier = 1)
+    {
+        return str_repeat(PHP_EOL, $multiplier);
     }
 }
