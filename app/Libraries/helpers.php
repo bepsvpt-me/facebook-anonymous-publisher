@@ -18,7 +18,7 @@ if (! function_exists('is_support_country')) {
             return true;
         }
 
-        return 'TW' === $isoCode;
+        return 'TW' === $isoCode || 'SG' === $isoCode;
     }
 }
 
