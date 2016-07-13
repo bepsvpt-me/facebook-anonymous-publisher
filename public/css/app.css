@@ -10,6 +10,9 @@ table th {
 table.table-middle td {
   vertical-align: middle !important; }
 
+textarea {
+  resize: vertical; }
+
 .page-footer {
   margin-top: 20px;
   margin-bottom: 20px; }
@@ -37,5 +40,9 @@ table.table-middle td {
   white-space: pre-line; }
   .post-content-th {
     width: 60%; }
+
+.jscolor {
+  border: none;
+  border-radius: 2px; }
 
 /*# sourceMappingURL=app.css.map */

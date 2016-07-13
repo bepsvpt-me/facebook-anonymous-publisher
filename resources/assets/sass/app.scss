@@ -16,6 +16,10 @@ table {
   }
 }
 
+textarea {
+  resize: vertical;
+}
+
 .page-footer {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -52,4 +56,9 @@ table {
   &-th {
     width: 60%;
   }
+}
+
+.jscolor {
+  border: none;
+  border-radius: 2px;
 }

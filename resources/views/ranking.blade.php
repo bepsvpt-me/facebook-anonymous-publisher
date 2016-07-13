@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
 @section('main')
-  <section>
-    <h1 class="text-center">{{ [1 => '日', 7 => '週', 30 => '月'][$days] }}排行榜</h1>
+  <section class="text-center">
+    <h1>{{ [1 => '日', 7 => '週', 30 => '月'][$days] }}排行榜</h1>
 
-    <p class="lead text-center">Top {{ $posts->currentPage() * 5 - 4 }} ~ {{ $posts->currentPage() * 5 }}</p>
+    <h3>Top {{ $posts->currentPage() * 5 - 4 }} ~ {{ $posts->currentPage() * 5 }}</h3>
   </section>
 
   <section>
