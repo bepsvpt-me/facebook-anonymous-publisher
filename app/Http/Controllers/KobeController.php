@@ -175,15 +175,17 @@ class KobeController extends Controller
      */
     protected function filterBlockWords($content)
     {
-        foreach ($this->blockWords() as $word) {
-            $content = str_replace($word, str_repeat('♥', mb_strlen($word)), $content, $count);
+        $words = $this->blockWords();
 
-            if (0 === $count && preg_match("/\p{Han}+/uU", $word)) {
-                $content = $this->advanceFilter($this->transformBlockWord($word), $content);
-            }
+        if (empty($words)) {
+            return $content;
         }
 
-        return $content;
+        if (! preg_match("/\p{Han}+/uU", $content)) {
+            return str_replace($words, $this->simpleReplacements($words), $content);
+        }
+
+        return $this->advanceFilter($content, $words);
     }
 
     /**
@@ -203,52 +205,106 @@ class KobeController extends Controller
     }
 
     /**
-     * Get block word length and pinyin.
+     * Create isometric characters for the block words.
      *
-     * @param string $word
+     * @param array $words
      *
      * @return array
      */
-    protected function transformBlockWord($word)
+    protected function simpleReplacements(array $words)
     {
-        return [
-            'len' => mb_strlen($word),
-            'pinyin' => (new Pinyin())->sentence($word),
-        ];
+        $replacements = [];
+
+        foreach ($words as $word) {
+            $replacements[] = str_repeat('♥', mb_strlen($word));
+        }
+
+        return $replacements;
     }
 
     /**
-     * Replace block word with ♥ symbol.
+     * Advance filter the block words.
      *
-     * @param array $word
      * @param string $content
+     * @param array $words
      *
      * @return string
-     * @todo Optimize
      */
-    protected function advanceFilter($word, $content)
+    protected function advanceFilter($content, $words)
     {
-        $pinyin = new Pinyin();
+        $hashes = $this->wordsHash($words);
 
-        if (! str_contains($pinyin->sentence($content), $word['pinyin'])) {
-            return $content;
-        }
+        $blocks = array_unique($hashes);
+        rsort($blocks);
 
-        $contentLen = mb_strlen($content) - $word['len'] + 1;
+        $chars = $this->stringToArray($content);
+        $indexes = $this->assocIndex($chars);
 
-        for ($i = 0; $i < $contentLen; ++$i) {
-            if ($pinyin->sentence(mb_substr($content, $i, $word['len'])) === $word['pinyin']) {
-                $content = implode('', [
-                    mb_substr($content, 0, $i),
-                    str_repeat('♥', $word['len']),
-                    mb_substr($content, $i + $word['len']),
-                ]);
+        $pinyins = (new Pinyin())->convert($content);
 
-                $i += ($word['len'] - 1);
+        $len = count($pinyins) - $blocks[count($blocks) - 1] + 1;
+
+        for ($i = 0; $i < $len; ++$i) {
+            foreach ($blocks as $block) {
+                if ($i + $block > $len + 1) {
+                    continue;
+                }
+
+                $hash = md5(implode(' ', array_slice($pinyins, $i, $block)));
+
+                if (isset($hashes[$hash])) {
+                    for ($c = 0; $c < $block; ++$c) {
+                        $chars[$indexes[$i + $c]] = '♥';
+                    }
+
+                    $i += $block - 1;
+
+                    break;
+                }
             }
         }
 
-        return $content;
+        return implode('', $chars);
+    }
+
+    /**
+     * Build words hash for multiple pattern matching.
+     *
+     * @param array $words
+     *
+     * @return array
+     */
+    protected function wordsHash($words)
+    {
+        $pinyin = new Pinyin();
+
+        $hash = [];
+
+        foreach ($words as $word) {
+            $hash[md5($pinyin->sentence($word))] = mb_strlen($word);
+        }
+
+        return $hash;
+    }
+
+    /**
+     * Get the associate index of the chars.
+     *
+     * @param array $chars
+     *
+     * @return array
+     */
+    protected function assocIndex(array $chars)
+    {
+        $indexes = [];
+
+        foreach ($chars as $index => $char) {
+            if (preg_match('/^[\p{Han}\w]+$/u', $char)) {
+                $indexes[] = $index;
+            }
+        }
+
+        return $indexes;
     }
 
     /**
@@ -547,7 +603,17 @@ class KobeController extends Controller
      */
     protected function stringToArray($string)
     {
-        return preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
+        $string = preg_replace('/([^\p{Han}\s？，、。！：「」『』；—]+)/u', "\t\t\t$1\t\t", $string);
+
+        $chars = [];
+
+        foreach (preg_split('/\t\t/u', $string, -1, PREG_SPLIT_NO_EMPTY) as $item) {
+            $chars[] = ("\t" === $item[0])
+                ? substr($item, 1)
+                : preg_split('//u', $item, -1, PREG_SPLIT_NO_EMPTY);
+        }
+
+        return array_flatten($chars);
     }
 
     /**
