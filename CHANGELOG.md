@@ -3,6 +3,8 @@
 ## 1.x
 
 - dev
+
+- 1.1.0 (2016-07-17)
   - Transform google service from application to independent config
   - Update application install page
   - Fix user incorrect fillable
