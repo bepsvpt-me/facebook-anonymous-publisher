@@ -10,12 +10,12 @@
 
         <div class="form-group">
           {{ Form::label('terms_of_service', '服務條款') }}
-          {{ Form::textarea('terms_of_service', null, ['class' => 'form-control']) }}
+          {{ Form::textarea('terms_of_service', null, ['class' => 'form-control', 'data-provide' => 'markdown', 'data-resize' => 'vertical']) }}
         </div>
 
         <div class="form-group">
           {{ Form::label('privacy_policy', '隱私政策') }}
-          {{ Form::textarea('privacy_policy', null, ['class' => 'form-control']) }}
+          {{ Form::textarea('privacy_policy', null, ['class' => 'form-control', 'data-provide' => 'markdown', 'data-resize' => 'vertical']) }}
         </div>
 
         {{ Form::submitButton('更新') }}
@@ -25,3 +25,8 @@
     </div>
   </div>
 @endsection
+
+@push('scripts')
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/css/bootstrap-markdown.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/js/bootstrap-markdown.min.js" defer></script>
+@endpush

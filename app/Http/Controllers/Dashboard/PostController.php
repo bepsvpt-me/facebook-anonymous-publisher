@@ -39,12 +39,7 @@ class PostController extends Controller
     {
         $ip = Post::withTrashed()->findOrFail($id, ['ip'])->getAttribute('ip');
 
-        if (! Block::where('type', 'ip')->where('value', $ip)->exists()) {
-            Block::create([
-                'type' => 'ip',
-                'value' => $ip,
-            ]);
-        }
+        Block::firstOrCreate(['type' => 'ip', 'value' => $ip]);
 
         Cache::forget('blacklist-ip');
 

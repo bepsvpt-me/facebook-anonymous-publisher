@@ -12,7 +12,7 @@ class KobeRequest extends Request
     public function rules()
     {
         $rules = [
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1500',
             'color' => [
                 'bail',
                 'required',

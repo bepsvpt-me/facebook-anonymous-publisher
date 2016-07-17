@@ -34,7 +34,7 @@
           {{ Form::open(['route' => 'kobe', 'method' => 'POST', 'files' => true, 'role' => 'form', 'data-toggle' => 'validator']) }}
 
           <div class="form-group">
-            {{ Form::textarea('content', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => '今天要靠北什麼？', 'maxlength' => 500, 'required']) }}
+            {{ Form::textarea('content', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => '今天要靠北什麼？', 'maxlength' => 1500, 'required']) }}
             {{ Form::validatorHelper() }}
           </div>
 

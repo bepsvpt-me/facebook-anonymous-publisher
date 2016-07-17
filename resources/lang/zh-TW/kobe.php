@@ -4,6 +4,7 @@ return [
 
     'website-title' => '匿名靠北',
     'terms-of-service' => '服務條款',
+    'privacy-policy' => '隱私政策',
 
     'navbar' => [
 

@@ -4,6 +4,7 @@ return [
 
     'website-title' => 'Anonymous Publisher',
     'terms-of-service' => 'Terms of Service',
+    'privacy-policy' => 'Privacy Policy',
 
     'navbar' => [
 

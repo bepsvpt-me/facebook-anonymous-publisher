@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @inject('agent', 'Jenssegers\Agent\Agent')
+@inject('now', 'Carbon\Carbon')
 
 @section('main')
   <section>
@@ -14,9 +15,9 @@
       <thead>
         <tr>
           <th>編號</th>
-          <th class="post-content-th">內容</th>
-          <th>連結</th>
+          <th style="width: 60%;">內容</th>
           <th>資訊</th>
+          <th>連結</th>
           <th>封鎖</th>
           <th>刪除</th>
         </tr>
@@ -32,6 +33,15 @@
               <pre class="post-content">{{ $post->getAttribute('content') }}</pre>
             </td>
             <td>
+              <p title="{{ $post->getAttribute('created_at') }}">提交於 {{ $post->getAttribute('created_at')->diffForHumans($now) }}</p>
+
+              @if(Auth::user()->is('admin'))
+                <p>來源 {{ $post->getAttribute('ip') }}</p>
+              @endif
+
+              <p>{{ $agent->browser().' on '.$agent->platform() }}</p>
+            </td>
+            <td>
               @if($post->trashed())
                 <span>-</span>
               @elseif(is_null($post->getAttribute('fbid')))
@@ -39,15 +49,6 @@
               @else
                 <a href="https://www.facebook.com/{{ $post->getAttribute('fbid') }}" target="_blank">{{ Html::icon('link') }}</a>
               @endif
-            </td>
-            <td>
-              <p title="{{ $post->getAttribute('created_at') }}">提交於 {{ $post->getAttribute('created_at')->diffForHumans(\Carbon\Carbon::now()) }}</p>
-
-              @if(Auth::user()->is('admin'))
-                <p>來源 {{ $post->getAttribute('ip') }}</p>
-              @endif
-
-              <p>{{ $agent->browser().' on '.$agent->platform() }}</p>
             </td>
             <td>{{ Html::linkButton('dashboard.posts.block', ['id' => $post->getKey()], 'btn-warning', 'ban') }}</td>
             <td>

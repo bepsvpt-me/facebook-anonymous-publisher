@@ -32,7 +32,7 @@ class OAuthController extends Controller
                 'username' => 'facebook-'.Socialite::driver('facebook')->user()->getId(),
             ]);
 
-            Auth::login($user, true);
+            Auth::login($user);
         } catch (\Exception $e) {
             Flash::error('登入失敗');
         }

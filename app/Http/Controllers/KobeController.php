@@ -299,7 +299,7 @@ class KobeController extends Controller
         $indexes = [];
 
         foreach ($chars as $index => $char) {
-            if (preg_match('/^[\p{Han}\w]+$/u', $char)) {
+            if (preg_match('/^[\p{Han}a-zA-Z\d]+$/u', $char)) {
                 $indexes[] = $index;
             }
         }
