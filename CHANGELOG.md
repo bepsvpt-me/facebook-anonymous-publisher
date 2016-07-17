@@ -3,6 +3,8 @@
 ## 1.x
 
 - dev
+
+- 1.0.2 (2016-07-17)
   - Fix facebook ranks sync exception when there is no post
   - Break line when post content is too long
   - Optimize block words filter
