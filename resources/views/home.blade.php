@@ -74,9 +74,9 @@
         </section>
       @endif
 
-      @unless(empty($application['ad-client']) || empty($application['ad-slot']))
+      @unless(empty($google['ad-client']) || empty($google['ad-slot']))
         <section>
-          <script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script><ins class="adsbygoogle block" data-ad-client="{{ $application['ad-client'] }}" data-ad-slot="{{ $application['ad-slot'] }}" data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          <script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script><ins class="adsbygoogle block" data-ad-client="{{ $google['ad-client'] }}" data-ad-slot="{{ $google['ad-slot'] }}" data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </section>
       @endunless
     </div>

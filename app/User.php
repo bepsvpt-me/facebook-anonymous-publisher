@@ -19,7 +19,7 @@ class User extends \Eloquent implements AuthenticatableContract, AuthorizableCon
      * @var array
      */
     protected $fillable = [
-        'username', 'password',
+        'username', 'password', 'role',
     ];
 
     /**

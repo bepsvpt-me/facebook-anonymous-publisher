@@ -25,7 +25,7 @@ class PostController extends Controller
             'id', 'content', 'fbid', 'user_agent', 'ip', 'created_at', 'deleted_at',
         ]);
 
-        return view('dashboard.posts.index', compact('posts'));
+        return view('dashboard.posts', compact('posts'));
     }
 
     /**

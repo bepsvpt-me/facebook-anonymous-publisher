@@ -18,7 +18,7 @@ return [
         'dashboard' => [
             'title' => '管理介面',
             'posts' => '文章列表',
-            'block-words' => '關鍵字封鎖',
+            'block-words' => '關鍵字過濾',
         ],
 
         'auth' => [

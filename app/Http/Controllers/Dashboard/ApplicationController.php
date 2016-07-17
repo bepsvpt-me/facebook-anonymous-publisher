@@ -12,37 +12,56 @@ use Redirect;
 class ApplicationController extends Controller
 {
     /**
-     * Get the terms of service and privacy policy edit form.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function tosAndPpView()
-    {
-        return view('dashboard.tosPp');
-    }
-
-    /**
-     * Update the terms of service and privacy policy.
+     * Get the edit form or update the terms of service and privacy policy.
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function tosAndPp(Request $request)
     {
+        if ($request->isMethod('GET')) {
+            return view('dashboard.tosPp');
+        }
+
+        $this->update($request->only(['terms_of_service', 'privacy_policy']));
+
+        return Redirect::route('dashboard.tos-pp.index');
+    }
+
+    /**
+     * Get the edit form or update the page info.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function page(Request $request)
+    {
+        if ($request->isMethod('GET')) {
+            return view('dashboard.page');
+        }
+
+        $this->update($request->only(['page_name', 'extra_content']));
+
+        return Redirect::route('dashboard.page.index');
+    }
+
+    /**
+     * Update config.
+     *
+     * @param array $input
+     *
+     * @return void
+     */
+    protected function update(array $input)
+    {
         $key = 'application-service';
 
-        $application = array_merge(
-            Config::getConfig($key),
-            $request->only(['terms_of_service', 'privacy_policy'])
-        );
-
-        Config::findOrFail($key)->update(['value' => $application]);
+        Config::findOrFail($key)->update(['value' => array_merge(Config::getConfig($key), $input)]);
 
         Cache::forget($key);
 
         Flash::success('更新成功');
-
-        return Redirect::route('dashboard.tos-pp.index');
     }
 }

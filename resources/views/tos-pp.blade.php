@@ -19,7 +19,7 @@
 @push('scripts')
   <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown.js/0.5.0/markdown.min.js"></script>
   <script>
-    document.querySelector('#terms-of-service').innerHTML = markdown.toHTML(`{{ $application['terms_of_service'] }}`);
-    document.querySelector('#privacy-policy').innerHTML = markdown.toHTML(`{{ $application['privacy_policy'] }}`);
+    document.querySelector('#terms-of-service').innerHTML = markdown.toHTML(`{{ $application['terms_of_service'] ?? '' }}`);
+    document.querySelector('#privacy-policy').innerHTML = markdown.toHTML(`{{ $application['privacy_policy'] ?? '' }}`);
   </script>
 @endpush

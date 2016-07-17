@@ -3,6 +3,9 @@
 ## 1.x
 
 - dev
+  - Transform google service from application to independent config
+  - Update application install page
+  - Fix user incorrect fillable
 
 - 1.0.2 (2016-07-17)
   - Fix facebook ranks sync exception when there is no post

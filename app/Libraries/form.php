@@ -2,6 +2,10 @@
 
 use Illuminate\Support\HtmlString;
 
+Form::macro('requiredHint', function () {
+    return new HtmlString('<b class="text-danger" style="vertical-align: text-top;">*</b>');
+});
+
 Form::macro('validatorHelper', function () {
     return new HtmlString('<div class="help-block with-errors"></div>');
 });

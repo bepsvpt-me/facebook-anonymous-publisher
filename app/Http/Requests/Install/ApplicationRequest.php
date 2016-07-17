@@ -19,9 +19,6 @@ class ApplicationRequest extends Request
             'page_name' => 'required|string',
             'extra_content' => 'string',
             'license' => 'string',
-            'ga' => 'string',
-            'ad-client' => 'required_with:ad-slot|string',
-            'ad-slot' => 'required_with:ad-client|string',
         ];
     }
 }

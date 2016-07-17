@@ -10,12 +10,12 @@
 
         <div class="form-group">
           {{ Form::label('terms_of_service', '服務條款') }}
-          {{ Form::textarea('terms_of_service', null, ['class' => 'form-control', 'data-provide' => 'markdown', 'data-resize' => 'vertical']) }}
+          {{ Form::textarea('terms_of_service', null, ['class' => 'form-control', 'maxlength' => 3000, 'data-provide' => 'markdown', 'data-resize' => 'vertical']) }}
         </div>
 
         <div class="form-group">
           {{ Form::label('privacy_policy', '隱私政策') }}
-          {{ Form::textarea('privacy_policy', null, ['class' => 'form-control', 'data-provide' => 'markdown', 'data-resize' => 'vertical']) }}
+          {{ Form::textarea('privacy_policy', null, ['class' => 'form-control', 'maxlength' => 3000, 'data-provide' => 'markdown', 'data-resize' => 'vertical']) }}
         </div>
 
         {{ Form::submitButton('更新') }}

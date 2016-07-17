@@ -549,7 +549,7 @@ class KobeController extends Controller
             $this->newLines(1),
 
             // Extra content that should insert to the post
-            $this->application['extra_content'],
+            $this->application['extra_content'] ?? '',
             $this->newLines(2),
 
             // User post content

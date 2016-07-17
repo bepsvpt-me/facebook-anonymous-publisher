@@ -39,8 +39,16 @@ $router->group(['prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'da
         $router->get('{value}/delete', ['as' => 'delete', 'uses' => 'BlockWordController@destroy']);
     });
 
-    $router->get('terms-of-service-privacy-policy', ['as' => 'tos-pp.index', 'uses' => 'ApplicationController@tosAndPpView']);
+    $router->get('terms-of-service-privacy-policy', ['as' => 'tos-pp.index', 'uses' => 'ApplicationController@tosAndPp']);
     $router->post('terms-of-service-privacy-policy', ['as' => 'tos-pp.update', 'uses' => 'ApplicationController@tosAndPp']);
+
+    $router->get('page', ['as' => 'page.index', 'uses' => 'ApplicationController@page']);
+    $router->post('page', ['as' => 'page.update', 'uses' => 'ApplicationController@page']);
+
+    $router->group(['prefix' => 'website', 'as' => 'website.'], function (Router $router) {
+        $router->get('/', ['as' => 'index', 'uses' => 'WebsiteController@index']);
+        $router->get('reset', ['as' => 'reset', 'uses' => 'WebsiteController@reset']);
+    });
 });
 
 $router->group(['prefix' => 'install', 'as' => 'install.'], function (Router $router) {
@@ -51,6 +59,9 @@ $router->group(['prefix' => 'install', 'as' => 'install.'], function (Router $ro
 
     $router->get('recaptcha-service', ['as' => 'recaptcha', 'uses' => 'InstallController@recaptcha']);
     $router->post('recaptcha-service', ['as' => 'recaptcha.store', 'uses' => 'InstallController@storeRecaptcha']);
+
+    $router->get('google-service', ['as' => 'google', 'uses' => 'InstallController@google']);
+    $router->post('google-service', ['as' => 'google.store', 'uses' => 'InstallController@storeGoogle']);
 
     $router->get('application-service', ['as' => 'application', 'uses' => 'InstallController@application']);
     $router->post('application-service', ['as' => 'application.store', 'uses' => 'InstallController@storeApplication']);

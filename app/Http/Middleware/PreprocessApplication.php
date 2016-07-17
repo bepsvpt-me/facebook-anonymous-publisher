@@ -95,5 +95,7 @@ class PreprocessApplication
         if (! is_null($application)) {
             $this->view->share('application', $application);
         }
+
+        $this->view->share('google', Config::getConfig('google-service') ?? []);
     }
 }

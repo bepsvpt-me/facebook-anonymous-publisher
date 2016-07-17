@@ -2,7 +2,7 @@
 
 @section('main')
   <section>
-    <h1 class="text-center">關鍵字封鎖</h1>
+    <h1 class="text-center">關鍵字過濾</h1>
   </section>
 
   <section class="text-center">

@@ -18,7 +18,11 @@ class InstalledMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->is('install*') === boolval(Config::getConfig('installed'))) {
+        $installed = Config::find('installed');
+
+        $installed = is_null($installed) ? false : boolval($installed->getAttribute('value'));
+
+        if ($request->is('install*') === $installed) {
             throw new ServiceUnavailableHttpException;
         }
 

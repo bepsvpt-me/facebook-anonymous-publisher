@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Config;
 use App\Http\Requests\Install\ApplicationRequest;
 use App\Http\Requests\Install\FacebookRequest;
+use App\Http\Requests\Install\GoogleRequest;
 use App\Http\Requests\Install\RecaptchaRequest;
 use App\User;
 use Artisan;
@@ -66,7 +67,7 @@ class InstallController extends Controller
     }
 
     /**
-     * Store recaptcha config and redirect to application install page.
+     * Store recaptcha config and redirect to google install page.
      *
      * @param RecaptchaRequest $request
      *
@@ -77,6 +78,34 @@ class InstallController extends Controller
         return $this->storeConfig(
             'recaptcha-service',
             $request->only(['public_key', 'private_key']),
+            'install.google'
+        );
+    }
+
+    /**
+     * Google install page.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function google()
+    {
+        $service = 'google';
+
+        return view('install.form', compact('service'));
+    }
+
+    /**
+     * Store google config and redirect to application install page.
+     *
+     * @param GoogleRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeGoogle(GoogleRequest $request)
+    {
+        return $this->storeConfig(
+            'google-service',
+            $request->only(['ga', 'ad-client', 'ad-slot']),
             'install.application'
         );
     }
@@ -109,10 +138,7 @@ class InstallController extends Controller
 
         return $this->storeConfig(
             'application-service',
-            $request->only([
-                'page_name', 'extra_content', 'terms_of_service', 'privacy_policy',
-                'ga', 'ad-client', 'ad-slot',
-            ]),
+            $request->only(['page_name']),
             'install.finish'
         );
     }
@@ -142,7 +168,9 @@ class InstallController extends Controller
      */
     protected function storeConfig($key, $value, $nextRoute)
     {
-        $config = Config::updateOrCreate(['key' => $key], ['value' => $value]);
+        $config = Config::updateOrCreate(['key' => $key], [
+            'value' => array_merge(Config::getConfig($key, []) ,$value),
+        ]);
 
         if (! $config->exists) {
             throw new ModelNotFoundException;

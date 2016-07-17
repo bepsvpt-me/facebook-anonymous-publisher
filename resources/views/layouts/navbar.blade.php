@@ -40,7 +40,9 @@
             <ul class="dropdown-menu">
               <li>{{ Html::linkRoute('dashboard.posts.index', trans('kobe.navbar.dashboard.posts')) }}</li>
               <li>{{ Html::linkRoute('dashboard.block-words.index', trans('kobe.navbar.dashboard.block-words')) }}</li>
+              <li>{{ Html::linkRoute('dashboard.page.index', '專頁設定') }}</li>
               <li>{{ Html::linkRoute('dashboard.tos-pp.index', '條款更新') }}</li>
+              <li>{{ Html::linkRoute('dashboard.website.index', '網站設定') }}</li>
             </ul>
           </li>
         @endif
