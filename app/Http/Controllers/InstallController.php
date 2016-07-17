@@ -169,7 +169,7 @@ class InstallController extends Controller
     protected function storeConfig($key, $value, $nextRoute)
     {
         $config = Config::updateOrCreate(['key' => $key], [
-            'value' => array_merge(Config::getConfig($key, []) ,$value),
+            'value' => array_merge(Config::getConfig($key, []), $value),
         ]);
 
         if (! $config->exists) {
