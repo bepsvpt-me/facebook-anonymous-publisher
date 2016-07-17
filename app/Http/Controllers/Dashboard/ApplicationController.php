@@ -24,6 +24,11 @@ class ApplicationController extends Controller
             return view('dashboard.tosPp');
         }
 
+        $this->validate($request, [
+            'terms_of_service' => 'string|max:3000',
+            'privacy_policy' => 'string|max:3000',
+        ]);
+
         $this->update($request->only(['terms_of_service', 'privacy_policy']));
 
         return Redirect::route('dashboard.tos-pp.index');
@@ -42,7 +47,13 @@ class ApplicationController extends Controller
             return view('dashboard.page');
         }
 
-        $this->update($request->only(['page_name', 'extra_content']));
+        $this->validate($request, [
+            'page_name' => 'required|string|max:16',
+            'extra_content' => 'string|max:255',
+            'block_word_replacement' => 'string|max:1',
+        ]);
+
+        $this->update($request->only(['page_name', 'extra_content', 'block_word_replacement']));
 
         return Redirect::route('dashboard.page.index');
     }

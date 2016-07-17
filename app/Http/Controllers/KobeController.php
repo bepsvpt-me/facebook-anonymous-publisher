@@ -216,7 +216,7 @@ class KobeController extends Controller
         $replacements = [];
 
         foreach ($words as $word) {
-            $replacements[] = str_repeat('♥', mb_strlen($word));
+            $replacements[] = str_repeat($this->application['block_word_replacement'] ?? '', mb_strlen($word));
         }
 
         return $replacements;
@@ -254,7 +254,7 @@ class KobeController extends Controller
 
                 if (isset($hashes[$hash])) {
                     for ($c = 0; $c < $block; ++$c) {
-                        $chars[$indexes[$i + $c]] = '♥';
+                        $chars[$indexes[$i + $c]] = $this->application['block_word_replacement'] ?? '';
                     }
 
                     $i += $block - 1;

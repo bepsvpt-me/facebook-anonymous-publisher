@@ -11,13 +11,19 @@
         <div class="form-group">
           {{ Form::requiredHint() }}
           {{ Form::label('page_name', '專頁名稱') }}
-          {{ Form::text('page_name', null, ['class' => 'form-control', 'required']) }}
+          {{ Form::text('page_name', null, ['class' => 'form-control', 'maxlength' => 16, 'required']) }}
           {{ Form::validatorHelper() }}
         </div>
 
         <div class="form-group">
           {{ Form::label('extra_content', '發文自定義訊息') }}
-          {{ Form::textarea('extra_content', null, ['class' => 'form-control', 'rows' => 5]) }}
+          {{ Form::textarea('extra_content', null, ['class' => 'form-control', 'maxlength' => 255, 'rows' => 5]) }}
+          {{ Form::validatorHelper() }}
+        </div>
+
+        <div class="form-group">
+          {{ Form::label('block_word_replacement', '關鍵字過濾取代字元') }}
+          {{ Form::text('block_word_replacement', null, ['class' => 'form-control', 'maxlength' => 1]) }}
           {{ Form::validatorHelper() }}
         </div>
 
