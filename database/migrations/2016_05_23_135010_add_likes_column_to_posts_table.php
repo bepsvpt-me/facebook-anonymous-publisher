@@ -27,9 +27,7 @@ class AddLikesColumnToPostsTable extends Migration
     public function down()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('likes');
-
-            $table->dropColumn('sync_at');
+            $table->dropColumn(['likes', 'sync_at']);
         });
     }
 }

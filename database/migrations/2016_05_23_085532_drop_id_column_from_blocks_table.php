@@ -12,13 +12,24 @@ class DropIdColumnFromBlocksTable extends Migration
      */
     public function up()
     {
-        Schema::table('blocks', function (Blueprint $table) {
-            $table->dropUnique(['type', 'value']);
+        if ('sqlite' !== DB::connection()->getDriverName()) {
+            Schema::table('blocks', function (Blueprint $table) {
+                $table->dropUnique(['type', 'value']);
 
-            $table->dropColumn('id');
+                $table->dropColumn('id');
 
-            $table->primary(['type', 'value']);
-        });
+                $table->primary(['type', 'value']);
+            });
+        } else {
+            Schema::drop('blocks');
+
+            Schema::create('blocks', function (Blueprint $table) {
+                $table->string('type', 24);
+                $table->string('value', 48);
+
+                $table->primary(['type', 'value']);
+            });
+        }
     }
 
     /**
@@ -28,14 +39,26 @@ class DropIdColumnFromBlocksTable extends Migration
      */
     public function down()
     {
-        Schema::table('blocks', function (Blueprint $table) {
-            $table->dropPrimary(['type', 'value']);
+        if ('sqlite' !== DB::connection()->getDriverName()) {
+            Schema::table('blocks', function (Blueprint $table) {
+                $table->dropPrimary(['type', 'value']);
 
-            $table->unique(['type', 'value']);
-        });
+                $table->unique(['type', 'value']);
+            });
 
-        Schema::table('blocks', function (Blueprint $table) {
-            $table->increments('id')->first();
-        });
+            Schema::table('blocks', function (Blueprint $table) {
+                $table->increments('id')->first();
+            });
+        } else {
+            Schema::drop('blocks');
+
+            Schema::create('blocks', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('type', 24);
+                $table->string('value', 48);
+
+                $table->unique(['type', 'value']);
+            });
+        }
     }
 }
