@@ -2,11 +2,11 @@
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class InstallTest extends TestCase
+class InstalledTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function test_it_will_throw_service_unavailable_http_exception_if_not_install()
+    public function test_it_will_throw_service_unavailable_http_exception_if_not_installed()
     {
         $this->get('/')->assertResponseStatus(503);
     }
