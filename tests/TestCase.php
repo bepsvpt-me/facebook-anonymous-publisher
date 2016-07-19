@@ -22,4 +22,18 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $app;
     }
+
+    public function setUp()
+    {
+        file_put_contents(__DIR__.'/database.sqlite', '');
+
+        parent::setUp();
+    }
+
+    protected function setInstalled()
+    {
+        \App\Config::create(['key' => 'installed', 'value' => true]);
+
+        return $this;
+    }
 }
