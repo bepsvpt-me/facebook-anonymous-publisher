@@ -30,6 +30,8 @@ class SyncRanks extends FacebookCommand
      */
     public function handle()
     {
+        parent::handle();
+
         $posts = $this->posts();
 
         if (false === $posts || $posts->isEmpty()) {
@@ -157,7 +159,7 @@ class SyncRanks extends FacebookCommand
      *
      * @param string $body
      *
-     * @return int
+     * @return array
      */
     protected function ranks($body)
     {

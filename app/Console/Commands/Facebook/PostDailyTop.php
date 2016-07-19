@@ -32,6 +32,8 @@ class PostDailyTop extends FacebookCommand
      */
     public function handle()
     {
+        parent::handle();
+
         $posts = $this->posts();
 
         if (false === $posts) {
@@ -50,7 +52,7 @@ class PostDailyTop extends FacebookCommand
     /**
      * Get the daily top posts.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Collection|bool
      */
     protected function posts()
     {

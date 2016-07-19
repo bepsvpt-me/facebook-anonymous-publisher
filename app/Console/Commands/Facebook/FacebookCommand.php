@@ -25,20 +25,20 @@ abstract class FacebookCommand extends Command
     protected $now;
 
     /**
-     * Create a new command instance.
+     * Execute the console command.
+     *
+     * @return mixed
      */
-    public function __construct()
+    public function handle()
     {
-        parent::__construct();
+        $this->now = Carbon::now();
 
         $this->config = Config::getConfig('facebook-service');
 
         if (is_null($this->config)) {
-            throw new \RuntimeException;
+            throw new \RuntimeException('Invalid facebook service config.');
         }
 
         $this->fb = new Facebook($this->config);
-
-        $this->now = Carbon::now();
     }
 }
