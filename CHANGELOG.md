@@ -3,6 +3,7 @@
 ## 1.x
 
 - dev
+  - Fix missing block word replacement
 
 - 1.1.0 (2016-07-17)
   - Transform google service from application to independent config
