@@ -12,12 +12,10 @@ use Crypt;
 use Facebook\Facebook;
 use Facebook\FacebookResponse;
 use Facebook\FileUpload\FacebookFile;
+use FacebookAnonymousPublisher\TextToImage\TextToImage;
+use FacebookAnonymousPublisher\Wordfilter\Wordfilter;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
-use Image;
-use Intervention\Image\Gd\Font;
-use Mexitek\PHPColors\Color;
-use Overtrue\Pinyin\Pinyin;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class KobeController extends Controller
@@ -38,6 +36,29 @@ class KobeController extends Controller
      * @var Post
      */
     protected $post;
+
+    /**
+     * @var Wordfilter
+     */
+    protected $wordfilter;
+
+    /**
+     * @var TextToImage
+     */
+    protected $textToImage;
+
+    /**
+     * Constructor.
+     *
+     * @param Wordfilter $wordfilter
+     * @param TextToImage $textToImage
+     */
+    public function __construct(Wordfilter $wordfilter, TextToImage $textToImage)
+    {
+        $this->wordfilter = $wordfilter;
+
+        $this->textToImage = $textToImage;
+    }
 
     /**
      * Post kobe.
@@ -181,11 +202,11 @@ class KobeController extends Controller
             return $content;
         }
 
-        if (! preg_match("/\p{Han}+/uU", $content)) {
-            return str_replace($words, $this->simpleReplacements($words), $content);
-        }
-
-        return $this->advanceFilter($content, $words);
+        return $this->wordfilter->replace(
+            $words,
+            $this->application['block_word_replacement'] ?? '',
+            $content
+        );
     }
 
     /**
@@ -202,109 +223,6 @@ class KobeController extends Controller
                 ->pluck('value')
                 ->toArray();
         });
-    }
-
-    /**
-     * Create isometric characters for the block words.
-     *
-     * @param array $words
-     *
-     * @return array
-     */
-    protected function simpleReplacements(array $words)
-    {
-        $replacements = [];
-
-        foreach ($words as $word) {
-            $replacements[] = str_repeat($this->application['block_word_replacement'] ?? '', mb_strlen($word));
-        }
-
-        return $replacements;
-    }
-
-    /**
-     * Advance filter the block words.
-     *
-     * @param string $content
-     * @param array $words
-     *
-     * @return string
-     */
-    protected function advanceFilter($content, $words)
-    {
-        $hashes = $this->wordsHash($words);
-
-        $blocks = array_unique($hashes);
-        rsort($blocks);
-
-        $chars = $this->stringToArray($content);
-        $indexes = $this->assocIndex($chars);
-
-        $pinyins = (new Pinyin())->convert($content);
-
-        $len = count($pinyins) - $blocks[count($blocks) - 1] + 1;
-
-        for ($i = 0; $i < $len; ++$i) {
-            foreach ($blocks as $block) {
-                if ($i + $block > $len + 1) {
-                    continue;
-                }
-
-                $hash = md5(implode(' ', array_slice($pinyins, $i, $block)));
-
-                if (isset($hashes[$hash])) {
-                    for ($c = 0; $c < $block; ++$c) {
-                        $chars[$indexes[$i + $c]] = $this->application['block_word_replacement'] ?? '';
-                    }
-
-                    $i += $block - 1;
-
-                    break;
-                }
-            }
-        }
-
-        return implode('', $chars);
-    }
-
-    /**
-     * Build words hash for multiple pattern matching.
-     *
-     * @param array $words
-     *
-     * @return array
-     */
-    protected function wordsHash($words)
-    {
-        $pinyin = new Pinyin();
-
-        $hash = [];
-
-        foreach ($words as $word) {
-            $hash[md5($pinyin->sentence($word))] = mb_strlen($word);
-        }
-
-        return $hash;
-    }
-
-    /**
-     * Get the associate index of the chars.
-     *
-     * @param array $chars
-     *
-     * @return array
-     */
-    protected function assocIndex(array $chars)
-    {
-        $indexes = [];
-
-        foreach ($chars as $index => $char) {
-            if (preg_match('/^[\p{Han}a-zA-Z\d]+$/u', $char)) {
-                $indexes[] = $index;
-            }
-        }
-
-        return $indexes;
     }
 
     /**
@@ -389,83 +307,13 @@ class KobeController extends Controller
     {
         $filePath = file_build_path($this->imageDirectory(), $this->post->getKey().'.jpg');
 
-        $content = $this->breakLine($this->post->getAttribute('content'));
-
-        $canvas = $this->getCanvasWidthAndHeight($content);
-
-        Image::canvas($canvas['width'], $canvas['height'], '#'.$color)
-            ->text($content, $canvas['width'] / 2, $canvas['height'] / 2, function (Font $font) use ($color) {
-                $font->file($this->getFontPath());
-                $font->size(48);
-                $font->color((new Color($color))->isDark() ? '#fff' : '#000');
-                $font->align('center');
-                $font->valign('middle');
-            })
+        $this->textToImage
+            ->setFont($this->getFontPath())
+            ->setColor($color)
+            ->make($this->post->getAttribute('content'))
             ->save($filePath, 100);
 
         return $filePath;
-    }
-
-    /**
-     * Break the line to multiple lines if length is too long.
-     *
-     * @param string $content
-     *
-     * @return string
-     */
-    protected function breakLine($content)
-    {
-        $lines = explode($this->newLines(1), $content);
-
-        foreach ($lines as &$line) {
-            if (mb_strwidth($line) > 48) {
-                $line = $this->partitionLine($line);
-            }
-        }
-
-        return implode($this->newLines(1), $lines);
-    }
-
-    /**
-     * Ensure the length of the line is not longer than 48.
-     *
-     * @param string $line
-     *
-     * @return string
-     */
-    protected function partitionLine($line)
-    {
-        list($lines, $temp, $width) = [[], '', 0];
-
-        foreach ($this->stringToArray($line) as $word) {
-            if ($width + mb_strwidth($word) > 48) {
-                $lines[] = $temp;
-                $temp = '';
-                $width = 0;
-            }
-
-            $temp .= $word;
-            $width += mb_strwidth($word);
-        }
-
-        return implode($this->newLines(1), $lines);
-    }
-
-    /**
-     * Get canvas width and height.
-     *
-     * @param string $content
-     *
-     * @return array
-     */
-    protected function getCanvasWidthAndHeight($content)
-    {
-        $box = imagettfbbox(48, 0, $this->getFontPath(), $content);
-
-        return [
-            'width' => abs($box[4] - $box[0]),
-            'height' => abs($box[5] - $box[1]),
-        ];
     }
 
     /**
@@ -531,7 +379,13 @@ class KobeController extends Controller
      */
     protected function imageDirectory()
     {
-        return storage_path(file_build_path('app', 'images', intval(floor($this->post->getKey() / 5000))));
+        $path = storage_path(file_build_path('app', 'images', intval(floor($this->post->getKey() / 5000))));
+
+        if (! is_dir($path)) {
+            mkdir($path);
+        }
+
+        return $path;
     }
 
     /**
