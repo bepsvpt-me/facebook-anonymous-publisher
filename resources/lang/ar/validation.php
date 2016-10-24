@@ -34,10 +34,11 @@ return [
     'different'            => 'يجب أن يكون الحقلان :attribute و :other مُختلفان',
     'digits'               => 'يجب أن يحتوي الحقل :attribute على :digits رقمًا/أرقام',
     'digits_between'       => 'يجب أن يحتوي الحقل :attribute ما بين :min و :max رقمًا/أرقام ',
-    'dimensions'           => 'The :attribute has invalid image dimensions.',
+    'dimensions'           => 'الـ :attribute يحتوي على أبعاد صورة غير صالحة.',
     'distinct'             => 'للحقل :attribute قيمة مُكرّرة.',
     'email'                => 'يجب أن يكون :attribute عنوان بريد إلكتروني صحيح البُنية',
     'exists'               => 'الحقل :attribute لاغٍ',
+    'file'                 => 'الـ :attribute يجب أن يكون من نوع ملف.',
     'filled'               => 'الحقل :attribute إجباري',
     'image'                => 'يجب أن يكون الحقل :attribute صورةً',
     'in'                   => 'الحقل :attribute لاغٍ',
@@ -52,6 +53,7 @@ return [
         'array'   => 'يجب أن لا يحتوي الحقل :attribute على أكثر من :max عناصر/عنصر.',
     ],
     'mimes'                => 'يجب أن يكون الحقل ملفًا من نوع : :values.',
+    'mimetypes'            => 'يجب أن يكون الحقل ملفًا من نوع : :values.',
     'min'                  => [
         'numeric' => 'يجب أن تكون قيمة الحقل :attribute أكبر من :min.',
         'file'    => 'يجب أن يكون حجم الملف :attribute أكبر من :min كيلوبايت',
@@ -60,7 +62,7 @@ return [
     ],
     'not_in'               => 'الحقل :attribute لاغٍ',
     'numeric'              => 'يجب على الحقل :attribute أن يكون رقمًا',
-    'present'              => 'The :attribute field must be present.',
+    'present'              => 'يجب تقديم الحقل :attribute',
     'regex'                => 'صيغة الحقل :attribute .غير صحيحة',
     'required'             => 'الحقل :attribute مطلوب.',
     'required_if'          => 'الحقل :attribute مطلوب في حال ما إذا كان :other يساوي :value.',
@@ -79,6 +81,7 @@ return [
     'string'               => 'يجب أن يكون الحقل :attribute نصآ.',
     'timezone'             => 'يجب أن يكون :attribute نطاقًا زمنيًا صحيحًا',
     'unique'               => 'قيمة الحقل :attribute مُستخدمة من قبل',
+    'uploaded'             => 'فشل في تحميل الـ :attribute',
     'url'                  => 'صيغة الرابط :attribute غير صحيحة',
 
     /*

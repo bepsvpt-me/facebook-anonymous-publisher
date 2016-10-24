@@ -32,12 +32,13 @@ return [
     'date'                 => ':attribute შეიცავს თარიღის არასწორ ფორმატს.',
     'date_format'          => ':attribute არ ემთხვევა თარიღის ფორმატს: :format.',
     'different'            => ':attribute და :other არ უნდა ემთხვეოდეს ერთმანეთს.',
-    'digits'               => ':attribute უნდა შედგებოდეს ციფრისგან :digits.',
+    'digits'               => ':attribute უნდა შედგებოდეს :digits ციფრისგან.',
     'digits_between'       => ':attribute უნდა შედგებოდეს :min-დან :max ციფრამბდე.',
     'dimensions'           => ':attribute შეიცავს სურათის არასწორ ზომებს.',
     'distinct'             => ':attribute უნდა იყოს უნიკალური.',
     'email'                => ':attribute უნდა იყოს სწორი ელ.ფოსტა.',
     'exists'               => 'ასეთი :attribute არ არსებობს.',
+    'file'                 => ':attribute უნდა იყოს ფაილი.',
     'filled'               => ':attribute აუცილებელია.',
     'image'                => ':attribute უნდა იყოს სურათი.',
     'in'                   => 'მითითებული :attribute არასწორია.',
@@ -52,6 +53,7 @@ return [
         'array'   => ':attribute-ის რაოდენობა არ უნდა აღემატებოდეს :max-ს.',
     ],
     'mimes'                => ':attribute უნდა იყოს შემდეგი ტიპის: :values.',
+    'mimetypes'            => ':attribute უნდა იყოს შემდეგი ტიპის: :values.',
     'min'                  => [
         'numeric' => ':attribute უნდა იყოს მინიმუმ :min.',
         'file'    => ':attribute უნდა იყოს მინიმუმ :min კილობაიტი.',
@@ -79,6 +81,7 @@ return [
     'string'               => ':attribute უნდა იყოს ტექსტი.',
     'timezone'             => ':attribute უნდა იყოს სასაათო სარტყელი.',
     'unique'               => 'ასეთი :attribute უკვე არსებობს.',
+    'uploaded'             => ':attribute-ის ატვირთვა ვერ მოხერხდა.',
     'url'                  => ':attribute უნდა იყოს URL მისამართი.',
 
     /*

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed'   => 'Tyto přihlašovací údaje neodpovídají žadnému záznamu.',
-    'throttle' => 'Příliš mnoho pokusů o přihlášení. Zkuste to prosím znovu za :seconds vteřin.',
+    'failed'   => 'এই পরিচয়পত্র আমাদের রেকর্ডের সাথে মেলে না.',
+    'throttle' => 'লগইন করার জন্য অনেকগুলি চেষ্টা করেছেন. :seconds সেকেন্ড পরে আবার চেষ্টা করুন .',
 
 ];
