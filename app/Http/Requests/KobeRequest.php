@@ -11,7 +11,7 @@ class KobeRequest extends Request
      */
     public function rules()
     {
-        $rules = [
+        return [
             'content' => 'required|string|max:1500',
             'color' => [
                 'bail',
@@ -22,14 +22,6 @@ class KobeRequest extends Request
             'g-recaptcha-response' => 'bail|required|recaptcha',
             'accept-license' => 'required|accepted',
         ];
-
-        if ($this->is('kobe-non-secure')) {
-            $rules['scheduling-auth'] = 'required|in:'.config('services.bitly.token');
-
-            unset($rules['g-recaptcha-response']);
-        }
-
-        return $rules;
     }
 
     /**

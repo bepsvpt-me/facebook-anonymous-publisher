@@ -37,7 +37,7 @@ class User extends \Eloquent implements AuthenticatableContract, AuthorizableCon
      * @param string|array $role
      * @return bool
      */
-    public function is($role)
+    public function own($role)
     {
         if (! $this->exists) {
             return false;

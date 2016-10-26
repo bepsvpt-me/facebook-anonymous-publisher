@@ -76,8 +76,8 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function includeMacros()
     {
-        require_once app_path(file_build_path('Libraries', 'form.php'));
-        require_once app_path(file_build_path('Libraries', 'html.php'));
+        require_once app_path('Libraries/form.php');
+        require_once app_path('Libraries/html.php');
     }
 
     /**

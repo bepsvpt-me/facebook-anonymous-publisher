@@ -24,8 +24,4 @@ return [
         'redirect' => env('APP_URL').'/oauth/facebook/callback',
     ],
 
-    'geoip2' => [
-        'path' => storage_path(file_build_path('app', 'geoip', 'GeoLite2-Country.mmdb')),
-    ],
-
 ];

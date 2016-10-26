@@ -80,7 +80,7 @@ class PreprocessApplication
      */
     protected function carbonLangPath($lang)
     {
-        return base_path(file_build_path('vendor', 'nesbot', 'carbon', 'src', 'Carbon', 'Lang', $lang.'.php'));
+        return base_path("vendor/nesbot/carbon/src/Carbon/Lang/{$lang}.php");
     }
 
     /**

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'fetch' => PDO::FETCH_CLASS,
+    'fetch' => PDO::FETCH_OBJ,
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
 
         'testing' => [
             'driver' => 'sqlite',
-            'database' => base_path('tests/database.sqlite'),
+            'database' => ':memory:',
             'prefix' => '',
         ],
 

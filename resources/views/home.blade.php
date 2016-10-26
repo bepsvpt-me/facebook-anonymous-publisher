@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@inject('firewall', 'FacebookAnonymousPublisher\Firewall\Firewall')
+
 @section('main')
   <div class="row">
     <div class="col-xs-12 col-md-offset-2 col-md-8">
@@ -7,7 +9,7 @@
         <h1 class="text-center">{{ $application['page_name'] }}</h1>
       </header>
 
-      @if(is_block_ip())
+      @if($firewall->isBanned())
         <section>
           <h3 class="text-center text-info">您的ＩＰ位址可能因下列原因而被系統封鎖，目前無法使用發文系統</h3>
 
@@ -21,7 +23,7 @@
             <li>如您的ＩＰ位址被封鎖，則可以透過登入的方式解除此限制，請特別注意，<strong class="text-danger">此時發文即不是匿名，如果您想要匿名發言，又不想任何負責，很抱歉，此系統無法滿足您的需求</strong>，在其餘狀況下，只要您的ＩＰ位址未被封鎖，不管是否有登入，本系統皆不會紀錄足以辨別使用者之資訊</li>
           </ol>
         </section>
-      @elseif(! is_support_country())
+      @elseif(! $firewall->isAllowCountry())
         <section class="text-center">
           <h3 class="text-info">本服務不支援您所在的國家/地區</h3>
 

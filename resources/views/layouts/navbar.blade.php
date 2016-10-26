@@ -32,7 +32,7 @@
           </ul>
         </li>
 
-        @if(Auth::check() && Auth::user()->is('manager'))
+        @if(Auth::check() && Auth::user()->own('manager'))
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <span>{{ Html::icon('tachometer', true) }} {{ trans('kobe.navbar.dashboard.title') }} </span><span class="caret"></span>

@@ -6,32 +6,30 @@
   "type": "project",
   "require": {
     "php": ">=7.0.0",
-    "laravel/framework": "5.2.*",
+    "laravel/framework": "5.3.*",
     "caouecs/laravel-lang": "~3.0",
     "doctrine/dbal": "~2.5",
-    "facebook/php-sdk-v4": "~5.2",
+    "facebook-anonymous-publisher/firewall": "^1.0",
+    "facebook-anonymous-publisher/graph-api": "^1.0",
     "facebook-anonymous-publisher/text-to-image": "^1.0",
     "facebook-anonymous-publisher/wordfilter": "^1.0",
     "gabrielkaputa/bitly": "~1.0",
-    "geoip2/geoip2": "~2.4",
     "greggilbert/recaptcha": "~2.1",
-    "guzzlehttp/guzzle": "~6.2",
     "hashids/hashids": "~1.0",
     "jenssegers/agent": "~2.3",
     "laracasts/flash": "~2.0",
     "laravel/socialite": "~2.0",
     "laravelcollective/html": "~5.2",
-    "predis/predis": "~1.0",
-    "vectorface/whip": "~0.3"
+    "predis/predis": "~1.0"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "~2.2",
     "barryvdh/laravel-ide-helper": "~2.1",
     "fzaninotto/faker": "~1.6",
     "mockery/mockery": "0.9.*",
-    "phpunit/phpunit": "~4.8",
-    "symfony/css-selector": "2.8.*|3.0.*",
-    "symfony/dom-crawler": "2.8.*|3.0.*"
+    "phpunit/phpunit": "^5.5",
+    "symfony/css-selector": "3.1.*",
+    "symfony/dom-crawler": "3.1.*"
   },
   "autoload": {
     "classmap": [

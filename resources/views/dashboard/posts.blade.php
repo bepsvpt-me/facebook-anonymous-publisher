@@ -35,7 +35,7 @@
             <td>
               <p title="{{ $post->getAttribute('created_at') }}">提交於 {{ $post->getAttribute('created_at')->diffForHumans($now) }}</p>
 
-              @if(Auth::user()->is('admin'))
+              @if(Auth::user()->own('admin'))
                 <p>來源 {{ $post->getAttribute('ip') }}</p>
               @endif
 

@@ -5,6 +5,7 @@ namespace App\Console\Commands\Facebook;
 use App\Config;
 use Carbon\Carbon;
 use Facebook\Facebook;
+use FacebookAnonymousPublisher\GraphApi\GraphApi;
 use Illuminate\Console\Command;
 
 abstract class FacebookCommand extends Command
@@ -18,6 +19,11 @@ abstract class FacebookCommand extends Command
      * @var Facebook|null
      */
     protected $fb;
+
+    /**
+     * @var GraphApi
+     */
+    protected $graphApi;
 
     /**
      * @var Carbon
@@ -38,6 +44,8 @@ abstract class FacebookCommand extends Command
         if (is_null($this->config)) {
             throw new \RuntimeException('Invalid facebook service config.');
         }
+
+        $this->graphApi = new GraphApi($this->config);
 
         $this->fb = new Facebook($this->config);
     }

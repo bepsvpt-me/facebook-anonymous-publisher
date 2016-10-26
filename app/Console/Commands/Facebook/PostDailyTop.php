@@ -4,9 +4,7 @@ namespace App\Console\Commands\Facebook;
 
 use App\Post;
 use App\Shortener;
-use Crypt;
 use GabrielKaputa\Bitly\Bitly;
-use GuzzleHttp\Client;
 use Log;
 
 class PostDailyTop extends FacebookCommand
@@ -128,14 +126,6 @@ class PostDailyTop extends FacebookCommand
             return;
         }
 
-        (new Client())->post(route('kobe.non-secure'), [
-            'form_params' => [
-                'content' => $this->now->toDateString().' 本日 Top 5'.PHP_EOL.implode(PHP_EOL, $urls),
-                'color' => '000000',
-                'accept-license' => true,
-                'nolink' => true,
-                'scheduling-auth' => Crypt::encrypt('daily-top'),
-            ],
-        ]);
+        $this->graphApi->status($this->now->toDateString().' 本日 Top 5'.PHP_EOL.implode(PHP_EOL, $urls));
     }
 }

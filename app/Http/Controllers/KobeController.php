@@ -8,15 +8,11 @@ use App\Http\Requests\KobeRequest;
 use App\Post;
 use Cache;
 use Carbon\Carbon;
-use Crypt;
-use Facebook\Facebook;
-use Facebook\FacebookResponse;
-use Facebook\FileUpload\FacebookFile;
+use FacebookAnonymousPublisher\Firewall\Firewall;
+use FacebookAnonymousPublisher\GraphApi\GraphApi;
 use FacebookAnonymousPublisher\TextToImage\TextToImage;
 use FacebookAnonymousPublisher\Wordfilter\Wordfilter;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class KobeController extends Controller
 {
@@ -28,14 +24,19 @@ class KobeController extends Controller
     protected $application;
 
     /**
-     * @var Facebook
-     */
-    protected $fb;
-
-    /**
      * @var Post
      */
     protected $post;
+
+    /**
+     * @var GraphApi
+     */
+    protected $graphApi;
+
+    /**
+     * @var Firewall
+     */
+    protected $firewall;
 
     /**
      * @var Wordfilter
@@ -50,11 +51,14 @@ class KobeController extends Controller
     /**
      * Constructor.
      *
+     * @param Firewall $firewall
      * @param Wordfilter $wordfilter
      * @param TextToImage $textToImage
      */
-    public function __construct(Wordfilter $wordfilter, TextToImage $textToImage)
+    public function __construct(Firewall $firewall, Wordfilter $wordfilter, TextToImage $textToImage)
     {
+        $this->firewall = $firewall;
+
         $this->wordfilter = $wordfilter;
 
         $this->textToImage = $textToImage;
@@ -69,8 +73,6 @@ class KobeController extends Controller
      */
     public function kobe(KobeRequest $request)
     {
-        $this->verify($request);
-
         $this->init();
 
         $this->save($request);
@@ -83,39 +85,13 @@ class KobeController extends Controller
     }
 
     /**
-     * Verify the request is valid or not.
-     *
-     * @param Request $request
-     *
-     * @return void
-     */
-    protected function verify(Request $request)
-    {
-        if ('kobe.non-secure' === $request->route()->getName()) {
-            $legal = true;
-
-            try {
-                if ('daily-top' !== Crypt::decrypt($request->input('scheduling-auth', ''))) {
-                    $legal = false;
-                }
-            } catch (DecryptException $e) {
-                $legal = false;
-            }
-
-            if (! $legal) {
-                throw new AccessDeniedHttpException;
-            }
-        }
-    }
-
-    /**
      * Initialize the kobe.
      */
     protected function init()
     {
         $this->application = Config::getConfig('application-service');
 
-        $this->fb = new Facebook(Config::getConfig('facebook-service'));
+        $this->graphApi = new GraphApi(Config::getConfig('facebook-service'));
 
         $this->post = new Post;
     }
@@ -137,12 +113,12 @@ class KobeController extends Controller
             )
         );
 
-        $this->post->setAttribute('user_id', (is_block_ip(false) && ! is_null($request->user())) ? $request->user()->getKey() : null);
+        $this->post->setAttribute('user_id', ($this->firewall->isBanned() && ! is_null($request->user())) ? $request->user()->getKey() : null);
         $this->post->setAttribute('content', $this->transformHashTag($content));
         $this->post->setAttribute('link', $request->has('nolink') ? null : $this->findLink($content));
         $this->post->setAttribute('has_image', $request->has('post-by-image') || $request->hasFile('image'));
         $this->post->setAttribute('user_agent', $request->header('user-agent'));
-        $this->post->setAttribute('ip', real_ip());
+        $this->post->setAttribute('ip', $this->firewall->ip());
         $this->post->setAttribute('created_at', Carbon::now());
         $this->post->setAttribute('sync_at', Carbon::now());
 
@@ -178,7 +154,7 @@ class KobeController extends Controller
     {
         $removes = [];
 
-        foreach ($this->stringToArray($string) as $char) {
+        foreach (preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY) as $char) {
             if ((1 === strlen($char)) && ($this->newLines(1) !== $char) && (! ctype_print($char) || ctype_cntrl($char))) {
                 $removes[] = $char;
             }
@@ -305,7 +281,7 @@ class KobeController extends Controller
      */
     protected function canvas($color)
     {
-        $filePath = file_build_path($this->imageDirectory(), $this->post->getKey().'.jpg');
+        $filePath = $this->imageDirectory().'/'.$this->post->getKey().'.jpg';
 
         $this->textToImage
             ->setFont($this->getFontPath())
@@ -323,7 +299,7 @@ class KobeController extends Controller
      */
     protected function getFontPath()
     {
-        return storage_path(file_build_path('app', 'fonts', 'NotoSansCJKtc-Regular.otf'));
+        return storage_path('app/fonts/NotoSansCJKtc-Regular.otf');
     }
 
     /**
@@ -331,7 +307,7 @@ class KobeController extends Controller
      *
      * @param \Symfony\Component\HttpFoundation\File\UploadedFile|null $file
      *
-     * @return FacebookResponse
+     * @return GraphApi
      */
     protected function postFeed($file)
     {
@@ -339,10 +315,10 @@ class KobeController extends Controller
             return $this->postPhotos($file);
         }
 
-        return $this->fb->post('/me/feed', [
-            'message' => $this->content(),
-            'link' => $this->post->getAttribute('link'),
-        ]);
+        return $this->graphApi->status(
+            $this->content(),
+            $this->post->getAttribute('link')
+        );
     }
 
     /**
@@ -350,26 +326,19 @@ class KobeController extends Controller
      *
      * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $file
      *
-     * @return FacebookResponse
+     * @return GraphApi
      */
     protected function postPhotos($file)
     {
         if (is_string($file)) {
-            return $this->fb->post('/me/photos', [
-                'source' => new FacebookFile($file),
-                'caption' => $this->content(true),
-            ]);
+            $source = $file;
+            $caption = $this->content(true);
+        } else {
+            $source = $file->move($this->imageDirectory(), $this->post->getKey().'.'.$file->guessExtension())->getPathname();
+            $caption = $this->content();
         }
 
-        $file = $file->move(
-            $this->imageDirectory(),
-            $this->post->getKey().'.'.$file->guessExtension()
-        );
-
-        return $this->fb->post('/me/photos', [
-            'source' => new FacebookFile($file->getPathname()),
-            'caption' => $this->content(),
-        ]);
+        return $this->graphApi->photo($source, $caption);
     }
 
     /**
@@ -379,7 +348,7 @@ class KobeController extends Controller
      */
     protected function imageDirectory()
     {
-        $path = storage_path(file_build_path('app', 'images', intval(floor($this->post->getKey() / 5000))));
+        $path = storage_path('app/images/'.intval(floor($this->post->getKey() / 5000)));
 
         if (! is_dir($path)) {
             mkdir($path);
@@ -434,40 +403,16 @@ class KobeController extends Controller
     /**
      * Save fbid and published_at.
      *
-     * @param FacebookResponse $response
+     * @param GraphApi $api
      *
      * @return bool
      */
-    protected function posted(FacebookResponse $response)
+    protected function posted(GraphApi $api)
     {
-        $key = $this->post->getAttribute('has_image') ? 'post_id' : 'id';
-
-        $this->post->setAttribute('fbid', substr(strstr($response->getDecodedBody()[$key], '_'), 1));
+        $this->post->setAttribute('fbid', $api->getId()['fbid']);
         $this->post->setAttribute('published_at', Carbon::now());
 
         return $this->post->save();
-    }
-
-    /**
-     * Convert string to array.
-     *
-     * @param string $string
-     *
-     * @return array
-     */
-    protected function stringToArray($string)
-    {
-        $string = preg_replace('/([^\p{Han}\s？，、。！：「」『』；—]+)/u', "\t\t\t$1\t\t", $string);
-
-        $chars = [];
-
-        foreach (preg_split('/\t\t/u', $string, -1, PREG_SPLIT_NO_EMPTY) as $item) {
-            $chars[] = ("\t" === $item[0])
-                ? substr($item, 1)
-                : preg_split('//u', $item, -1, PREG_SPLIT_NO_EMPTY);
-        }
-
-        return array_flatten($chars);
     }
 
     /**

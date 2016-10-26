@@ -42,7 +42,7 @@ class UpdateLang extends Command
 
         $this->filesystem = $filesystem;
 
-        $this->srcPath = file_build_path('vendor', 'caouecs', 'laravel-lang', 'src');
+        $this->srcPath = 'vendor/caouecs/laravel-lang/src';
     }
 
     /**
@@ -63,7 +63,7 @@ class UpdateLang extends Command
         foreach ($langs as $lang) {
             $this->filesystem->copyDirectory(
                 $lang,
-                resource_path(file_build_path('lang', $this->filesystem->name($lang)))
+                resource_path('lang/'.$this->filesystem->name($lang))
             );
         }
 

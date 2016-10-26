@@ -22,7 +22,7 @@ class Authenticate
     {
         if (Auth::guest()) {
             return Redirect::route('auth.sign-in');
-        } elseif (! is_null($role) && ! Auth::user()->is($role)) {
+        } elseif (! is_null($role) && ! Auth::user()->own($role)) {
             throw new AccessDeniedHttpException;
         }
 

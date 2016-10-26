@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use FacebookAnonymousPublisher\Firewall\Firewall;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -28,6 +29,23 @@ class Handler extends ExceptionHandler
     ];
 
     /**
+     * @var Firewall
+     */
+    protected $firewall;
+
+    /**
+     * Constructor.
+     *
+     * @param Firewall $firewall
+     */
+    public function __construct(Firewall $firewall)
+    {
+        parent::__construct(app());
+
+        $this->firewall = $firewall;
+    }
+
+    /**
      * Report or log an exception.
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
@@ -39,7 +57,7 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof TokenMismatchException) {
             Log::notice('Token-Mismatch', [
-                'ip' => real_ip(),
+                'ip' => $this->firewall->ip(),
                 'user_agent' => Request::header('user-agent'),
             ]);
         }
