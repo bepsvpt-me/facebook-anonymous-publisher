@@ -14,7 +14,7 @@
     "facebook-anonymous-publisher/shortener": "^1.0",
     "facebook-anonymous-publisher/text-to-image": "^1.0",
     "facebook-anonymous-publisher/wordfilter": "^1.0",
-    "greggilbert/recaptcha": "~2.1",
+    "guzzlehttp/guzzle": "^5.3",
     "jenssegers/agent": "~2.3",
     "laracasts/flash": "~2.0",
     "laravel/socialite": "~2.0",

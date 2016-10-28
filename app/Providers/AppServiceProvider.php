@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Config;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
         $this->overrideConfig();
 
         $this->includeMacros();
+
+        $this->extendValidators();
     }
 
     /**
@@ -78,6 +81,16 @@ class AppServiceProvider extends ServiceProvider
     {
         require_once app_path('Libraries/form.php');
         require_once app_path('Libraries/html.php');
+    }
+
+    /**
+     * Extends the validators.
+     *
+     * @return void
+     */
+    protected function extendValidators()
+    {
+        Validator::extend('recaptcha', 'App\Validators\RecaptchaValidator@validate');
     }
 
     /**

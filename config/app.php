@@ -179,7 +179,6 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         FacebookAnonymousPublisher\Firewall\FirewallServiceProvider::class,
         FacebookAnonymousPublisher\Shortener\ShortenerServiceProvider::class,
-        Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
@@ -236,7 +235,6 @@ return [
         'Flash' => Laracasts\Flash\Flash::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-        'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Shortener' => FacebookAnonymousPublisher\Shortener\Facades\Shortener::class,
 

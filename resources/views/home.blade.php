@@ -58,7 +58,7 @@
           </div>
 
           <div class="form-group">
-            {!! Recaptcha::render() !!}
+            <div class="g-recaptcha" data-sitekey="{{ config('recaptcha.public_key') }}" ></div>
           </div>
 
           <div class="form-group">
@@ -88,6 +88,7 @@
 @push('scripts')
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.15/autosize.min.js"></script>
+  <script src='https://www.google.com/recaptcha/api.js?render=onload' defer></script>
 
   <script>
     $('form').on('submit', function () {
