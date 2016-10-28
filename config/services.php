@@ -14,10 +14,6 @@ return [
     |
     */
 
-    'bitly' => [
-        'token' => env('BITLY_TOKEN'),
-    ],
-
     'facebook' => [
         'client_id' => '',
         'client_secret' => '',

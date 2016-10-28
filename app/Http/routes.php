@@ -7,9 +7,6 @@ use Illuminate\Routing\Router;
 $router->get('/', ['as' => 'home', 'uses' => 'HomeController@home']);
 
 $router->post('kobe', ['as' => 'kobe', 'middleware' => ['ip'], 'uses' => 'KobeController@kobe']);
-$router->post('kobe-non-secure', ['as' => 'kobe.non-secure', 'middleware' => ['ip'], 'uses' => 'KobeController@kobe']);
-
-$router->get('s/{hash}', ['as' => 'short-url', 'uses' => 'HomeController@shortUrlRedirect']);
 
 $router->group(['prefix' => 'ranking', 'as' => 'ranking.'], function (Router $router) {
     $router->get('daily', ['as' => 'daily', 'uses' => 'RankingController@daily']);

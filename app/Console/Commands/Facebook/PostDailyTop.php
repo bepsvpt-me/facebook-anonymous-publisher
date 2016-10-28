@@ -3,9 +3,8 @@
 namespace App\Console\Commands\Facebook;
 
 use App\Post;
-use App\Shortener;
-use GabrielKaputa\Bitly\Bitly;
 use Log;
+use Shortener;
 
 class PostDailyTop extends FacebookCommand
 {
@@ -32,38 +31,34 @@ class PostDailyTop extends FacebookCommand
     {
         parent::handle();
 
-        $posts = $this->posts();
-
-        if (false === $posts) {
-            return;
-        }
-
-        foreach ($posts as $index => $post) {
-            $url = $this->shortenUrl("https://www.facebook.com/{$this->config['page_id']}/posts/{$post->getAttribute('fbid')}");
+        foreach ($this->posts() as $index => $post) {
+            $url = $this->shortenUrl("https://www.facebook.com/{$post->getAttribute('fbid')}");
 
             $urls[] = 'Top'.($index + 1).' : '.$url;
         }
 
-        $this->send($urls ?? []);
+        if (isset($urls)) {
+            $this->send($urls);
+        }
     }
 
     /**
      * Get the daily top posts.
      *
-     * @return \Illuminate\Database\Eloquent\Collection|bool
+     * @return \Illuminate\Database\Eloquent\Collection|array
      */
     protected function posts()
     {
         try {
             return Post::whereNotNull('fbid')
-                ->where('published_at', '>=', $this->now->copy()->subDays(1))
+                ->where('published_at', '>=', $this->now->copy()->subDays(10))
                 ->orderBy('ranks', 'desc')
                 ->take(5)
-                ->get(['id', 'fbid']);
+                ->get(['fbid']);
         } catch (\PDOException $e) {
             Log::error('database-connection-refused');
 
-            return false;
+            return [];
         }
     }
 
@@ -76,41 +71,7 @@ class PostDailyTop extends FacebookCommand
      */
     protected function shortenUrl($url)
     {
-        if (is_null(config('services.bitly.token'))) {
-            return $this->shortenUsingLocal($url);
-        }
-
-        return $this->shortenUsingBitly($url);
-    }
-
-    /**
-     * Shorten the url using local shortener.
-     *
-     * @param string $url
-     *
-     * @return string
-     */
-    protected function shortenUsingLocal($url)
-    {
         return Shortener::shorten($url);
-    }
-
-    /**
-     * Shorten the url using bitly.
-     *
-     * @param string $url
-     *
-     * @return bool|string
-     */
-    protected function shortenUsingBitly($url)
-    {
-        static $bitly = null;
-
-        if (is_null($bitly)) {
-            $bitly = Bitly::withGenericAccessToken(config('services.bitly.token'));
-        }
-
-        return $bitly->shortenUrl($url);
     }
 
     /**
@@ -122,10 +83,11 @@ class PostDailyTop extends FacebookCommand
      */
     protected function send($urls)
     {
-        if (empty($urls)) {
-            return;
-        }
+        $content = implode(PHP_EOL, [
+            $this->now->toDateString().' Top 5',
+            implode(PHP_EOL, $urls),
+        ]);
 
-        $this->graphApi->status($this->now->toDateString().' 本日 Top 5'.PHP_EOL.implode(PHP_EOL, $urls));
+        $this->graphApi->status($content);
     }
 }
