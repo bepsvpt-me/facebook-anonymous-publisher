@@ -39,7 +39,7 @@ class TransformBannedIpList extends Migration
             ->each(function ($ip) use (&$data) {
                 $data[] = [
                     'type' => 'ip',
-                    'value' => inet_ntop(base64_decode($ip->ip, true)),
+                    'value' => $ip->ip,
                 ];
             });
 

@@ -113,7 +113,7 @@ class KobeController extends Controller
             )
         );
 
-        $this->post->setAttribute('user_id', ($this->firewall->isBanned() && ! is_null($request->user())) ? $request->user()->getKey() : null);
+        $this->post->setAttribute('user_id', ((false !== $this->firewall->isBanned()) && ! is_null($request->user())) ? $request->user()->getKey() : null);
         $this->post->setAttribute('content', $this->transformHashTag($content));
         $this->post->setAttribute('link', $request->has('nolink') ? null : $this->findLink($content));
         $this->post->setAttribute('has_image', $request->has('post-by-image') || $request->hasFile('image'));

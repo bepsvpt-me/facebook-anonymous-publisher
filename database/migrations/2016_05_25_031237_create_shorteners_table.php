@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateShortenersTable extends Migration
+class CreateShortenersTableLegacy extends Migration
 {
     /**
      * Run the migrations.

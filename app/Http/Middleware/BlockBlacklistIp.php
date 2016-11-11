@@ -33,10 +33,23 @@ class BlockBlacklistIp
      */
     public function handle($request, Closure $next)
     {
-        if (! $this->firewall->isAllowCountry(['TW', 'SG']) ||
-            ($this->firewall->isBanned() && is_null($request->user()))
-        ) {
-            Log::notice('blacklist-ip', ['ip' => $this->firewall->ip()]);
+        $allow = true;
+
+        $banned = $this->firewall->isBanned();
+
+        if (! $this->firewall->isAllowCountry(['TW'])) {
+            $allow = false;
+        } elseif ('permanent' === $banned) {
+            $allow = false;
+        } elseif (false !== $banned && is_null($request->user())) {
+            $allow = false;
+        }
+
+        if (! $allow) {
+            Log::notice('blacklist-ip', [
+                'ip' => $this->firewall->ip(),
+                'type' => $banned,
+            ]);
 
             throw new AccessDeniedHttpException;
         }
