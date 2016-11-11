@@ -2,27 +2,11 @@
 
 namespace App\Validators;
 
-use GuzzleHttp\Client;
 use Illuminate\Validation\Validator;
 
 class RecaptchaValidator
 {
     const RECAPTCHA_API_END_POINT = 'https://www.google.com/recaptcha/api/siteverify';
-
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * Constructor.
-     *
-     * @param Client $client
-     */
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
 
     /**
      * Validate a given attribute against a rule.
@@ -36,10 +20,7 @@ class RecaptchaValidator
      */
     public function validate($attribute, $value, $parameters, Validator $validator)
     {
-        $response = json_decode(
-            $this->request($value)->getBody()->getContents(),
-            true
-        );
+        $response = json_decode($this->request($value), true);
 
         return $response['success'];
     }
@@ -49,16 +30,26 @@ class RecaptchaValidator
      *
      * @param string $value
      *
-     * @return \GuzzleHttp\Message\ResponseInterface
+     * @return string
      */
     protected function request($value)
     {
-        return $this->client
-            ->post(self::RECAPTCHA_API_END_POINT, [
-                'body' => [
-                    'secret' => config('recaptcha.private_key'),
-                    'response' => $value,
-                ],
-            ]);
+        $parameters = [
+            'secret' => config('recaptcha.private_key'),
+            'response' => $value,
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, self::RECAPTCHA_API_END_POINT);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $response;
     }
 }

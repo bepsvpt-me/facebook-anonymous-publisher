@@ -51,7 +51,7 @@ class PostDailyTop extends FacebookCommand
     {
         try {
             return Post::whereNotNull('fbid')
-                ->where('published_at', '>=', $this->now->copy()->subDays(10))
+                ->where('published_at', '>=', $this->now->copy()->subDays(1))
                 ->orderBy('ranks', 'desc')
                 ->take(5)
                 ->get(['fbid']);
