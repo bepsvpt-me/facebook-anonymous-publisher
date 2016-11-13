@@ -86,7 +86,7 @@ class SyncRanks extends FacebookCommand
      */
     protected function prepareRequests($posts)
     {
-        $queryString = 'fields=comments.summary(true).limit(0),likes.summary(true).limit(0)';
+        $queryString = 'fields=comments.summary(true).limit(0),likes.summary(true).limit(0),shares';
 
         $requests = [];
 
@@ -165,14 +165,17 @@ class SyncRanks extends FacebookCommand
     {
         $data = json_decode($body, true);
 
-        $likes = $data['likes']['summary']['total_count'];
-
-        $comments = $data['comments']['summary']['total_count'];
+        list($likes, $comments, $shares) = [
+            $data['likes']['summary']['total_count'],
+            $data['comments']['summary']['total_count'],
+            $data['shares']['count'],
+        ];
 
         return [
             'likes' => $likes,
             'comments' => $comments,
-            'ranks' => intval($likes + $comments * 8.7),
+            'shares' => $shares,
+            'ranks' => intval($likes + $comments * 8.7 + $shares * 87),
         ];
     }
 }
