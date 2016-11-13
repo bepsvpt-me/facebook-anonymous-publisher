@@ -168,7 +168,7 @@ class SyncRanks extends FacebookCommand
         list($likes, $comments, $shares) = [
             $data['likes']['summary']['total_count'],
             $data['comments']['summary']['total_count'],
-            $data['shares']['count'],
+            isset($data['shares']['count']) ? $data['shares']['count'] : 0,
         ];
 
         return [
