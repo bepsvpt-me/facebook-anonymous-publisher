@@ -74,7 +74,7 @@ class AuthController extends Controller
      *
      * @return string
      */
-    protected function loginUsername()
+    protected function username()
     {
         return '';
     }

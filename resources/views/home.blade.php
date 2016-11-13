@@ -9,7 +9,9 @@
         <h1 class="text-center">{{ $application['page_name'] }}</h1>
       </header>
 
-      @if(false !== ($banned = $firewall->isBanned()))
+      @php($banned = $firewall->isBanned())
+
+      @if('permanent' === $banned || (false !== $banned && Auth::guest()))
         <section>
           <h3 class="text-center text-info">您的ＩＰ位址可能因下列原因而被系統封鎖，目前無法使用發文系統</h3>
 

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Block;
 use App\Config;
 use App\Http\Controllers\Controller;
 use App\Post;
-use Cache;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
+use FacebookAnonymousPublisher\Firewall\Firewall;
 use Flash;
 use Redirect;
 
@@ -31,17 +30,16 @@ class PostController extends Controller
     /**
      * Block the poster ip.
      *
+     * @param Firewall $firewall
      * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function block($id)
+    public function block(Firewall $firewall, $id)
     {
         $ip = Post::withTrashed()->findOrFail($id, ['ip'])->getAttribute('ip');
 
-        Block::firstOrCreate(['type' => 'ip', 'value' => $ip]);
-
-        Cache::forget('blacklist-ip');
+        $firewall->ban($ip);
 
         Flash::success('封鎖成功');
 
