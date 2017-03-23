@@ -260,7 +260,7 @@ class KobeController extends Controller
     protected function findLink($content, $all = false)
     {
         $amount = preg_match_all(
-            '/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]/i',
+            '/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;\p{Han}]*[-A-Z0-9+&@#\/%=~_|\p{Han}]/ui',
             $content,
             $matches
         );
