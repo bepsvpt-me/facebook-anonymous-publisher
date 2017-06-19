@@ -277,35 +277,31 @@ class KobeController extends Controller
      *
      * @param string $color
      *
-     * @return string
+     * @return array
      */
     protected function canvas($color)
     {
-        $filePath = $this->imageDirectory().'/'.$this->post->getKey().'.jpg';
+        $filePath = [];
 
-        $this->textToImage
-            ->setFont($this->getFontPath())
+        $images = $this->textToImage
             ->setColor($color)
-            ->make($this->post->getAttribute('content'))
-            ->save($filePath, 100);
+            ->make($this->post->getAttribute('content'), true);
+
+        foreach ($images as $index => $image) {
+            $path = sprintf('%s/%d-%d.jpg', $this->imageDirectory(), $this->post->getKey(), $index);
+
+            $image->save($path, 100);
+
+            $filePath[] = $path;
+        }
 
         return $filePath;
     }
 
     /**
-     * Get the text font path.
-     *
-     * @return string
-     */
-    protected function getFontPath()
-    {
-        return storage_path('app/fonts/NotoSansCJKtc-Regular.otf');
-    }
-
-    /**
      * Post to feed.
      *
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile|null $file
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile|array|null $file
      *
      * @return GraphApi
      */
@@ -324,21 +320,19 @@ class KobeController extends Controller
     /**
      * Post a photo.
      *
-     * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param array|\Symfony\Component\HttpFoundation\File\UploadedFile $file
      *
      * @return GraphApi
      */
     protected function postPhotos($file)
     {
-        if (is_string($file)) {
-            $source = $file;
-            $caption = $this->content(true);
-        } else {
-            $source = $file->move($this->imageDirectory(), $this->post->getKey().'.'.$file->guessExtension())->getPathname();
-            $caption = $this->content();
+        if (is_array($file)) {
+            return $this->graphApi->photos($file, $this->content(true));
         }
 
-        return $this->graphApi->photo($source, $caption);
+        $source = $file->move($this->imageDirectory(), $this->post->getKey().'.'.$file->guessExtension())->getPathname();
+
+        return $this->graphApi->photo($source, $this->content());
     }
 
     /**

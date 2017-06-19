@@ -13,19 +13,14 @@
 
       @if('permanent' === $banned || (false !== $banned && Auth::guest()))
         <section>
-          <h3 class="text-center text-info">您的ＩＰ位址可能因下列原因而被系統封鎖，目前無法使用發文系統</h3>
-
-          <ol>
-            <li>過去發文紀錄中，有違反法律條文之紀錄</li>
-            <li>過去發文紀錄中，有違反 Facebook 使用條款之紀錄</li>
-            <li>過去發文紀錄中，有指名道姓、透漏任何個資或隱私資訊之紀錄</li>
-            <li>過去發文紀錄中，有惡意洗版之行為</li>
-            <li>過去發文紀錄中，有足以造成本專頁有法律風險之紀錄</li>
-            <li>以上為常見被封鎖原因，如您為共用ＩＰ之使用者，只要其中一位用戶違反相關規定，將會連累不能使用，請特別注意</li>
-            @if('permanent' !== $banned)
-              <li>如您的ＩＰ位址被封鎖，則可以透過登入的方式解除此限制，請特別注意，<strong class="text-danger">此時發文即不是匿名，如果您想要匿名發言，又不想任何負責，很抱歉，此系統無法滿足您的需求</strong>，在其餘狀況下，只要您的ＩＰ位址未被封鎖，不管是否有登入，本系統皆不會紀錄足以辨別使用者之資訊</li>
-            @endif
-          </ol>
+          @if('permanent' !== $banned)
+            <h3 class="text-center text-info">
+              <p>您必須先登入方能使用發文系統</p>
+              <a href="{{ route('oauth.facebook') }}">{{ trans('kobe.navbar.auth.sign-in') }}</a>
+            </h3>
+          @else
+            <h3 class="text-center text-info">您無法使用發文系統</h3>
+          @endif
         </section>
       @elseif(! $firewall->isAllowCountry())
         <section class="text-center">

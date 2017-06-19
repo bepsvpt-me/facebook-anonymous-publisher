@@ -15,8 +15,8 @@ return [
     */
 
     'facebook' => [
-        'client_id' => '',
-        'client_secret' => '',
+        'client_id' => env('FACEBOOK_ID', ''),
+        'client_secret' => env('FACEBOOK_SECRET', ''),
         'redirect' => env('APP_URL').'/oauth/facebook/callback',
     ],
 
