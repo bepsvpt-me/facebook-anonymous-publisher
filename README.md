@@ -1,7 +1,6 @@
 # Facebook Anonymous Publisher
 
 [![StyleCI](https://styleci.io/repos/59216090/shield?style=flat)](https://styleci.io/repos/59216090)
-[![Dependency Status](https://www.versioneye.com/user/projects/57557d0a7757a00041b3a71e/badge.svg?style=flat)](https://www.versioneye.com/user/projects/57557d0a7757a00041b3a71e)
 
 # Feature
 
