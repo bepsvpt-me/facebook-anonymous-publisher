@@ -45,9 +45,10 @@ class BlockBlacklistIp
             $allow = false;
         }
 
-        if (! $allow) {
+        if ((! $allow) || (! is_null($request->user() && 'banned' === $request->user()->role))) {
             Log::notice('blacklist-ip', [
                 'ip' => $this->firewall->ip(),
+                'user' => $request->user()->id ?? null,
                 'type' => $banned,
             ]);
 
