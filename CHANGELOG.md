@@ -1,4 +1,4 @@
-# CHANGELOG
+#Amazing CHANGELOG
 
 ## 1.x
 
