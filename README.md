@@ -6,6 +6,8 @@
 
 - Image Upload
 
+- HD images
+
 - Append Link to Hashtag
 
 - Url Detect
