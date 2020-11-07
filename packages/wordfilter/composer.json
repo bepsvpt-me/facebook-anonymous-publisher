@@ -1,0 +1,32 @@
+{
+  "name": "facebook-anonymous-publisher/wordfilter",
+  "description": "High performance wordfilter.",
+  "keywords": ["wordfilter"],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "BePsvPT",
+      "email": "freedom@csie.io"
+    }
+  ],
+  "require": {
+    "php": ">=5.6",
+    "ext-mbstring": "*",
+    "overtrue/pinyin": "^3.0"
+  },
+  "require-dev": {
+    "codeclimate/php-test-reporter": "^0.4",
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "FacebookAnonymousPublisher\\Wordfilter\\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}
