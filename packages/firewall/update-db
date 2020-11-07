@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+// url of geo file
+$url = 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz';
+
+// filename for downloaded archive
+$filename = 'temp.tar.gz';
+
+// mmdb name
+$mmdb = 'GeoLite2-Country.mmdb';
+
+// save downloaded data to filesystem
+file_put_contents($filename, file_get_contents($url));
+
+// create PharData instance
+$tar = new PharData($filename);
+
+// get top directory name
+$dirname = $tar->getFilename();
+
+// extract archive
+$tar->extractTo('db', "{$dirname}/{$mmdb}");
+
+// move geo file
+rename("db/{$dirname}/{$mmdb}", "db/{$mmdb}");
+
+// remove temp directory
+rmdir("db/{$dirname}");
+
+// remove temp file
+unlink($filename);
