@@ -1,0 +1,32 @@
+{
+  "name": "facebook-anonymous-publisher/graph-api",
+  "description": "Facebook graph api wrapper.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "BePsvPT",
+      "email": "freedom@csie.io"
+    }
+  ],
+  "require": {
+    "php": ">=5.6",
+    "facebook/graph-sdk": "^5.5",
+    "guzzlehttp/guzzle": "^5.3"
+  },
+  "require-dev": {
+    "codeclimate/php-test-reporter": "^0.4",
+    "mockery/mockery": "^0.9",
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "FacebookAnonymousPublisher\\GraphApi\\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}
